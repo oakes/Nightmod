@@ -6,5 +6,5 @@
 
 (defn -main
   []
-  (LwjglApplication. nightmod "nightmod" 800 600 true)
+  (LwjglApplication. nightmod "Nightmod" 800 600 true)
   (Keyboard/enableRepeatEvents true))
