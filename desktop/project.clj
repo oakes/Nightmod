@@ -5,8 +5,10 @@
                  [com.badlogicgames.gdx/gdx-backend-lwjgl "1.0-SNAPSHOT"]
                  [com.badlogicgames.gdx/gdx-platform "1.0-SNAPSHOT"
                   :classifier "natives-desktop"]
+                 [com.fifesoft/rsyntaxtextarea "2.5.0"]
                  [org.clojure/clojure "1.5.1"]
-                 [play-clj "0.2.0-SNAPSHOT"]]
+                 [play-clj "0.2.0-SNAPSHOT"]
+                 [seesaw "1.4.4"]]
   :repositories [["sonatype"
                   "https://oss.sonatype.org/content/repositories/snapshots/"]]
   
