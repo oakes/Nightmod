@@ -3,11 +3,15 @@
             [nightmod.core :refer :all]
             [seesaw.core :as s])
   (:import [com.badlogic.gdx.backends.lwjgl LwjglApplication]
-           [java.awt BorderLayout Canvas Color Panel]
+           [java.awt BorderLayout Canvas Dimension]
            [org.fife.ui.rsyntaxtextarea FileLocation SyntaxConstants
             TextEditorPane Theme]
            [org.lwjgl.input Keyboard])
   (:gen-class))
+
+(def ^:const window-width 1200)
+(def ^:const window-height 768)
+(def ^:const editor-width (/ window-width 2))
 
 (defn set-theme!
   [text-area path]
@@ -15,10 +19,7 @@
       io/resource
       io/input-stream
       Theme/load
-      (.apply text-area))
-  (when-let [c (.getBackground text-area)]
-    (.setBackground text-area
-      (Color. (.getRed c) (.getGreen c) (.getBlue c) 128))))
+      (.apply text-area)))
 
 (defn create-text-area
   ([]
@@ -31,7 +32,7 @@
               (proxy-super processKeyBinding ks e condition pressed)))
       (.setAntiAliasingEnabled true)
       (set-theme! "dark.xml")
-      (.setOpaque false)))
+      (.setPreferredSize (Dimension. editor-width window-height))))
   ([path]
     (doto (create-text-area)
       (.load (FileLocation/create path) nil)
@@ -52,13 +53,13 @@
   []
   (s/invoke-later
     (doto (s/frame :title "Nightmod"
-                   :width 800
-                   :height 600
+                   :width window-width
+                   :height window-height
                    :on-close :exit)
       (-> .getContentPane (.add (create-canvas)))
       (-> .getGlassPane (doto
                           (.setLayout (BorderLayout.))
-                          (.add (create-text-area) BorderLayout/CENTER)
+                          (.add (create-text-area) BorderLayout/EAST)
                           (.setVisible true)))
       s/show!))
   (Keyboard/enableRepeatEvents true))
