@@ -77,5 +77,6 @@
   (s/native!)
   (SubstanceLookAndFeel/setSkin (GraphiteSkin.))
   (s/invoke-later
-    (s/show! (reset! ui/ui-root (create-window))))
+    (s/show! (reset! ui/ui-root (create-window)))
+    (editors/show-editor! "/home/oliver/game-test/desktop/src-common/game_test/core.clj"))
   (Keyboard/enableRepeatEvents true))

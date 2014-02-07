@@ -156,6 +156,20 @@
   [_]
   (reset! paredit-enabled? (not @paredit-enabled?)))
 
+(defn show-paredit-help!
+  [_]
+  (let [commands (->> pw/advanced-keymap
+                      (apply concat)
+                      (cons #(compare %1 %2))
+                      (apply sorted-map-by))
+        modifiers {"M" (utils/get-string :alt)
+                   "C" (utils/get-string :ctrl)}]
+    (->> (doseq [[k v] commands]
+           (when-let [modifier (get modifiers (first k))]
+             (println modifier "+" (second k) " " (name v))))
+         with-out-str
+         s/alert)))
+
 ; create and show/hide editors for each file
 
 (def ^:const styles {"as"         SyntaxConstants/SYNTAX_STYLE_ACTIONSCRIPT
@@ -367,7 +381,12 @@
                                          :focusable? false
                                          :visible? is-clojure?
                                          :selected? @paredit-enabled?
-                                         :listen [:action toggle-paredit!])])
+                                         :listen [:action toggle-paredit!])
+                              (ui/button :id :paredit-help-button
+                                         :text (utils/get-string :paredit_help)
+                                         :focusable? false
+                                         :visible? is-clojure?
+                                         :listen [:action show-paredit-help!])])
           ; create the main panel
           text-group (s/border-panel
                        :north btn-group
