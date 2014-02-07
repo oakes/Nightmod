@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Nightmod</string>
+
+  <string name="ok">OK</string>
+  <string name="cancel">Cancel</string>
+
+  <string name="quit_confirm">Are you sure you want to quit?</string>
+  <string name="quit">Quit</string>
+
+  <string name="undo">Undo</string>
+  <string name="redo">Redo</string>
+  <string name="font_dec">Font -</string>
+  <string name="font_inc">Font +</string>
+  <string name="paredit">Paredit</string>
+  <string name="doc">Doc</string>
+
+  <string name="ctrl">Ctrl</string>
+  <string name="alt">Alt</string>
+</resources>
