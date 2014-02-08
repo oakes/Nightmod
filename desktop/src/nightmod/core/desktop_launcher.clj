@@ -63,7 +63,7 @@
     (-> .getGlassPane (doto
                         (.setLayout (BorderLayout.))
                         (.add (create-layered-pane) BorderLayout/EAST)
-                        (.setVisible true)))
+                        (.setVisible false)))
     ; listen for keys while modifier is down
     (shortcuts/listen-for-shortcuts!
       (fn [key-code]

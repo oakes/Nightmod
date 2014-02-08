@@ -1,9 +1,9 @@
 (defproject nightmod "0.0.1-SNAPSHOT"
   :description "FIXME: write description"
   
-  :dependencies [[com.badlogicgames.gdx/gdx "1.0-SNAPSHOT"]
-                 [com.badlogicgames.gdx/gdx-backend-lwjgl "1.0-SNAPSHOT"]
-                 [com.badlogicgames.gdx/gdx-platform "1.0-SNAPSHOT"
+  :dependencies [[com.badlogicgames.gdx/gdx "0.9.9"]
+                 [com.badlogicgames.gdx/gdx-backend-lwjgl "0.9.9"]
+                 [com.badlogicgames.gdx/gdx-platform "0.9.9"
                   :classifier "natives-desktop"]
                  [com.github.insubstantial/substance "7.2.1"]
                  [com.fifesoft/autocomplete "2.5.0"]

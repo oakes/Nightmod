@@ -1,7 +1,7 @@
 (defproject nightmod "0.0.1-SNAPSHOT"
   :description "FIXME: write description"
-  :dependencies [[com.badlogicgames.gdx/gdx "1.0-SNAPSHOT"]
-                 [com.badlogicgames.gdx/gdx-backend-robovm "1.0-SNAPSHOT"]
+  :dependencies [[com.badlogicgames.gdx/gdx "0.9.9"]
+                 [com.badlogicgames.gdx/gdx-backend-robovm "0.9.9"]
                  [org.clojure/clojure "1.5.1"]
                  [play-clj "0.2.0-SNAPSHOT"]]
   :repositories [["sonatype"
