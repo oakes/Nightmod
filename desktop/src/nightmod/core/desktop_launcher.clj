@@ -7,7 +7,7 @@
             [nightmod.core.ui :as ui]
             [nightmod.core.utils :as utils]
             [seesaw.core :as s])
-  (:import [java.awt BorderLayout Canvas Dimension]
+  (:import [java.awt BorderLayout Canvas Dimension Window]
            [java.awt.event ComponentAdapter WindowAdapter]
            [javax.swing JLayeredPane]
            [com.badlogic.gdx.backends.lwjgl LwjglApplication]
@@ -49,6 +49,16 @@
     (System/exit 0)
     true))
 
+(defn enable-full-screen!
+  "Enables full screen mode on OS X."
+  [window]
+  (try
+    (some-> (Class/forName "com.apple.eawt.FullScreenUtilities")
+            (.getMethod "setWindowCanFullScreen"
+                        (into-array Class [Window Boolean/TYPE]))
+            (.invoke nil (object-array [window true])))
+    (catch Exception _)))
+
 (defn create-window
   "Creates the main window."
   []
@@ -78,7 +88,8 @@
           ;87 (editors/close-selected-editor!)
           ; else
           false)))
-    ; when the window state changes
+    ; set various window properties
+    enable-full-screen!
     (.addWindowListener (proxy [WindowAdapter] []
                           (windowClosing [e]
                             (confirm-exit-app!))))))
