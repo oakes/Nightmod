@@ -5,7 +5,7 @@
   (:import [java.awt Color Component KeyboardFocusManager KeyEventDispatcher
             Toolkit]
            [java.awt.event ActionEvent KeyEvent]
-           [javax.swing JComponent JLayeredPane]
+           [javax.swing JComponent]
            [net.java.balloontip BalloonTip]
            [net.java.balloontip.positioners CenteredPositioner]
            [net.java.balloontip.styles ToolTipBalloonStyle]))
@@ -70,10 +70,12 @@
       (let [style (ToolTipBalloonStyle. Color/DARK_GRAY Color/DARK_GRAY)
             ^CenteredPositioner positioner (CenteredPositioner. 0)
             ^BalloonTip tip (BalloonTip. view contents style false)
-            y (if (and (> (.getHeight view) 0) is-vertically-centered?)
-                (-> (/ (.getHeight view) 2)
-                    (+ (/ (.getHeight tip) 2))
-                    (/ (.getHeight view)))
+            view-height (.getHeight view)
+            tip-height (.getHeight tip)
+            y (if (and (> view-height 0) is-vertically-centered?)
+                (-> (/ view-height 2)
+                    (+ (/ tip-height 2))
+                    (/ view-height))
                 0.5)]
         (doto positioner
           (.enableFixedAttachLocation true)

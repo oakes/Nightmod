@@ -22,7 +22,7 @@
 (def ^:const window-height 768)
 (def ^:const editor-width 700)
 
-(defn create-editor-pane
+(defn create-layered-pane
   "Returns the pane with the editors."
   []
   (let [pane (s/card-panel :id :editor-pane :items [["" :default-card]])]
@@ -62,7 +62,7 @@
     (-> .getContentPane (.add (create-canvas-pane)))
     (-> .getGlassPane (doto
                         (.setLayout (BorderLayout.))
-                        (.add (create-editor-pane) BorderLayout/EAST)
+                        (.add (create-layered-pane) BorderLayout/EAST)
                         (.setVisible true)))
     ; listen for keys while modifier is down
     (shortcuts/listen-for-shortcuts!
