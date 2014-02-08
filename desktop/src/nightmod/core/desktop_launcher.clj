@@ -7,9 +7,10 @@
             [nightmod.core.ui :as ui]
             [nightmod.core.utils :as utils]
             [seesaw.core :as s])
-  (:import [java.awt.event WindowAdapter]
+  (:import [java.awt BorderLayout Canvas Dimension]
+           [java.awt.event ComponentAdapter WindowAdapter]
+           [javax.swing JLayeredPane]
            [com.badlogic.gdx.backends.lwjgl LwjglApplication]
-           [java.awt BorderLayout Canvas Dimension]
            [org.fife.ui.rsyntaxtextarea FileLocation SyntaxConstants
             TextEditorPane Theme]
            [org.lwjgl.input Keyboard]
@@ -24,8 +25,15 @@
 (defn create-editor-pane
   "Returns the pane with the editors."
   []
-  (doto (s/card-panel :id :editor-pane :items [["" :default-card]])
-    (.setPreferredSize (Dimension. editor-width window-height))))
+  (let [pane (s/card-panel :id :editor-pane :items [["" :default-card]])]
+    (doto (JLayeredPane.)
+      (.setPreferredSize (Dimension. editor-width window-height))
+      (.addComponentListener (proxy [ComponentAdapter] []
+                               (componentResized [e]
+                                 (->> (.getComponent e)
+                                      .getHeight
+                                      (.setBounds pane 0 0 editor-width)))))
+      (.add pane))))
 
 (defn create-canvas-pane
   "Returns the pane with the canvas."
@@ -60,13 +68,17 @@
     (shortcuts/listen-for-shortcuts!
       (fn [key-code]
         (case key-code
+          ; page up
+          33 (editors/move-tab-selection! -1)
+          ; page down
+          34 (editors/move-tab-selection! 1)
           ; Q
           81 (confirm-exit-app!)
           ; W
           ;87 (editors/close-selected-editor!)
           ; else
           false)))
-    ; update the project tree when window comes into focus
+    ; when the window state changes
     (.addWindowListener (proxy [WindowAdapter] []
                           (windowClosing [e]
                             (confirm-exit-app!))))))
@@ -77,6 +89,5 @@
   (s/native!)
   (SubstanceLookAndFeel/setSkin (GraphiteSkin.))
   (s/invoke-later
-    (s/show! (reset! ui/ui-root (create-window)))
-    (editors/show-editor! "/home/oliver/game-test/desktop/src-common/game_test/core.clj"))
+    (s/show! (reset! ui/ui-root (create-window))))
   (Keyboard/enableRepeatEvents true))

@@ -1,10 +1,11 @@
 (ns nightmod.core.shortcuts
-  (:require [seesaw.core :as s]
+  (:require [nightmod.core.ui :as ui]
+            [seesaw.core :as s]
             [seesaw.keymap :as keymap])
   (:import [java.awt Color Component KeyboardFocusManager KeyEventDispatcher
             Toolkit]
            [java.awt.event ActionEvent KeyEvent]
-           [javax.swing JComponent]
+           [javax.swing JComponent JLayeredPane]
            [net.java.balloontip BalloonTip]
            [net.java.balloontip.positioners CenteredPositioner]
            [net.java.balloontip.styles ToolTipBalloonStyle]))
@@ -69,7 +70,7 @@
       (let [style (ToolTipBalloonStyle. Color/DARK_GRAY Color/DARK_GRAY)
             ^CenteredPositioner positioner (CenteredPositioner. 0)
             ^BalloonTip tip (BalloonTip. view contents style false)
-            y (if is-vertically-centered?
+            y (if (and (> (.getHeight view) 0) is-vertically-centered?)
                 (-> (/ (.getHeight view) 2)
                     (+ (/ (.getHeight tip) 2))
                     (/ (.getHeight view)))
@@ -79,7 +80,8 @@
           (.setAttachLocation 0.5 y))
         (doto tip
           (.setPositioner positioner)
-          (.setVisible false))))))
+          (.setVisible false)
+          (.setTopLevelContainer (ui/get-layered-pane)))))))
 
 (defn create-hints!
   "Creates hints for all widgets within given target with IDs in `mappings`."

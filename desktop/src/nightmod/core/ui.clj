@@ -44,6 +44,11 @@
   []
   (s/select @ui-root [:#editor-pane]))
 
+(defn get-layered-pane
+  "Returns the JLayeredPane holding the editor pane."
+  []
+  (first (s/select (.getGlassPane @ui-root) [:JLayeredPane])))
+
 (def selection (atom nil))
 
 (defn get-selected-path

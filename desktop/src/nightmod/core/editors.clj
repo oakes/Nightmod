@@ -20,14 +20,13 @@
             FileLocation SyntaxConstants TextEditorPane Theme]
            [org.fife.ui.rtextarea RTextScrollPane]))
 
-; keep track of open editors
-
 (def editors (atom (flatland/ordered-map)))
 (def font-size (atom (utils/read-pref :font-size)))
 (def paredit-enabled? (atom (utils/read-pref :enable-paredit)))
 (def tabs (atom nil))
 (def theme-resource (io/resource "dark.xml"))
-(def ^:dynamic *reorder-tabs?* true)
+
+; basic getters
 
 (defn get-text-area
   [view]
@@ -53,7 +52,24 @@
   (when-let [text-area (get-text-area-from-path path)]
     (.isDirty text-area)))
 
-; actions for editor buttons
+; tabs
+
+(def ^:dynamic *reorder-tabs?* true)
+
+(defn move-tab-selection!
+  [diff]
+  (let [paths (reverse (keys @editors))
+        index (.indexOf paths (ui/get-selected-path))
+        max-index (- (count paths) 1)
+        new-index (+ index diff)
+        new-index (cond
+                    (< new-index 0) max-index
+                    (> new-index max-index) 0
+                    :else new-index)]
+    (when (> (count paths) 0)
+      (binding [*reorder-tabs?* false]
+        (reset! ui/selection (nth paths new-index)))))
+  true)
 
 (defn update-tabs!
   [path]
@@ -80,6 +96,8 @@
                   (binding [*reorder-tabs?* false]
                     (reset! ui/selection (.getDescription e))))))
     (shortcuts/toggle-hint! @tabs @shortcuts/is-down?)))
+
+; button bar actions
 
 (defn update-buttons!
   [editor ^TextEditorPane text-area]
