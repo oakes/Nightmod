@@ -2,13 +2,31 @@
   (:require [clojure.java.io :as io]
             [seesaw.core :as s]
             [seesaw.util :as s-util])
-  (:import [java.awt Dimension FontMetrics]
+  (:import [com.camick WrapLayout]
+           [java.awt Dimension FontMetrics]
            [javax.swing JComponent]))
 
 (extend-protocol s-util/Children
   java.awt.Component (children [this] nil))
 
 (def ui-root (atom nil))
+
+(defn wrap-panel
+  "Returns a panel based on FlowLayout that allows its contents to wrap."
+  [& {:keys [items align hgap vgap]}]
+  (let [align (case align
+                :left WrapLayout/LEFT
+                :center WrapLayout/CENTER
+                :right WrapLayout/RIGHT
+                :leading WrapLayout/LEADING
+                :trailing WrapLayout/TRAILING
+                WrapLayout/LEFT)
+        hgap (or hgap 0)
+        vgap (or vgap 0)
+        panel (s/abstract-panel (WrapLayout. align hgap vgap) {})]
+    (doseq [item items]
+      (s/add! panel item))
+    panel))
 
 (defn adjust-button!
   "Adjusts the given button to fit its contents."

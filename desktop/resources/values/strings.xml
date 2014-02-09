@@ -8,6 +8,7 @@
   <string name="quit_confirm">Are you sure you want to quit?</string>
   <string name="quit">Quit</string>
 
+  <string name="save">Save</string>
   <string name="undo">Undo</string>
   <string name="redo">Redo</string>
   <string name="font_dec">Font -</string>

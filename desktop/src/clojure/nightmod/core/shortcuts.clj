@@ -12,7 +12,8 @@
 
 (def is-down? (atom false))
 (def ^:const mappings
-  {:undo-button "Z"
+  {:save-button "S"
+   :undo-button "Z"
    :redo-button "Y"
    :font-dec-button "MINUS"
    :font-inc-button "EQUALS"

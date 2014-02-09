@@ -101,6 +101,8 @@
 
 (defn update-buttons!
   [editor ^TextEditorPane text-area]
+  (when (ui/config! editor :#save-button :enabled? (.isDirty text-area))
+    (update-tabs! (ui/get-selected-path)))
   (ui/config! editor :#undo-button :enabled? (.canUndo text-area))
   (ui/config! editor :#redo-button :enabled? (.canRedo text-area)))
 
@@ -372,8 +374,12 @@
           is-clojure? (contains? clojure-exts extension)
           completer (create-completer text-area extension)
           ; create the buttons with their actions attached
-          btn-group (s/horizontal-panel
-                      :items [(ui/button :id :undo-button
+          btn-group (ui/wrap-panel
+                      :items [(ui/button :id :save-button
+                                         :text (utils/get-string :save)
+                                         :focusable? false
+                                         :listen [:action save-file!])
+                              (ui/button :id :undo-button
                                          :text (utils/get-string :undo)
                                          :focusable? false
                                          :listen [:action undo-file!])
@@ -411,7 +417,8 @@
                        :center (RTextScrollPane. text-area))]
       ; create shortcuts
       (doto text-group
-        (shortcuts/create-mappings! {:undo-button undo-file!
+        (shortcuts/create-mappings! {:save-button save-file!
+                                     :undo-button undo-file!
                                      :redo-button redo-file!
                                      :font-dec-button decrease-font-size!
                                      :font-inc-button increase-font-size!
