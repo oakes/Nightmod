@@ -3,9 +3,9 @@
   
   :dependencies [[com.badlogicgames.gdx/gdx "0.9.9" :use-resources true]
                  [com.badlogicgames.gdx/gdx-backend-android "0.9.9"]
-                 [neko/neko "3.0.0"]
+                 [neko/neko "3.0.1"]
                  [org.clojure-android/clojure "1.5.1-jb" :use-resources true]
-                 [play-clj "0.2.0-SNAPSHOT"]]
+                 [play-clj "0.2.0"]]
   :repositories [["sonatype"
                   "https://oss.sonatype.org/content/repositories/snapshots/"]]
   :profiles {:dev {:dependencies [[android/tools.nrepl "0.2.0-bigstack"]

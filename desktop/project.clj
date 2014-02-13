@@ -13,7 +13,7 @@
                  [org.flatland/ordered "1.5.2"]
                  [org.lpetit/paredit.clj "0.19.3"]
                  [net.java.balloontip/balloontip "1.2.4.1"]
-                 [play-clj "0.2.0-SNAPSHOT"]
+                 [play-clj "0.2.0"]
                  [seesaw "1.4.4"]]
   :repositories [["sonatype"
                   "https://oss.sonatype.org/content/repositories/snapshots/"]]
