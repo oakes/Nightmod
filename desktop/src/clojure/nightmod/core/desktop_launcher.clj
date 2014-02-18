@@ -32,7 +32,7 @@
 (defn create-layered-pane
   "Returns the pane with the editors."
   []
-  (let [pane (s/card-panel :id :editor-pane :items [["" :default-card]])]
+  (let [pane (core/create-editor-pane)]
     (doto (JLayeredPane.)
       (.setPreferredSize (Dimension. editor-width window-height))
       (.addComponentListener (proxy [ComponentAdapter] []
