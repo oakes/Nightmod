@@ -7,7 +7,7 @@
                   :classifier "natives-desktop"]
                  [nightcode "0.3.0-SNAPSHOT"]
                  [org.clojure/clojure "1.5.1"]
-                 [play-clj "0.2.0"]
+                 [play-clj "0.2.1-SNAPSHOT"]
                  [seesaw "1.4.4"]]
   :repositories [["sonatype"
                   "https://oss.sonatype.org/content/repositories/snapshots/"]]
