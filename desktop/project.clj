@@ -5,7 +5,13 @@
                  [com.badlogicgames.gdx/gdx-backend-lwjgl "0.9.9"]
                  [com.badlogicgames.gdx/gdx-platform "0.9.9"
                   :classifier "natives-desktop"]
-                 [nightcode "0.3.0-SNAPSHOT"]
+                 [nightcode "0.3.0-SNAPSHOT"
+                  :exclusions [leiningen
+                               lein-ancient
+                               lein-cljsbuild
+                               lein-droid
+                               lein-fruit
+                               play-clj/lein-template]]
                  [org.clojure/clojure "1.5.1"]
                  [play-clj "0.2.1-SNAPSHOT"]
                  [seesaw "1.4.4"]]
