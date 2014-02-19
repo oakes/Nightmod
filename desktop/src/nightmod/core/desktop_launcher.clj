@@ -26,8 +26,8 @@
 (def ^:const window-height 768)
 (def ^:const editor-width 700)
 
-(def editor-controls [:save :undo :redo :font-dec :font-inc
-                      :doc :paredit :paredit-help])
+(def editor-widgets [:save :undo :redo :font-dec :font-inc
+                     :doc :paredit :paredit-help])
 
 (defn create-layered-pane
   "Returns the pane with the editors."
@@ -92,6 +92,6 @@
   (SubstanceLookAndFeel/setSkin (GraphiteSkin.))
   (s/invoke-later
     (s/show! (reset! ui/ui-root (create-window)))
-    (binding [editors/editor-controls editor-controls]
+    (binding [editors/editor-widgets editor-widgets]
       (comment editors/show-editor! "")))
   (Keyboard/enableRepeatEvents true))
