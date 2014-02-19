@@ -49,13 +49,6 @@
     (LwjglApplication. nightmod true canvas)
     canvas))
 
-(defn confirm-exit-app!
-  "Displays a dialog confirming whether the program should shut down."
-  []
-  (if (dialogs/show-shut-down-dialog! [])
-    (System/exit 0)
-    true))
-
 (defn create-window
   "Creates the main window."
   []
@@ -83,16 +76,14 @@
           ; page down
           34 (editors/move-tab-selection! 1)
           ; Q
-          81 (confirm-exit-app!)
+          81 (core/confirm-exit-app!)
           ; W
           ;87 (editors/close-selected-editor!)
           ; else
           false)))
     ; set various window properties
     core/enable-full-screen!
-    (.addWindowListener (proxy [WindowAdapter] []
-                          (windowClosing [e]
-                            (confirm-exit-app!))))))
+    core/add-window-listener!))
 
 (defn -main
   "Launches the main window."
