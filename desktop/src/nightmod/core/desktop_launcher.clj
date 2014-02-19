@@ -26,8 +26,8 @@
 (def ^:const window-height 768)
 (def ^:const editor-width 700)
 
-(def ^:dynamic editor-controls [:save :undo :redo :font-dec :font-inc
-                                :doc :paredit :paredit-help])
+(def editor-controls [:save :undo :redo :font-dec :font-inc
+                      :doc :paredit :paredit-help])
 
 (defn create-layered-pane
   "Returns the pane with the editors."
