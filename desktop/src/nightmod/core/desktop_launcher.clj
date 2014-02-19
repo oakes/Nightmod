@@ -1,12 +1,12 @@
 (ns nightmod.core.desktop-launcher
   (:require [clojure.java.io :as io]
             [nightmod.core :refer :all]
-            [nightcode.core :as core]
             [nightcode.editors :as editors]
             [nightcode.dialogs :as dialogs]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
             [nightcode.utils :as utils]
+            [nightcode.window :as window]
             [seesaw.core :as s]
             [seesaw.util :as s-util])
   (:import [java.awt BorderLayout Canvas Dimension Window]
@@ -32,7 +32,7 @@
 (defn create-layered-pane
   "Returns the pane with the editors."
   []
-  (let [pane (core/create-editor-pane)]
+  (let [pane (editors/create-pane)]
     (doto (JLayeredPane.)
       (.setPreferredSize (Dimension. editor-width window-height))
       (.addComponentListener (proxy [ComponentAdapter] []
@@ -76,22 +76,21 @@
           ; page down
           34 (editors/move-tab-selection! 1)
           ; Q
-          81 (core/confirm-exit-app!)
+          81 (window/confirm-exit-app!)
           ; W
           ;87 (editors/close-selected-editor!)
           ; else
           false)))
     ; set various window properties
-    core/enable-full-screen!
-    core/add-window-listener!))
+    window/enable-full-screen!
+    window/add-listener!))
 
 (defn -main
   "Launches the main window."
-  []
-  (s/native!)
-  (SubstanceLookAndFeel/setSkin (GraphiteSkin.))
+  [& args]
+  (window/set-theme! args)
   (s/invoke-later
     (s/show! (reset! ui/ui-root (create-window)))
-    (binding [editors/editor-widgets editor-widgets]
+    (binding [editors/*editor-widgets* editor-widgets]
       (comment editors/show-editor! "")))
   (Keyboard/enableRepeatEvents true))
