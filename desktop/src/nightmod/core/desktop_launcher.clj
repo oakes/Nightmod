@@ -27,7 +27,7 @@
 (def ^:const editor-width 700)
 
 (def editor-widgets [:save :undo :redo :font-dec :font-inc
-                     :doc :paredit :paredit-help])
+                     :doc :paredit :paredit-help :close])
 
 (defn create-layered-pane
   "Returns the pane with the editors."
@@ -78,7 +78,7 @@
           ; Q
           81 (window/confirm-exit-app!)
           ; W
-          ;87 (editors/close-selected-editor!)
+          87 (editors/close-selected-editor!)
           ; else
           false)))
     ; set various window properties
@@ -92,5 +92,5 @@
   (s/invoke-later
     (s/show! (reset! ui/ui-root (create-window)))
     (binding [editors/*editor-widgets* editor-widgets]
-      (comment editors/show-editor! "")))
+      (reset! ui/tree-selection "")))
   (Keyboard/enableRepeatEvents true))
