@@ -87,7 +87,7 @@
   [& args]
   (window/set-theme! args)
   (s/invoke-later
-    (s/show! (reset! ui/ui-root (create-window)))
+    (s/show! (reset! ui/root (create-window)))
     (binding [editors/*editor-widgets* editor-widgets]
       (reset! ui/tree-selection "")))
   (Keyboard/enableRepeatEvents true))
