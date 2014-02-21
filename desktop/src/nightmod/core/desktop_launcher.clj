@@ -13,9 +13,7 @@
            [java.awt.event ComponentAdapter WindowAdapter]
            [javax.swing JLayeredPane]
            [com.badlogic.gdx.backends.lwjgl LwjglApplication]
-           [org.lwjgl.input Keyboard]
-           [org.pushingpixels.substance.api SubstanceLookAndFeel]
-           [org.pushingpixels.substance.api.skin GraphiteSkin])
+           [org.lwjgl.input Keyboard])
   (:gen-class))
 
 ; allow s/select to work with Canvas
