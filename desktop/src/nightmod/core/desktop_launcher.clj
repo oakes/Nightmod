@@ -2,7 +2,6 @@
   (:require [clojure.java.io :as io]
             [nightmod.core :refer :all]
             [nightcode.editors :as editors]
-            [nightcode.dialogs :as dialogs]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
             [nightcode.utils :as utils]
