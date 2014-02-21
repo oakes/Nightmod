@@ -23,8 +23,8 @@
 (def ^:const window-height 768)
 (def ^:const editor-width 700)
 
-(def editor-widgets [:save :undo :redo :font-dec :font-inc
-                     :doc :paredit :paredit-help :close])
+(def widgets [:save :undo :redo :font-dec :font-inc
+              :doc :paredit :paredit-help :close])
 
 (defn create-layered-pane
   "Returns the pane with the editors."
@@ -88,6 +88,6 @@
   (window/set-theme! args)
   (s/invoke-later
     (s/show! (reset! ui/root (create-window)))
-    (binding [editors/*editor-widgets* editor-widgets]
+    (binding [editors/*widgets* widgets]
       (reset! ui/tree-selection "")))
   (Keyboard/enableRepeatEvents true))
