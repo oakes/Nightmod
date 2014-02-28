@@ -23,13 +23,33 @@
 (def ^:const window-height 768)
 (def ^:const editor-width 700)
 
-(def widgets [:save :undo :redo :font-dec :font-inc
-              :doc :paredit :paredit-help :close])
+(defn show-home!
+  [& _]
+  (reset! ui/tree-selection nil))
 
-(defn create-layered-pane
+(defn create-home-button
+  []
+  (s/button :id :home
+            :text (shortcuts/wrap-hint-text "&larr;")
+            :focusable? false
+            :listen [:action show-home!]))
+
+(defn select-file!
+  [path]
+  (binding [editors/*widgets* [(create-home-button)
+                               :save :undo :redo :font-dec :font-inc
+                               :doc :paredit :paredit-help :close]]
+    (reset! ui/tree-selection path)))
+
+(defn create-editor-pane
   "Returns the pane with the editors."
   []
-  (let [pane (editors/create-pane)]
+  (s/card-panel :id :editor-pane :items [["" :default-card]]))
+
+(defn create-layered-pane
+  "Returns the layered pane holding the editor pane."
+  []
+  (let [pane (create-editor-pane)]
     (doto (JLayeredPane.)
       (.setPreferredSize (Dimension. editor-width window-height))
       (.addComponentListener (proxy [ComponentAdapter] []
@@ -88,6 +108,5 @@
   (window/set-theme! args)
   (s/invoke-later
     (s/show! (reset! ui/root (create-window)))
-    (binding [editors/*widgets* widgets]
-      (reset! ui/tree-selection "")))
+    (select-file! "/etc/fstab"))
   (Keyboard/enableRepeatEvents true))
