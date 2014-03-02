@@ -1,6 +1,7 @@
 (ns nightmod.core.desktop-launcher
   (:require [clojure.java.io :as io]
             [nightmod.core :refer :all]
+            [nightmod.git :as git]
             [nightcode.editors :as editors]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
