@@ -27,7 +27,8 @@
 (defn create-editor-pane
   "Returns the pane with the editors."
   []
-  (s/card-panel :id :editor-pane :items [["" :default-card]]))
+  (s/card-panel :id :editor-pane
+                :items [[(overlay/create-home-card) :default-card]]))
 
 (defn create-layered-pane
   "Returns the layered pane holding the editor pane."
