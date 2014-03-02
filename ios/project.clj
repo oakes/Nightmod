@@ -2,8 +2,7 @@
   :description "FIXME: write description"
   :dependencies [[com.badlogicgames.gdx/gdx "0.9.9"]
                  [com.badlogicgames.gdx/gdx-backend-robovm "0.9.9"]
-                 [org.clojure/clojure "1.5.1"]
-                 [play-clj "0.2.1-SNAPSHOT"]]
+                 [org.clojure/clojure "1.5.1"]]
   :repositories [["sonatype"
                   "https://oss.sonatype.org/content/repositories/snapshots/"]]
   :source-paths ["src/clojure" "../desktop/src-common"]
