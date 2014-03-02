@@ -1,7 +1,7 @@
 (ns nightmod.core.desktop-launcher
-  (:require [clojure.java.io :as io]
-            [nightmod.core :refer :all]
+  (:require [nightmod.core :refer :all]
             [nightmod.git :as git]
+            [nightmod.core.overlay :as overlay]
             [nightcode.editors :as editors]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
@@ -23,24 +23,6 @@
 (def ^:const window-width 1200)
 (def ^:const window-height 768)
 (def ^:const editor-width 700)
-
-(defn show-home!
-  [& _]
-  (reset! ui/tree-selection nil))
-
-(defn create-home-button
-  []
-  (s/button :id :home
-            :text (shortcuts/wrap-hint-text "&larr;")
-            :focusable? false
-            :listen [:action show-home!]))
-
-(defn select-file!
-  [path]
-  (binding [editors/*widgets* [(create-home-button)
-                               :save :undo :redo :font-dec :font-inc
-                               :doc :paredit :paredit-help :close]]
-    (reset! ui/tree-selection path)))
 
 (defn create-editor-pane
   "Returns the pane with the editors."
@@ -109,5 +91,5 @@
   (window/set-theme! args)
   (s/invoke-later
     (s/show! (reset! ui/root (create-window)))
-    (select-file! "/etc/fstab"))
+    (overlay/select-file! "/etc/fstab"))
   (Keyboard/enableRepeatEvents true))
