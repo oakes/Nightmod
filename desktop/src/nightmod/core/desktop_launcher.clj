@@ -67,7 +67,7 @@
     (-> .getGlassPane (doto
                         (.setLayout (BorderLayout.))
                         (.add (create-layered-pane) BorderLayout/EAST)
-                        (.setVisible true)))
+                        (.setVisible false)))
     ; listen for keys while modifier is down
     (shortcuts/listen-for-shortcuts!
       (fn [key-code]
@@ -91,6 +91,5 @@
   [& args]
   (window/set-theme! args)
   (s/invoke-later
-    (s/show! (reset! ui/root (create-window)))
-    (overlay/select-file! "/etc/fstab"))
+    (s/show! (reset! ui/root (create-window))))
   (Keyboard/enableRepeatEvents true))
