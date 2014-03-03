@@ -1,61 +1,50 @@
 (ns nightmod.core
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
+            [nightmod.utils :as u]
             [play-clj.core :refer :all]
-            [play-clj.ui :refer :all])
-  (:import [java.text SimpleDateFormat]))
+            [play-clj.ui :refer :all]))
+
+(declare nightmod main-screen)
 
 (def ^:const templates ["arcade" "platformer"
                         "orthogonal-rpg" "isometric-rpg"
                         "barebones-2d" "barebones-3d"])
 
-(defn get-data-dir
-  []
-  (let [home-dir (System/getProperty "user.home")
-        app-name "Nightmod"
-        app-name-lower (clojure.string/lower-case app-name)
-        osx-dir (io/file home-dir "Library" "Application Support" app-name)
-        win-dir (io/file home-dir "AppData" "Roaming" app-name)]
-    (.getCanonicalPath
-      (cond
-        (.exists (.getParentFile osx-dir)) osx-dir
-        (.exists (.getParentFile win-dir)) win-dir
-        :else (if-let [config-dir (System/getenv "XDG_CONFIG_HOME")]
-                (io/file config-dir app-name-lower)
-                (io/file home-dir ".config" app-name-lower))))))
-
-(defn format-date
-  [unix-time]
-  (.format (SimpleDateFormat. "yyyy.MM.dd HH:mm:ss") unix-time))
-
 (defn read-title
   [f]
   [(.getCanonicalPath f)
-   (or (-> (io/file f ".properties")
+   (or (-> (io/file f u/properties-file)
             slurp
             edn/read-string
             :title
             (try (catch Exception _)))
        (-> (.getName f)
            Long/parseLong
-           format-date
+           u/format-date
            (try (catch Exception _)))
        "Invalid")])
 
-(defn new-project!
-  [template]
-  (println "New Project:" template))
-
 (defn load-project!
   [path]
+  (reset! u/project-dir path)
   (println "Load Project:" path))
+
+(defn new-project!
+  [template]
+  (-> (io/file @u/main-dir u/projects-dir (str (System/currentTimeMillis)))
+      (doto .mkdir)
+      .getCanonicalPath
+      load-project!))
 
 (defscreen main-screen
   :on-show
   (fn [screen entities]
     (update! screen :renderer (stage) :camera (orthographic))
+    (when-not @u/main-dir
+      (reset! u/main-dir (u/get-data-dir)))
     (let [ui-skin (skin "uiskin.json")
-          projects-dir (doto (io/file (get-data-dir) "projects") .mkdirs)
+          projects-dir (doto (io/file @u/main-dir u/projects-dir) .mkdirs)
           create-button (fn [[k v]]
                           (text-button v ui-skin :set-name k))
           template-names ["Arcade" "Platformer"
