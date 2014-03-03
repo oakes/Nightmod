@@ -32,10 +32,12 @@
 
 (defn new-project!
   [template]
-  (-> (io/file @u/main-dir u/projects-dir (str (System/currentTimeMillis)))
-      (doto .mkdir)
-      .getCanonicalPath
-      load-project!))
+  (->> (System/currentTimeMillis)
+       str
+       (io/file @u/main-dir u/projects-dir)
+       .getCanonicalPath
+       (u/apply-template template)
+       load-project!))
 
 (defscreen main-screen
   :on-show
@@ -77,7 +79,8 @@
     (when-let [n (-> screen :actor .getName)]
       (if (contains? (set templates) n)
         (new-project! n)
-        (load-project! n)))))
+        (load-project! n)))
+    nil))
 
 (defgame nightmod
   :on-create

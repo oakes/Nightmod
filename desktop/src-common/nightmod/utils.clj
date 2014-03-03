@@ -26,3 +26,10 @@
 (defn format-date
   [unix-time]
   (.format (SimpleDateFormat. "yyyy.MM.dd HH:mm:ss") unix-time))
+
+(defn apply-template
+  [template path]
+  (.mkdir (io/file path))
+  (doseq [f (-> (io/resource template) io/file .listFiles)]
+    (io/copy f (io/file path (.getName f))))
+  path)
