@@ -1,11 +1,12 @@
 (ns nightmod.core.desktop-launcher
   (:require [nightmod.core :refer :all]
             [nightmod.git :as git]
+            [nightmod.utils :as utils]
             [nightmod.core.overlay :as overlay]
             [nightcode.editors :as editors]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
-            [nightcode.utils :as utils]
+            [nightcode.utils :as code-utils]
             [nightcode.window :as window]
             [seesaw.core :as s]
             [seesaw.util :as s-util])
@@ -45,17 +46,29 @@
 
 (defn create-canvas-pane
   "Returns the pane with the canvas."
-  []
+  [game-object]
   (let [canvas (Canvas.)]
-    (LwjglApplication. nightmod true canvas)
+    (LwjglApplication. game-object true canvas)
     canvas))
+
+(defn set-game!
+  "Creates a canvas with `game-object` and displays it."
+  [root game-object]
+  (->> (create-canvas-pane game-object)
+       (s/border-panel :center)
+       (.setContentPane root)))
+
+(defn load-game!
+  "Loads game into a new canvas and runs it in a sandbox."
+  [path]
+  (println "Load game:" path))
 
 (defn create-window
   "Creates the main window."
   []
-  (doto (s/frame :title (str (utils/get-string :app_name)
+  (doto (s/frame :title (str (code-utils/get-string :app_name)
                              " "
-                             (if-let [p (utils/get-project
+                             (if-let [p (code-utils/get-project
                                           "nightmod.core.desktop_launcher")]
                                (nth p 2)
                                "beta"))
@@ -63,7 +76,7 @@
                  :height window-height
                  :on-close :nothing)
     ; add canvas and editor pane
-    (-> .getContentPane (.add (create-canvas-pane)))
+    (set-game! nightmod)
     (-> .getGlassPane (doto
                         (.setLayout (BorderLayout.))
                         (.add (create-layered-pane) BorderLayout/EAST)
@@ -90,6 +103,12 @@
   "Launches the main window."
   [& args]
   (window/set-theme! args)
+  (add-watch utils/project-dir
+             :load-game
+             (fn [_ _ _ path]
+               (if path
+                 (load-game! path)
+                 (set-game! nightmod))))
   (s/invoke-later
     (s/show! (reset! ui/root (create-window))))
   (Keyboard/enableRepeatEvents true))

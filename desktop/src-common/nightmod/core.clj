@@ -27,8 +27,7 @@
 
 (defn load-project!
   [path]
-  (reset! u/project-dir path)
-  (println "Load Project:" path))
+  (reset! u/project-dir path))
 
 (defn new-project!
   [template]

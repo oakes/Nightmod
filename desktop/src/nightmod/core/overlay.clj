@@ -3,7 +3,7 @@
             [nightcode.editors :as editors]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
-            [nightcode.utils :as utils]
+            [nightcode.utils :as code-utils]
             [seesaw.core :as s]))
 
 (defn new-file!
@@ -13,7 +13,7 @@
 (defn create-home-widgets
   []
   [(ui/button :id :new-file
-              :text (utils/get-string :new_file)
+              :text (code-utils/get-string :new_file)
               :listen [:action new-file!]
               :focusable? false)])
 
