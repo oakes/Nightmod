@@ -11,8 +11,3 @@
   (fn [screen entities]
     (clear!)
     (render! screen entities)))
-
-(defgame {{app-name}}
-  :on-create
-  (fn [this]
-    (set-screen! this main-screen)))
