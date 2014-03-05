@@ -56,6 +56,7 @@
 (defn load-game!
   "Loads game into the canvas and runs it in a sandbox."
   [path]
+  (remove-ns 'nightmod.game)
   (binding [*ns* (create-ns 'nightmod.game)]
     (clojure.core/refer 'clojure.core)
     (require '[nightmod.public :refer :all]
