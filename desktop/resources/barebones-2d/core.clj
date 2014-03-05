@@ -12,7 +12,4 @@
     (clear!)
     (render! screen entities)))
 
-(defgame nightmod
-  :on-create
-  (fn [this]
-    (set-screen! this main-screen)))
+(set-screen! this main-screen)

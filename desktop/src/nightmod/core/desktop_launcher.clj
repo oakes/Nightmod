@@ -1,6 +1,8 @@
 (ns nightmod.core.desktop-launcher
-  (:require [nightmod.core :refer :all]
+  (:require [cemerick.pomegranate :as pom]
+            [clojure.java.io :as io]
             [nightmod.git :as git]
+            [nightmod.public :as public]
             [nightmod.utils :as utils]
             [nightmod.core.overlay :as overlay]
             [nightcode.editors :as editors]
@@ -46,22 +48,21 @@
 
 (defn create-canvas-pane
   "Returns the pane with the canvas."
-  [game-object]
+  []
   (let [canvas (Canvas.)]
-    (LwjglApplication. game-object true canvas)
+    (LwjglApplication. public/nightmod true canvas)
     canvas))
 
-(defn set-game!
-  "Creates a canvas with `game-object` and displays it."
-  [root game-object]
-  (->> (create-canvas-pane game-object)
-       (s/border-panel :center)
-       (.setContentPane root)))
-
 (defn load-game!
-  "Loads game into a new canvas and runs it in a sandbox."
+  "Loads game into the canvas and runs it in a sandbox."
   [path]
-  (println "Load game:" path))
+  (binding [*ns* (create-ns 'nightmod.game)]
+    (clojure.core/refer 'clojure.core)
+    (require '[nightmod.public :refer :all]
+             '[play-clj.core :refer :all]
+             '[play-clj.ui :refer :all])
+    (pom/add-classpath path)
+    (load-file (.getCanonicalPath (io/file path "core.clj")))))
 
 (defn create-window
   "Creates the main window."
@@ -76,7 +77,8 @@
                  :height window-height
                  :on-close :nothing)
     ; add canvas and editor pane
-    (set-game! nightmod)
+    (-> .getContentPane (doto
+                          (.add (s/border-panel :center (create-canvas-pane)))))
     (-> .getGlassPane (doto
                         (.setLayout (BorderLayout.))
                         (.add (create-layered-pane) BorderLayout/EAST)
@@ -106,9 +108,7 @@
   (add-watch utils/project-dir
              :load-game
              (fn [_ _ _ path]
-               (if path
-                 (load-game! path)
-                 (set-game! nightmod))))
+               (load-game! path)))
   (s/invoke-later
     (s/show! (reset! ui/root (create-window))))
   (Keyboard/enableRepeatEvents true))

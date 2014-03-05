@@ -5,8 +5,6 @@
             [play-clj.core :refer :all]
             [play-clj.ui :refer :all]))
 
-(declare nightmod main-screen)
-
 (def ^:const templates ["arcade" "platformer"
                         "orthogonal-rpg" "isometric-rpg"
                         "barebones-2d" "barebones-3d"])
@@ -80,8 +78,3 @@
         (new-project! n)
         (load-project! n)))
     nil))
-
-(defgame nightmod
-  :on-create
-  (fn [this]
-    (set-screen! this main-screen)))

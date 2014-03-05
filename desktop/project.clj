@@ -5,6 +5,7 @@
                  [com.badlogicgames.gdx/gdx-backend-lwjgl "0.9.9"]
                  [com.badlogicgames.gdx/gdx-platform "0.9.9"
                   :classifier "natives-desktop"]
+                 [com.cemerick/pomegranate "0.3.0"]
                  [nightcode "0.3.0"
                   :exclusions [leiningen
                                lein-ancient
