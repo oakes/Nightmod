@@ -61,7 +61,12 @@
     (clojure.core/refer 'clojure.core)
     (require '[nightmod.public :refer :all]
              '[play-clj.core :refer :all]
-             '[play-clj.ui :refer :all])
+             '[play-clj.g2d :refer :all]
+             '[play-clj.g2d-physics :refer :all]
+             '[play-clj.g3d :refer :all]
+             '[play-clj.math :refer :all]
+             '[play-clj.ui :refer :all]
+             '[play-clj.utils :refer :all])
     (pom/add-classpath path)
     (load-file (.getCanonicalPath (io/file path "core.clj")))))
 
