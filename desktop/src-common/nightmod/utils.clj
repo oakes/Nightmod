@@ -29,7 +29,7 @@
 
 (defn get-game-dir
   [project-dir]
-  (.getCanonicalPath (io/file (get-content-dir project-dir) "nightmod")))
+  (.getCanonicalPath (io/file (get-content-dir project-dir) "nightmod" "game")))
 
 (defn format-date
   [unix-time]
