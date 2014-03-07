@@ -1,7 +1,3 @@
-(ns nightmod.core
-  (:require [play-clj.core :refer :all]
-            [play-clj.ui :refer :all]))
-
 (defscreen main-screen
   :on-show
   (fn [screen entities]
