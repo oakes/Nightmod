@@ -33,7 +33,7 @@
        str
        (io/file @u/main-dir u/projects-dir)
        .getCanonicalPath
-       (u/apply-template template)
+       (u/apply-template! template)
        load-project!))
 
 (defscreen main-screen
