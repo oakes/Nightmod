@@ -23,13 +23,24 @@
                 (io/file config-dir app-name-lower)
                 (io/file home-dir ".config" app-name-lower))))))
 
+(defn get-content-dir
+  [project-dir]
+  (.getCanonicalPath (io/file project-dir "content")))
+
+(defn get-game-dir
+  [project-dir]
+  (.getCanonicalPath (io/file (get-content-dir project-dir) "nightmod")))
+
 (defn format-date
   [unix-time]
   (.format (SimpleDateFormat. "yyyy.MM.dd HH:mm:ss") unix-time))
 
-(defn apply-template!
-  [template path]
-  (.mkdir (io/file path))
-  (doseq [f (-> (io/resource template) io/file .listFiles)]
-    (io/copy f (io/file path (.getName f))))
-  path)
+(defn new-project!
+  [template]
+  (let [project-name (str (System/currentTimeMillis))
+        project-file (io/file @main-dir projects-dir project-name)
+        game-dir (get-game-dir project-file)]
+    (.mkdirs (io/file game-dir))
+    (doseq [f (-> (io/resource template) io/file .listFiles)]
+      (io/copy f (io/file game-dir (.getName f))))
+    (.getCanonicalPath project-file)))

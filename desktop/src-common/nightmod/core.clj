@@ -29,12 +29,7 @@
 
 (defn new-project!
   [template]
-  (->> (System/currentTimeMillis)
-       str
-       (io/file @u/main-dir u/projects-dir)
-       .getCanonicalPath
-       (u/apply-template! template)
-       load-project!))
+  (load-project! (u/new-project! template)))
 
 (defscreen main-screen
   :on-show
@@ -43,7 +38,6 @@
     (when-not @u/main-dir
       (reset! u/main-dir (u/get-data-dir)))
     (let [ui-skin (skin "uiskin.json")
-          projects-dir (doto (io/file @u/main-dir u/projects-dir) .mkdirs)
           create-button (fn [[k v]]
                           (text-button v ui-skin :set-name k))
           template-names ["Arcade" "Platformer"
@@ -53,7 +47,8 @@
                            [(nth templates i)
                             (nth template-names i)])
                          (map create-button))
-          saved-games (->> (.listFiles projects-dir)
+          saved-games (->> (io/file @u/main-dir u/projects-dir)
+                           .listFiles
                            (filter #(.isDirectory %))
                            (map read-title)
                            (map create-button))]

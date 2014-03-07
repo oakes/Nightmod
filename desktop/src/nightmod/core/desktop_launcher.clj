@@ -67,8 +67,11 @@
              '[play-clj.math :refer :all]
              '[play-clj.ui :refer :all]
              '[play-clj.utils :refer :all])
-    (pom/add-classpath path)
-    (load-file (.getCanonicalPath (io/file path "core.clj")))))
+    (pom/add-classpath (utils/get-content-dir path))
+    (-> (utils/get-game-dir path)
+        (io/file "core.clj")
+        .getCanonicalPath
+        load-file)))
 
 (defn create-window
   "Creates the main window."
