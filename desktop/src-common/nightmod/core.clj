@@ -78,3 +78,26 @@
         (new-project! n)
         (load-project! n)))
     nil))
+
+(defscreen overlay-screen
+  :on-show
+  (fn [screen entities]
+    (update! screen :camera (orthographic) :renderer (stage))
+    (assoc (label "0" (color :white))
+           :id :fps
+           :x 5))
+  :on-render
+  (fn [screen entities]
+    (->> (for [entity entities]
+           (case (:id entity)
+             :fps (doto entity (label! :set-text (str (game :fps))))
+             entity))
+         (render! screen)))
+  :on-resize
+  (fn [screen entities]
+    (height! screen 300)))
+
+(defgame nightmod
+  :on-create
+  (fn [this]
+    (set-screen! this main-screen)))

@@ -2,7 +2,6 @@
   (:require [nightmod.core :refer :all]
             [play-clj.core :refer :all]))
 
-(defgame nightmod
-  :on-create
-  (fn [this]
-    (set-screen! this main-screen)))
+(defn set-game-screen!
+  [& screens]
+  (apply set-screen! nightmod (conj (vec screens) overlay-screen)))

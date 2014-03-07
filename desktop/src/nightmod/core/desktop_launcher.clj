@@ -2,7 +2,7 @@
   (:require [cemerick.pomegranate :as pom]
             [clojure.java.io :as io]
             [nightmod.git :as git]
-            [nightmod.public :as public]
+            [nightmod.core :as core]
             [nightmod.utils :as utils]
             [nightmod.core.overlay :as overlay]
             [nightcode.editors :as editors]
@@ -50,7 +50,7 @@
   "Returns the pane with the canvas."
   []
   (let [canvas (Canvas.)]
-    (LwjglApplication. public/nightmod true canvas)
+    (LwjglApplication. core/nightmod true canvas)
     canvas))
 
 (defn load-game!

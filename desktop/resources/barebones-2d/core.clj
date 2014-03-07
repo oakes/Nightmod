@@ -12,4 +12,4 @@
     (clear!)
     (render! screen entities)))
 
-(set-screen! this main-screen)
+(set-game-screen! main-screen)
