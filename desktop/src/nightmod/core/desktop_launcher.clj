@@ -68,9 +68,8 @@
              '[play-clj.math :refer :all]
              '[play-clj.ui :refer :all]
              '[play-clj.utils :refer :all])
-    (pom/add-classpath (utils/get-content-dir path))
-    (-> (utils/get-game-dir path)
-        (io/file "core.clj")
+    (pom/add-classpath path)
+    (-> (io/file path "core.clj")
         .getCanonicalPath
         load-file)))
 
