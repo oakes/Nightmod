@@ -4,4 +4,6 @@
 
 (defn set-game-screen!
   [& screens]
-  (apply set-screen! nightmod (conj (vec screens) overlay-screen)))
+  (->> (apply set-screen! nightmod (conj (vec screens) overlay-screen))
+       (fn [])
+       (app! :post-runnable)))

@@ -4,6 +4,7 @@
             [nightmod.git :as git]
             [nightmod.core :as core]
             [nightmod.utils :as utils]
+            [nightmod.core.sandbox :as sandbox]
             [nightmod.core.overlay :as overlay]
             [nightcode.editors :as editors]
             [nightcode.shortcuts :as shortcuts]
@@ -56,22 +57,10 @@
 (defn load-game!
   "Loads game into the canvas and runs it in a sandbox."
   [path]
-  (binding [*ns* (let [game-ns 'nightmod.game.core]
-                   (remove-ns game-ns)
-                   (create-ns game-ns))]
-    (clojure.core/refer 'clojure.core)
-    (require '[nightmod.public :refer :all]
-             '[play-clj.core :refer :all]
-             '[play-clj.g2d :refer :all]
-             '[play-clj.g2d-physics :refer :all]
-             '[play-clj.g3d :refer :all]
-             '[play-clj.math :refer :all]
-             '[play-clj.ui :refer :all]
-             '[play-clj.utils :refer :all])
-    (pom/add-classpath path)
-    (-> (io/file path "core.clj")
-        .getCanonicalPath
-        load-file)))
+  (pom/add-classpath path)
+  (-> (io/file path "core.clj")
+      .getCanonicalPath
+      sandbox/run!))
 
 (defn create-window
   "Creates the main window."
@@ -113,6 +102,7 @@
 (defn -main
   "Launches the main window."
   [& args]
+  (sandbox/set-policy!)
   (window/set-theme! args)
   (add-watch utils/project-dir
              :load-game

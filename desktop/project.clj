@@ -1,7 +1,8 @@
 (defproject nightmod "0.0.1-SNAPSHOT"
   :description "FIXME: write description"
   
-  :dependencies [[com.badlogicgames.gdx/gdx "0.9.9"]
+  :dependencies [[clojail "1.0.6"]
+                 [com.badlogicgames.gdx/gdx "0.9.9"]
                  [com.badlogicgames.gdx/gdx-backend-lwjgl "0.9.9"]
                  [com.badlogicgames.gdx/gdx-platform "0.9.9"
                   :classifier "natives-desktop"]
