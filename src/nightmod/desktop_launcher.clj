@@ -1,11 +1,11 @@
-(ns nightmod.core.desktop-launcher
+(ns nightmod.desktop-launcher
   (:require [cemerick.pomegranate :as pom]
             [clojure.java.io :as io]
             [nightmod.git :as git]
             [nightmod.core :as core]
             [nightmod.utils :as utils]
-            [nightmod.core.sandbox :as sandbox]
-            [nightmod.core.overlay :as overlay]
+            [nightmod.sandbox :as sandbox]
+            [nightmod.overlay :as overlay]
             [nightcode.editors :as editors]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
@@ -68,7 +68,7 @@
   (doto (s/frame :title (str (code-utils/get-string :app_name)
                              " "
                              (if-let [p (code-utils/get-project
-                                          "nightmod.core.desktop_launcher")]
+                                          "nightmod.desktop_launcher")]
                                (nth p 2)
                                "beta"))
                  :width window-width

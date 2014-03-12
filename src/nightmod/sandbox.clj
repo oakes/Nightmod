@@ -1,4 +1,4 @@
-(ns nightmod.core.sandbox
+(ns nightmod.sandbox
   (:require [clojail.core :as jail]
             [clojail.testers :as jail-test]
             [clojure.java.io :as io]))

@@ -1,4 +1,4 @@
-(ns nightmod.core.overlay
+(ns nightmod.overlay
   (:require [nightcode.dialogs :as dialogs]
             [nightcode.editors :as editors]
             [nightcode.shortcuts :as shortcuts]
