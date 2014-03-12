@@ -65,8 +65,7 @@
 (defn create-window
   "Creates the main window."
   []
-  (doto (s/frame :title (str (code-utils/get-string :app_name)
-                             " "
+  (doto (s/frame :title (str "Nightmod "
                              (if-let [p (code-utils/get-project
                                           "nightmod.desktop_launcher")]
                                (nth p 2)
