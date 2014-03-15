@@ -1,7 +1,7 @@
 (ns nightmod.public
   (:require [clojail.core :as jail]
             [clojure.java.io :as io]
-            [nightmod.core :refer :all]
+            [nightmod.screens :refer :all]
             [play-clj.core :refer :all]))
 
 (defn set-game-screen!

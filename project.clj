@@ -22,5 +22,5 @@
                   "https://oss.sonatype.org/content/repositories/snapshots/"]]
   
   :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
-  :aot [nightmod.desktop-launcher]
-  :main nightmod.desktop-launcher)
+  :aot [nightmod.core]
+  :main nightmod.core)

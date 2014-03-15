@@ -1,98 +1,111 @@
 (ns nightmod.core
-  (:require [clojure.edn :as edn]
+  (:require [cemerick.pomegranate :as pom]
             [clojure.java.io :as io]
-            [nightmod.utils :as u]
-            [play-clj.core :refer :all]
-            [play-clj.ui :refer :all]))
+            [nightmod.git :as git]
+            [nightmod.screens :as screens]
+            [nightmod.utils :as utils]
+            [nightmod.sandbox :as sandbox]
+            [nightmod.overlay :as overlay]
+            [nightcode.editors :as editors]
+            [nightcode.shortcuts :as shortcuts]
+            [nightcode.ui :as ui]
+            [nightcode.utils :as nc-utils]
+            [nightcode.window :as window]
+            [seesaw.core :as s]
+            [seesaw.util :as s-util])
+  (:import [java.awt BorderLayout Canvas Dimension Window]
+           [java.awt.event ComponentAdapter WindowAdapter]
+           [javax.swing JLayeredPane]
+           [com.badlogic.gdx.backends.lwjgl LwjglApplication]
+           [org.lwjgl.input Keyboard])
+  (:gen-class))
 
-(def ^:const templates ["arcade" "platformer"
-                        "orthogonal-rpg" "isometric-rpg"
-                        "barebones-2d" "barebones-3d"])
+; allow s/select to work with Canvas
+(extend-protocol s-util/Children
+  java.awt.Component (children [this] nil))
 
-(defn read-title
-  [f]
-  [(.getCanonicalPath f)
-   (or (-> (io/file f u/properties-file)
-            slurp
-            edn/read-string
-            :title
-            (try (catch Exception _)))
-       (-> (.getName f)
-           Long/parseLong
-           u/format-date
-           (try (catch Exception _)))
-       "Invalid")])
+(def ^:const window-width 1200)
+(def ^:const window-height 768)
+(def ^:const editor-width 700)
 
-(defn load-project!
+(defn create-editor-pane
+  "Returns the pane with the editors."
+  []
+  (s/card-panel :id :editor-pane
+                :items [[(overlay/create-home-card) :default-card]]))
+
+(defn create-layered-pane
+  "Returns the layered pane holding the editor pane."
+  []
+  (let [pane (create-editor-pane)]
+    (doto (JLayeredPane.)
+      (.setPreferredSize (Dimension. editor-width window-height))
+      (.addComponentListener (proxy [ComponentAdapter] []
+                               (componentResized [e]
+                                 (->> (.getComponent e)
+                                      .getHeight
+                                      (.setBounds pane 0 0 editor-width)))))
+      (.add pane))))
+
+(defn create-canvas-pane
+  "Returns the pane with the canvas."
+  []
+  (let [canvas (Canvas.)]
+    (LwjglApplication. screens/nightmod true canvas)
+    canvas))
+
+(defn load-game!
+  "Loads game into the canvas and runs it in a sandbox."
   [path]
-  (reset! u/project-dir path))
+  (pom/add-classpath path)
+  (-> (io/file path "core.clj")
+      .getCanonicalPath
+      sandbox/run!))
 
-(defn new-project!
-  [template]
-  (load-project! (u/new-project! template)))
+(defn create-window
+  "Creates the main window."
+  []
+  (doto (s/frame :title (str "Nightmod "
+                             (if-let [p (nc-utils/get-project "nightmod.core")]
+                               (nth p 2)
+                               "beta"))
+                 :width window-width
+                 :height window-height
+                 :on-close :nothing)
+    ; add canvas and editor pane
+    (-> .getContentPane (doto
+                          (.add (s/border-panel :center (create-canvas-pane)))))
+    (-> .getGlassPane (doto
+                        (.setLayout (BorderLayout.))
+                        (.add (create-layered-pane) BorderLayout/EAST)
+                        (.setVisible false)))
+    ; listen for keys while modifier is down
+    (shortcuts/listen-for-shortcuts!
+      (fn [key-code]
+        (case key-code
+          ; page up
+          33 (editors/move-tab-selection! -1)
+          ; page down
+          34 (editors/move-tab-selection! 1)
+          ; Q
+          81 (window/confirm-exit-app!)
+          ; W
+          87 (editors/close-selected-editor!)
+          ; else
+          false)))
+    ; set various window properties
+    window/enable-full-screen!
+    window/add-listener!))
 
-(defscreen main-screen
-  :on-show
-  (fn [screen entities]
-    (update! screen :renderer (stage) :camera (orthographic))
-    (when-not @u/main-dir
-      (reset! u/main-dir (u/get-data-dir)))
-    (let [ui-skin (skin "uiskin.json")
-          create-button (fn [[k v]]
-                          (text-button v ui-skin :set-name k))
-          template-names ["Arcade" "Platformer"
-                          "Orthogonal RPG" "Isometric RPG"
-                          "Barebones 2D" "Barebones 3D"]
-          new-games (->> (for [i (range (count templates))]
-                           [(nth templates i)
-                            (nth template-names i)])
-                         (map create-button))
-          saved-games (->> (io/file @u/main-dir u/projects-dir)
-                           .listFiles
-                           (filter #(.isDirectory %))
-                           (map read-title)
-                           (map create-button))]
-      (-> (cons (label "New Game:" ui-skin) new-games)
-          (concat (when (seq saved-games)
-                    (cons (label "Load Game:" ui-skin) saved-games)))
-          vertical
-          (scroll-pane (style :scroll-pane nil nil nil nil nil))
-          list
-          (table :align (align :center) :set-fill-parent true))))
-  :on-render
-  (fn [screen entities]
-    (clear! 0 0 0 0)
-    (render! screen entities))
-  :on-resize
-  (fn [screen entities]
-    (height! screen 400))
-  :on-ui-changed
-  (fn [screen entities]
-    (when-let [n (-> screen :actor .getName)]
-      (if (contains? (set templates) n)
-        (new-project! n)
-        (load-project! n)))
-    nil))
-
-(defscreen overlay-screen
-  :on-show
-  (fn [screen entities]
-    (update! screen :camera (orthographic) :renderer (stage))
-    (assoc (label "0" (color :white))
-           :id :fps
-           :x 5))
-  :on-render
-  (fn [screen entities]
-    (->> (for [entity entities]
-           (case (:id entity)
-             :fps (doto entity (label! :set-text (str (game :fps))))
-             entity))
-         (render! screen)))
-  :on-resize
-  (fn [screen entities]
-    (height! screen 300)))
-
-(defgame nightmod
-  :on-create
-  (fn [this]
-    (set-screen! this main-screen)))
+(defn -main
+  "Launches the main window."
+  [& args]
+  (sandbox/set-policy!)
+  (window/set-theme! args)
+  (add-watch utils/project-dir
+             :load-game
+             (fn [_ _ _ path]
+               (load-game! path)))
+  (s/invoke-later
+    (s/show! (reset! ui/root (create-window))))
+  (Keyboard/enableRepeatEvents true))
