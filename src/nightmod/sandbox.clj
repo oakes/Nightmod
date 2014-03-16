@@ -12,7 +12,6 @@
    (jail-test/blacklist-packages
      ["java.lang.reflect"
       "java.security"
-      "java.util.concurrent"
       "java.awt"])
    (jail-test/blacklist-symbols
     '#{alter-var-root eval catch 
