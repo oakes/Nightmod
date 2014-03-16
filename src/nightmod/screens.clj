@@ -100,7 +100,7 @@
                     (label! :set-text (str (game :fps)))
                     (label! :pack))
              :error (doto e
-                      (label! :set-text (or (some-> @u/error .getMessage) ""))
+                      (label! :set-text (or (some-> @u/error .toString) ""))
                       (label! :pack))
              e))
          (render! screen)))
@@ -121,4 +121,6 @@
            :show-error
            (fn [_ _ _ e]
              (when e
-               (set-screen! nightmod blank-screen overlay-screen))))
+               (->> (set-screen! nightmod blank-screen overlay-screen)
+                    (fn [])
+                    (app! :post-runnable)))))
