@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [nightmod.git :as git]
             [nightmod.screens :as screens]
-            [nightmod.utils :as utils]
+            [nightmod.utils :as u]
             [nightmod.sandbox :as sandbox]
             [nightmod.overlay :as overlay]
             [nightcode.editors :as editors]
@@ -102,10 +102,8 @@
   [& args]
   (sandbox/set-policy!)
   (window/set-theme! args)
-  (add-watch utils/project-dir
-             :load-game
-             (fn [_ _ _ path]
-               (load-game! path)))
+  (add-watch u/project-dir :load-game (fn [_ _ _ path]
+                                        (load-game! path)))
   (s/invoke-later
     (s/show! (reset! ui/root (create-window))))
   (Keyboard/enableRepeatEvents true))

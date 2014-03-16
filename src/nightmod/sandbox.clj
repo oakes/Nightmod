@@ -1,7 +1,8 @@
 (ns nightmod.sandbox
   (:require [clojail.core :as jail]
             [clojail.testers :as jail-test]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [nightmod.utils :as u]))
 
 (def tester
   [(jail-test/blacklist-objects
@@ -41,8 +42,8 @@
 
 (defn run!
   [path]
-  (->> path
-       slurp
-       (format "(do %s\n)")
-       jail/safe-read
-       sb))
+  (reset! u/error nil)
+  (-> (format "(do %s\n)" (slurp path))
+      jail/safe-read
+      sb
+      (try (catch Exception e (reset! u/error e)))))

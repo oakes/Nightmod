@@ -5,6 +5,8 @@
             [play-clj.core :refer :all]
             [play-clj.ui :refer :all]))
 
+(def ^:const screen-height 350)
+(def ^:const line-height 20)
 (def ^:const templates ["arcade" "platformer"
                         "orthogonal-rpg" "isometric-rpg"
                         "barebones-2d" "barebones-3d"])
@@ -61,11 +63,11 @@
           (table :align (align :center) :set-fill-parent true))))
   :on-render
   (fn [screen entities]
-    (clear! 0 0 0 0)
+    (clear!)
     (render! screen entities))
   :on-resize
   (fn [screen entities]
-    (height! screen 400))
+    (height! screen screen-height))
   :on-ui-changed
   (fn [screen entities]
     (when-let [n (-> screen :actor .getName)]
@@ -74,25 +76,49 @@
         (load-project! n)))
     nil))
 
+(defscreen blank-screen
+  :on-render
+  (fn [screen entities]
+    (clear!)))
+
 (defscreen overlay-screen
   :on-show
   (fn [screen entities]
     (update! screen :camera (orthographic) :renderer (stage))
-    (assoc (label "0" (color :white))
-           :id :fps
-           :x 5))
+    [(assoc (label "" (color :white))
+            :id :fps
+            :x 5
+            :y (- screen-height line-height))
+     (assoc (label "" (color :white) :set-wrap true)
+            :id :error
+            :x 5)])
   :on-render
   (fn [screen entities]
-    (->> (for [entity entities]
-           (case (:id entity)
-             :fps (doto entity (label! :set-text (str (game :fps))))
-             entity))
+    (->> (for [e entities]
+           (case (:id e)
+             :fps (doto e
+                    (label! :set-text (str (game :fps)))
+                    (label! :pack))
+             :error (doto e
+                      (label! :set-text (or (some-> @u/error .getMessage) ""))
+                      (label! :pack))
+             e))
          (render! screen)))
   :on-resize
-  (fn [screen entities]
-    (height! screen 300)))
+  (fn [{:keys [camera] :as screen} entities]
+    (height! screen screen-height)
+    (for [e entities]
+      (case (:id e)
+        :error (assoc e :width (. camera viewportWidth))
+        e))))
 
 (defgame nightmod
   :on-create
   (fn [this]
     (set-screen! this main-screen)))
+
+(add-watch u/error
+           :show-error
+           (fn [_ _ _ e]
+             (when e
+               (set-screen! nightmod blank-screen overlay-screen))))

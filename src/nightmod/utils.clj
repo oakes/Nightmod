@@ -7,6 +7,7 @@
 
 (def main-dir (atom nil))
 (def project-dir (atom nil))
+(def error (atom nil))
 
 (defn get-data-dir
   []
