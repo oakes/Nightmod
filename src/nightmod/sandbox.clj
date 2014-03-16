@@ -17,15 +17,14 @@
    (jail-test/blacklist-symbols
     '#{alter-var-root eval catch 
        load-string load-reader addMethod ns-resolve resolve find-var
-       *read-eval* ns-publics ns-unmap set! ns-map ns-interns the-ns
-       push-thread-bindings pop-thread-bindings future-call agent send
-       send-off pmap pcalls pvals in-ns System/out System/in System/err
+       *read-eval* ns-publics ns-unmap ns-map ns-interns the-ns
+       in-ns System/out System/in System/err
        with-redefs-fn Class/forName})
    (jail-test/blacklist-nses '[clojure.main])
    (jail-test/blanket "clojail")])
 
 (def sb (jail/sandbox tester
-                      :timeout 5000
+                      :timeout 2000
                       :namespace 'nightmod.game
                       :init '(require '[nightmod.public :refer :all]
                                       '[play-clj.core :refer :all]
@@ -41,16 +40,10 @@
   (System/setProperty "java.security.policy"
                       (-> "java.policy" io/resource .toString)))
 
-(defn run-form!
-  [form]
-  (try (sb form)
-    (catch Exception e
-      (when (nil? @u/error) (reset! u/error e)))))
-
 (defn run-file!
   [path]
   (reset! u/error nil)
-  (->> (slurp path)
-       (format "(do %s\n)")
-       jail/safe-read
-       run-form!))
+  (-> (format "(do %s\n)" (slurp path))
+      jail/safe-read
+      sb
+      (try (catch Exception e (reset! u/error e)))))
