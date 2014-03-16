@@ -25,7 +25,7 @@
    (jail-test/blanket "clojail")])
 
 (def sb (jail/sandbox tester
-                      :timeout 2000
+                      :timeout 5000
                       :namespace 'nightmod.game
                       :init '(require '[nightmod.public :refer :all]
                                       '[play-clj.core :refer :all]
