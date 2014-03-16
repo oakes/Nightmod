@@ -26,6 +26,7 @@
 
 (def sb (jail/sandbox tester
                       :timeout 5000
+                      :namespace 'nightmod.game
                       :init '(require '[nightmod.public :refer :all]
                                       '[play-clj.core :refer :all]
                                       '[play-clj.g2d :refer :all]
@@ -40,10 +41,16 @@
   (System/setProperty "java.security.policy"
                       (-> "java.policy" io/resource .toString)))
 
-(defn run!
+(defn run-form!
+  [form]
+  (try (sb form)
+    (catch Exception e
+      (when (nil? @u/error) (reset! u/error e)))))
+
+(defn run-file!
   [path]
   (reset! u/error nil)
-  (-> (format "(do %s\n)" (slurp path))
-      jail/safe-read
-      sb
-      (try (catch Exception e (reset! u/error e)))))
+  (->> (slurp path)
+       (format "(do %s\n)")
+       jail/safe-read
+       run-form!))

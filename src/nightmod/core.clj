@@ -60,7 +60,7 @@
   (pom/add-classpath path)
   (-> (io/file path "core.clj")
       .getCanonicalPath
-      sandbox/run!))
+      sandbox/run-file!))
 
 (defn create-window
   "Creates the main window."

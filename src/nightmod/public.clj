@@ -5,11 +5,17 @@
             [nightmod.utils :as u]
             [play-clj.core :refer :all]))
 
+(defn ^:private wrap
+  [f args]
+  (try (apply f args)
+    (catch Exception e
+      (when (nil? @u/error) (reset! u/error e)))))
+
 (defn set-game-screen!
   [& screens]
   (->> (set-screen-with-options! s/nightmod
                                  (conj (vec screens) s/overlay-screen)
-                                 #(when (nil? @u/error) (reset! u/error %)))
+                                 :wrap wrap)
        (fn [])
        (app! :post-runnable)))
 
