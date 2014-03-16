@@ -12,12 +12,14 @@
    (jail-test/blacklist-packages
      ["java.lang.reflect"
       "java.security"
+      "java.util.concurrent"
       "java.awt"])
    (jail-test/blacklist-symbols
     '#{alter-var-root eval catch 
        load-string load-reader addMethod ns-resolve resolve find-var
-       *read-eval* ns ns-publics ns-unmap ns-map ns-interns the-ns
-       in-ns System/out System/in System/err
+       *read-eval* ns-publics ns-unmap set! ns-map ns-interns the-ns
+       push-thread-bindings pop-thread-bindings future-call agent send
+       send-off pmap pcalls pvals in-ns System/out System/in System/err
        with-redefs-fn Class/forName})
    (jail-test/blacklist-nses '[clojure.main])
    (jail-test/blanket "clojail")])
