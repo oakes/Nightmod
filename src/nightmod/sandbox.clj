@@ -16,7 +16,7 @@
    (jail-test/blacklist-symbols
     '#{alter-var-root eval catch 
        load-string load-reader addMethod ns-resolve resolve find-var
-       *read-eval* ns-publics ns-unmap ns-map ns-interns the-ns
+       *read-eval* ns ns-publics ns-unmap ns-map ns-interns the-ns
        in-ns System/out System/in System/err
        with-redefs-fn Class/forName})
    (jail-test/blacklist-nses '[clojure.main])
