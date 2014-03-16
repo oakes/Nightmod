@@ -105,11 +105,11 @@
              e))
          (render! screen)))
   :on-resize
-  (fn [{:keys [camera] :as screen} entities]
+  (fn [screen entities]
     (height! screen screen-height)
     (for [e entities]
       (case (:id e)
-        :error (assoc e :width (. camera viewportWidth))
+        :error (assoc e :width (width screen))
         e))))
 
 (defgame nightmod
