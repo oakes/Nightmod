@@ -3,8 +3,7 @@
             [clojail.jvm :as jvm]
             [clojail.testers :as jail-test]
             [clojure.java.io :as io]
-            [nightmod.utils :as u])
-  (:import [java.security AccessController]))
+            [nightmod.utils :as u]))
 
 (def tester
   [(jail-test/blacklist-objects

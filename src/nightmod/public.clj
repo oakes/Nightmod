@@ -5,8 +5,7 @@
             [nightmod.sandbox :as sandbox]
             [nightmod.screens :as s]
             [nightmod.utils :as u]
-            [play-clj.core :refer :all])
-  (:import [java.security AccessController]))
+            [play-clj.core :refer :all]))
 
 (defn set-game-screen!
   [& screens]
