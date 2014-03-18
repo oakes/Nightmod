@@ -1,14 +1,17 @@
 (ns nightmod.public
   (:require [clojail.core :as jail]
+            [clojail.jvm :as jvm]
             [clojure.java.io :as io]
             [nightmod.screens :as s]
             [nightmod.utils :as u]
-            [play-clj.core :refer :all]))
+            [play-clj.core :refer :all])
+  (:import [java.security AccessController]))
 
 (defn set-game-screen!
   [& screens]
   (->> (fn [f args]
-         (try (apply f args)
+         (try
+           (jvm/jvm-sandbox #(apply f args) (AccessController/getContext))
            (catch Exception e
              (when (nil? @u/error) (reset! u/error e)))))
        (set-screen-with-options! s/nightmod
@@ -20,7 +23,7 @@
 (defmacro load-game-file
   [n]
   (some->> (or (io/resource n)
-               (throw (Throwable. (str "File not found:" n))))
+               (throw (Throwable. (str "File not found: " n))))
            slurp
            (format "(do %s\n)")
            jail/safe-read))
