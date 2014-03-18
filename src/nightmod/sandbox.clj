@@ -1,5 +1,6 @@
 (ns nightmod.sandbox
   (:require [clojail.core :as jail]
+            [clojail.jvm :as jvm]
             [clojail.testers :as jail-test]
             [clojure.java.io :as io]
             [nightmod.utils :as u])
@@ -25,8 +26,13 @@
    (jail-test/blacklist-nses '[clojure.main])
    (jail-test/blanket "clojail")])
 
+(def context (-> (doto (jvm/permissions)
+                   (.add (java.io.FilePermission. "<<ALL FILES>>" "read")))
+                 jvm/domain
+                 jvm/context))
+
 (def sb (jail/sandbox tester
-                      :context (AccessController/getContext)
+                      :context context
                       :timeout 5000
                       :namespace 'nightmod.game
                       :init '(require '[nightmod.public :refer :all]
