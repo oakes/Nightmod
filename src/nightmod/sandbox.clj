@@ -2,7 +2,8 @@
   (:require [clojail.core :as jail]
             [clojail.testers :as jail-test]
             [clojure.java.io :as io]
-            [nightmod.utils :as u]))
+            [nightmod.utils :as u])
+  (:import [java.security AccessController]))
 
 (def tester
   [(jail-test/blacklist-objects
@@ -25,6 +26,7 @@
    (jail-test/blanket "clojail")])
 
 (def sb (jail/sandbox tester
+                      :context (AccessController/getContext)
                       :timeout 5000
                       :namespace 'nightmod.game
                       :init '(require '[nightmod.public :refer :all]
