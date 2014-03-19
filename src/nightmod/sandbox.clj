@@ -21,7 +21,7 @@
        addMethod forName
        load load-file load-string load-reader
        ns-resolve ns-publics ns-unmap ns-map ns-interns the-ns in-ns
-       push-thread-bindings pop-thread-bindings future future-call
+       push-thread-bindings pop-thread-bindings future-call
        agent send send-off
        pmap pvalues pcalls
        System/out System/in System/err
