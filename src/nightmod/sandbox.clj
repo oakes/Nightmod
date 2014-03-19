@@ -22,7 +22,7 @@
        push-thread-bindings pop-thread-bindings future-call agent send
        send-off pmap pcalls pvals in-ns System/out System/in System/err
        with-redefs-fn Class/forName
-       set-screen! app! postRunnable})
+       set-screen! setScreen app! postRunnable})
    (jail-test/blacklist-nses '[clojure.main])
    (jail-test/blanket "clojail")])
 
