@@ -23,7 +23,7 @@
        ns-resolve ns-publics ns-unmap ns-map ns-interns the-ns in-ns
        push-thread-bindings pop-thread-bindings future-call
        agent send send-off
-       pmap pvalues pcalls
+       pmap pcalls
        System/out System/in System/err
        set-screen! setScreen app! app})
    (jail-test/blacklist-nses '[clojure.main])
