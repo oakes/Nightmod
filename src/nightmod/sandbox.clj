@@ -7,22 +7,25 @@
 
 (def tester
   [(jail-test/blacklist-objects
-     [clojure.lang.Compiler clojure.lang.Ref clojure.lang.Reflector
-      clojure.lang.Namespace clojure.lang.RT
-      java.io.ObjectInputStream])
+     [clojure.lang.Compiler clojure.lang.Namespace
+      clojure.lang.Ref clojure.lang.Reflector clojure.lang.RT
+      java.io.ObjectInputStream java.lang.Thread])
    (jail-test/blacklist-packages
      ["java.lang.reflect"
       "java.security"
       "java.util.concurrent"
       "java.awt"])
    (jail-test/blacklist-symbols
-    '#{alter-var-root eval catch 
-       load-string load-reader addMethod ns-resolve resolve find-var
-       *read-eval* ns-publics ns-unmap set! ns-map ns-interns the-ns
-       push-thread-bindings pop-thread-bindings future-call agent send
-       send-off pmap pcalls pvals in-ns System/out System/in System/err
-       with-redefs-fn Class/forName
-       set-screen! setScreen app! postRunnable})
+    '#{alter-var-root resolve find-var with-redefs-fn
+       *read-eval* set! eval catch
+       addMethod forName
+       load load-file load-string load-reader
+       ns-resolve ns-publics ns-unmap ns-map ns-interns the-ns in-ns
+       push-thread-bindings pop-thread-bindings future future-call
+       agent send send-off
+       pmap pvalues pcalls
+       System/out System/in System/err
+       set-screen! setScreen app! app})
    (jail-test/blacklist-nses '[clojure.main])
    (jail-test/blanket "clojail")])
 
