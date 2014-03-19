@@ -49,7 +49,7 @@
                            [(nth templates i)
                             (nth template-names i)])
                          (map create-button))
-          saved-games (->> (io/file @u/main-dir u/projects-dir)
+          saved-games (->> (io/file @u/main-dir)
                            .listFiles
                            (filter #(.isDirectory %))
                            (map read-title)

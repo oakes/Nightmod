@@ -2,7 +2,6 @@
   (:require [clojure.java.io :as io])
   (:import [java.text SimpleDateFormat]))
 
-(def ^:const projects-dir "projects")
 (def ^:const properties-file ".properties")
 
 (def main-dir (atom nil))
@@ -31,7 +30,7 @@
 (defn new-project!
   [template]
   (let [project-name (str (System/currentTimeMillis))
-        project-file (io/file @main-dir projects-dir project-name)]
+        project-file (io/file @main-dir project-name)]
     (.mkdirs project-file)
     (doseq [f (-> (io/resource template) io/file .listFiles)]
       (io/copy f (io/file project-file (.getName f))))
