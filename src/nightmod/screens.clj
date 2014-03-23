@@ -57,7 +57,7 @@
       (-> (cons (label "New Game:" ui-skin) new-games)
           (concat (when (seq saved-games)
                     (cons (label "Load Game:" ui-skin) saved-games)))
-          vertical
+          (vertical :pack)
           (scroll-pane (style :scroll-pane nil nil nil nil nil))
           list
           (table :align (align :center) :set-fill-parent true))))
@@ -67,7 +67,7 @@
     (render! screen entities))
   :on-resize
   (fn [screen entities]
-    (height! screen screen-height))
+    (height! screen (:height screen)))
   :on-ui-changed
   (fn [screen entities]
     (when-let [n (-> screen :actor .getName)]
