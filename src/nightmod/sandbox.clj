@@ -3,7 +3,9 @@
             [clojail.jvm :as jvm]
             [clojail.testers :as jail-test]
             [clojure.java.io :as io]
-            [nightmod.utils :as u]))
+            [nightmod.utils :as u])
+  (:import [java.io FilePermission]
+           [java.lang.reflect ReflectPermission]))
 
 (def tester
   [(jail-test/blacklist-objects
@@ -30,7 +32,8 @@
    (jail-test/blanket "clojail")])
 
 (def context (-> (doto (jvm/permissions)
-                   (.add (java.io.FilePermission. "<<ALL FILES>>" "read")))
+                   (.add (FilePermission. "<<ALL FILES>>" "read"))
+                   (.add (ReflectPermission. "suppressAccessChecks")))
                  jvm/domain
                  jvm/context))
 
