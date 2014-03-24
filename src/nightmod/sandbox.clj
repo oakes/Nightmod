@@ -3,6 +3,7 @@
             [clojail.jvm :as jvm]
             [clojail.testers :as jail-test]
             [clojure.java.io :as io]
+            [nightmod.screens :as s]
             [nightmod.utils :as u])
   (:import [java.io FilePermission]
            [java.lang.reflect ReflectPermission]))
@@ -62,3 +63,14 @@
       jail/safe-read
       sb
       (try (catch Exception e (reset! u/error e)))))
+
+(intern 'play-clj.core
+        'wrapper
+        (fn [screen f]
+          (if (or (= screen (:screen s/main-screen))
+                  (= screen (:screen s/overlay-screen)))
+            (f)
+            (try
+              (jvm/jvm-sandbox f context)
+              (catch Exception e
+                (when (nil? @u/error) (reset! u/error e)))))))
