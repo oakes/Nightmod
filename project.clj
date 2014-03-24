@@ -16,10 +16,8 @@
                                play-clj/lein-template]]
                  [org.clojure/clojure "1.5.1"]
                  [org.eclipse.jgit "3.2.0.201312181205-r"]
-                 [play-clj "0.2.3-SNAPSHOT"]
+                 [play-clj "0.2.3"]
                  [seesaw "1.4.4"]]
-  :repositories [["sonatype"
-                  "https://oss.sonatype.org/content/repositories/snapshots/"]]
   
   :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
   :aot [nightmod.core]
