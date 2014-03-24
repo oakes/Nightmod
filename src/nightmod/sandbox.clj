@@ -18,7 +18,7 @@
       "java.util.concurrent"
       "java.awt"])
    (jail-test/blacklist-symbols
-    '#{alter-var-root resolve find-var with-redefs-fn
+    '#{alter-var-root resolve find-var with-redefs-fn intern
        *read-eval* set! eval catch
        addMethod forName
        load load-file load-string load-reader

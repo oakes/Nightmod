@@ -7,19 +7,20 @@
             [nightmod.utils :as u]
             [play-clj.core :refer :all]))
 
+(intern 'play-clj.core
+        'wrapper
+        (fn [screen f]
+          (if (= screen (:screen s/overlay-screen))
+            (f)
+            (try
+              (jvm/jvm-sandbox f sandbox/context)
+              (catch Exception e
+                (when (nil? @u/error) (reset! u/error e)))))))
+
 (defn set-game-screen!
   [& screens]
-  (->> (fn [screen k args]
-         (let [f #(apply (get screen k) args)]
-           (if (= screen s/overlay-screen)
-             (f)
-             (try
-               (jvm/jvm-sandbox f sandbox/context)
-               (catch Exception e
-                 (when (nil? @u/error) (reset! u/error e)))))))
-       (set-screen-with-options! s/nightmod
-                                 (conj (vec screens) s/overlay-screen)
-                                 :wrap)
+  (->> (conj (vec screens) s/overlay-screen)
+       (apply set-screen! s/nightmod)
        (fn [])
        (app! :post-runnable)))
 
