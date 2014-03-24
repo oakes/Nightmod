@@ -9,11 +9,14 @@
 
 (defn set-game-screen!
   [& screens]
-  (->> (fn [f args]
-         (try
-           (jvm/jvm-sandbox #(apply f args) sandbox/context)
-           (catch Exception e
-             (when (nil? @u/error) (reset! u/error e)))))
+  (->> (fn [screen k args]
+         (let [f #(apply (get screen k) args)]
+           (if (= screen s/overlay-screen)
+             (f)
+             (try
+               (jvm/jvm-sandbox f sandbox/context)
+               (catch Exception e
+                 (when (nil? @u/error) (reset! u/error e)))))))
        (set-screen-with-options! s/nightmod
                                  (conj (vec screens) s/overlay-screen)
                                  :wrap)

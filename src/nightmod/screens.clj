@@ -5,8 +5,6 @@
             [play-clj.core :refer :all]
             [play-clj.ui :refer :all]))
 
-(def ^:const screen-height 350)
-(def ^:const line-height 20)
 (def ^:const templates ["arcade" "platformer"
                         "orthogonal-rpg" "isometric-rpg"
                         "barebones-2d" "barebones-3d"])
@@ -85,13 +83,14 @@
   :on-show
   (fn [screen entities]
     (update! screen :camera (orthographic) :renderer (stage))
-    [(assoc (label "" (color :white))
-            :id :fps
-            :x 5
-            :y (- screen-height line-height))
-     (assoc (label "" (color :white) :set-wrap true)
-            :id :error
-            :x 5)])
+    (let [ui-skin (skin "uiskin.json")]
+      [(assoc (label "" ui-skin)
+              :id :fps
+              :x 5)
+       (assoc (label "" ui-skin :set-wrap true)
+              :id :error
+              :x 5
+              :y 5)]))
   :on-render
   (fn [screen entities]
     (->> (for [e entities]
@@ -106,10 +105,11 @@
          (render! screen)))
   :on-resize
   (fn [screen entities]
-    (height! screen screen-height)
+    (height! screen (:height screen))
     (for [e entities]
       (case (:id e)
-        :error (assoc e :width (width screen))
+        :fps (assoc e :y (- (:height screen) 40))
+        :error (assoc e :width (:width screen))
         e))))
 
 (defgame nightmod
