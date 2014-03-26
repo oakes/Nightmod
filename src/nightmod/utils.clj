@@ -1,5 +1,6 @@
 (ns nightmod.utils
-  (:require [clojure.java.io :as io])
+  (:require [clojure.java.io :as io]
+            [nightcode.ui :as ui])
   (:import [java.text SimpleDateFormat]))
 
 (def ^:const properties-file ".properties")
@@ -24,3 +25,10 @@
     (doseq [f (-> (io/resource template) io/file .listFiles)]
       (io/copy f (io/file project-file (.getName f))))
     (.getCanonicalPath project-file)))
+
+(defn toggle-glass!
+  ([]
+    (-> @ui/root .getGlassPane .isVisible not toggle-glass!))
+  ([show?]
+    (.setVisible (.getGlassPane @ui/root) show?)
+    (.revalidate @ui/root)))

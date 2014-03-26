@@ -5,6 +5,8 @@
             [play-clj.core :refer :all]
             [play-clj.ui :refer :all]))
 
+(declare nightmod main-screen blank-screen overlay-screen)
+
 (def ^:const templates ["arcade" "platformer"
                         "orthogonal-rpg" "isometric-rpg"
                         "barebones-2d" "barebones-3d"])
@@ -68,7 +70,7 @@
     (height! screen (:height screen)))
   :on-ui-changed
   (fn [screen entities]
-    (when-let [n (-> screen :actor .getName)]
+    (when-let [n (text-button! (:actor screen) :get-name)]
       (if (contains? (set templates) n)
         (new-project! n)
         (load-project! n)))
@@ -84,20 +86,16 @@
   (fn [screen entities]
     (update! screen :camera (orthographic) :renderer (stage))
     (let [ui-skin (skin "uiskin.json")]
-      [(assoc (label "" ui-skin)
-              :id :fps
-              :x 5)
-       (assoc (label "" ui-skin :set-wrap true)
-              :id :error
-              :x 5
-              :y 5)]))
+      [(-> [(text-button "Home" ui-skin :set-name "home")
+            (text-button "Files" ui-skin :set-name "files")]
+           (vertical :pack)
+           (assoc :id :menu :x 5))
+       (-> (label "" ui-skin :set-wrap true)
+           (assoc :id :error :x 5 :y 5))]))
   :on-render
   (fn [screen entities]
     (->> (for [e entities]
            (case (:id e)
-             :fps (doto e
-                    (label! :set-text (str (game :fps)))
-                    (label! :pack))
              :error (doto e
                       (label! :set-text (or (some-> @u/error .toString) ""))
                       (label! :pack))
@@ -108,9 +106,17 @@
     (height! screen (:height screen))
     (for [e entities]
       (case (:id e)
-        :fps (assoc e :y (- (:height screen) 40))
+        :menu (assoc e :y (- (:height screen) (vertical! e :get-height)))
         :error (assoc e :width (:width screen))
-        e))))
+        e)))
+  :on-ui-changed
+  (fn [screen entities]
+    (case (text-button! (:actor screen) :get-name)
+      "home" (do (u/toggle-glass! false)
+               (set-screen! nightmod main-screen))
+      "files" (u/toggle-glass!)
+      nil)
+    nil))
 
 (defgame nightmod
   :on-create
