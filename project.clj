@@ -7,7 +7,7 @@
                  [com.badlogicgames.gdx/gdx-platform "0.9.9"
                   :classifier "natives-desktop"]
                  [com.cemerick/pomegranate "0.3.0"]
-                 [nightcode "0.3.1"
+                 [nightcode "0.3.2"
                   :exclusions [leiningen
                                lein-ancient
                                lein-cljsbuild

@@ -34,7 +34,9 @@
 (defscreen main-screen
   :on-show
   (fn [screen entities]
-    (update! screen :renderer (stage) :camera (orthographic))
+    (-> screen
+        (update! :renderer (stage) :camera (orthographic))
+        (height! (game :height)))
     (when-not @u/main-dir
       (reset! u/main-dir (u/get-data-dir)))
     (let [ui-skin (skin "uiskin.json")
@@ -57,7 +59,7 @@
                     (cons (label "Load Game:" ui-skin) saved-games)))
           (vertical :pack)
           (scroll-pane (style :scroll-pane nil nil nil nil nil))
-          list
+          vector
           (table :align (align :center) :set-fill-parent true))))
   :on-render
   (fn [screen entities]
