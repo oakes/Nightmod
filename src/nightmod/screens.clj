@@ -34,9 +34,7 @@
 (defscreen main-screen
   :on-show
   (fn [screen entities]
-    (-> screen
-        (update! :renderer (stage) :camera (orthographic))
-        (height! (game :height)))
+    (update! screen :renderer (stage) :camera (orthographic))
     (when-not @u/main-dir
       (reset! u/main-dir (u/get-data-dir)))
     (let [ui-skin (skin "uiskin.json")
