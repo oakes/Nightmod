@@ -1,6 +1,7 @@
 (ns nightmod.utils
   (:require [clojure.java.io :as io]
-            [nightcode.ui :as ui])
+            [nightcode.ui :as ui]
+            [seesaw.core :as s])
   (:import [java.text SimpleDateFormat]))
 
 (def ^:const properties-file ".properties")
@@ -30,5 +31,6 @@
   ([]
     (-> @ui/root .getGlassPane .isVisible not toggle-glass!))
   ([show?]
-    (.setVisible (.getGlassPane @ui/root) show?)
-    (.revalidate @ui/root)))
+    (s/invoke-later
+      (.setVisible (.getGlassPane @ui/root) show?)
+      (.revalidate @ui/root))))
