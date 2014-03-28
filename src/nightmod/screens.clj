@@ -103,7 +103,9 @@
            (case (:id e)
              :error (let [l (-> e (scroll-pane! :get-children) first)]
                       (label! l :set-text (or (some-> @u/error .toString) ""))
-                      e)
+                      (assoc e :width (if (.isVisible (u/glass))
+                                        (- (game :width) u/editor-width)
+                                        (game :width))))
              e))
          (render! screen)))
   :on-resize

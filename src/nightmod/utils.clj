@@ -4,6 +4,9 @@
             [seesaw.core :as s])
   (:import [java.text SimpleDateFormat]))
 
+(def ^:const window-width 1200)
+(def ^:const window-height 768)
+(def ^:const editor-width 700)
 (def ^:const properties-file ".properties")
 
 (def main-dir (atom nil))
@@ -27,10 +30,14 @@
       (io/copy f (io/file project-file (.getName f))))
     (.getCanonicalPath project-file)))
 
+(defn glass
+  []
+  (.getGlassPane @ui/root))
+
 (defn toggle-glass!
   ([]
-    (-> @ui/root .getGlassPane .isVisible not toggle-glass!))
+    (-> (glass) .isVisible not toggle-glass!))
   ([show?]
     (s/invoke-later
-      (.setVisible (.getGlassPane @ui/root) show?)
+      (.setVisible (glass) show?)
       (.revalidate @ui/root))))

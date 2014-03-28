@@ -24,10 +24,6 @@
 (extend-protocol s-util/Children
   java.awt.Component (children [this] nil))
 
-(def ^:const window-width 1200)
-(def ^:const window-height 768)
-(def ^:const editor-width 700)
-
 (defn create-editor-pane
   "Returns the pane with the editors."
   []
@@ -39,12 +35,12 @@
   []
   (let [pane (create-editor-pane)]
     (doto (JLayeredPane.)
-      (.setPreferredSize (Dimension. editor-width window-height))
+      (.setPreferredSize (Dimension. u/editor-width u/window-height))
       (.addComponentListener (proxy [ComponentAdapter] []
                                (componentResized [e]
                                  (->> (.getComponent e)
                                       .getHeight
-                                      (.setBounds pane 0 0 editor-width)))))
+                                      (.setBounds pane 0 0 u/editor-width)))))
       (.add pane))))
 
 (defn create-canvas-pane
@@ -69,8 +65,8 @@
                              (if-let [p (nc-utils/get-project "nightmod.core")]
                                (nth p 2)
                                "beta"))
-                 :width window-width
-                 :height window-height
+                 :width u/window-width
+                 :height u/window-height
                  :on-close :nothing)
     ; add canvas and editor pane
     (-> .getContentPane (doto
