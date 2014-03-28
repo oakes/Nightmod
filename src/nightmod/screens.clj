@@ -7,6 +7,7 @@
 
 (declare nightmod main-screen blank-screen overlay-screen)
 
+(def ^:const border-space 5)
 (def ^:const templates ["arcade" "platformer"
                         "orthogonal-rpg" "isometric-rpg"
                         "barebones-2d" "barebones-3d"])
@@ -86,29 +87,34 @@
   (fn [screen entities]
     (update! screen :camera (orthographic) :renderer (stage))
     (let [ui-skin (skin "uiskin.json")]
-      [(-> [(text-button "Home" ui-skin :set-name "home")
+      [(-> (label "" ui-skin
+                  :set-wrap true
+                  :set-alignment (bit-or (align :left) (align :bottom)))
+           (scroll-pane (style :scroll-pane nil nil nil nil nil))
+           (assoc :id :error :x border-space :y border-space))
+       (-> [(text-button "Home" ui-skin :set-name "home")
             (text-button "Restart" ui-skin :set-name "restart")
             (text-button "Files" ui-skin :set-name "files")]
            (vertical :pack)
-           (assoc :id :menu :x 5))
-       (-> (label "" ui-skin :set-wrap true)
-           (assoc :id :error :x 5 :y 5))]))
+           (assoc :id :menu :x border-space))]))
   :on-render
   (fn [screen entities]
     (->> (for [e entities]
            (case (:id e)
-             :error (doto e
-                      (label! :set-text (or (some-> @u/error .toString) ""))
-                      (label! :pack))
+             :error (let [l (-> e (scroll-pane! :get-children) first)]
+                      (label! l :set-text (or (some-> @u/error .toString) ""))
+                      e)
              e))
          (render! screen)))
   :on-resize
-  (fn [screen entities]
-    (height! screen (:height screen))
+  (fn [{:keys [width height] :as screen} entities]
+    (height! screen height)
     (for [e entities]
       (case (:id e)
-        :menu (assoc e :y (- (:height screen) (vertical! e :get-height)))
-        :error (assoc e :width (:width screen))
+        :menu (assoc e :y (- height
+                             (vertical! e :get-height)
+                             border-space))
+        :error (assoc e :width width :height height)
         e)))
   :on-ui-changed
   (fn [screen entities]
