@@ -87,6 +87,7 @@
     (update! screen :camera (orthographic) :renderer (stage))
     (let [ui-skin (skin "uiskin.json")]
       [(-> [(text-button "Home" ui-skin :set-name "home")
+            (text-button "Restart" ui-skin :set-name "restart")
             (text-button "Files" ui-skin :set-name "files")]
            (vertical :pack)
            (assoc :id :menu :x 5))
@@ -114,6 +115,7 @@
     (case (text-button! (:actor screen) :get-name)
       "home" (do (u/toggle-glass! false)
                (set-screen! nightmod main-screen))
+      "restart" (reset! u/project-dir @u/project-dir)
       "files" (u/toggle-glass!)
       nil)
     nil))
