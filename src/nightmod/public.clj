@@ -9,8 +9,7 @@
   [& screens]
   (->> (conj (vec screens) s/overlay-screen)
        (apply set-screen! s/nightmod)
-       (fn [])
-       (app! :post-runnable)))
+       on-gl))
 
 (defmacro load-game-file
   [n]
