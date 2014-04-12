@@ -5,7 +5,6 @@
             [nightmod.screens :as screens]
             [nightmod.utils :as u]
             [nightmod.sandbox :as sandbox]
-            [nightmod.overlay :as overlay]
             [nightcode.editors :as editors]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
@@ -24,16 +23,10 @@
 (extend-protocol s-util/Children
   java.awt.Component (children [this] nil))
 
-(defn create-editor-pane
-  "Returns the pane with the editors."
-  []
-  (s/card-panel :id :editor-pane
-                :items [[(overlay/create-home-card) :default-card]]))
-
 (defn create-layered-pane
   "Returns the layered pane holding the editor pane."
   []
-  (let [pane (create-editor-pane)]
+  (let [pane (editors/create-pane)]
     (doto (JLayeredPane.)
       (.setPreferredSize (Dimension. u/editor-width u/window-height))
       (.addComponentListener (proxy [ComponentAdapter] []
@@ -47,7 +40,7 @@
   "Returns the pane with the canvas."
   []
   (let [canvas (Canvas.)]
-    (LwjglApplication. screens/nightmod true canvas)
+    (LwjglApplication. screens/nightmod canvas)
     canvas))
 
 (defn load-game!

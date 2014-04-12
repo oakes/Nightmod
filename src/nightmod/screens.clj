@@ -1,9 +1,11 @@
 (ns nightmod.screens
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
+            [nightcode.ui :as ui]
             [nightmod.utils :as u]
             [play-clj.core :refer :all]
-            [play-clj.ui :refer :all]))
+            [play-clj.ui :refer :all]
+            [seesaw.core :as s]))
 
 (declare nightmod main-screen blank-screen overlay-screen)
 
@@ -28,7 +30,9 @@
 
 (defn load-project!
   [path]
-  (reset! u/project-dir path))
+  (reset! u/project-dir path)
+  (s/invoke-later
+    (reset! ui/tree-selection path)))
 
 (defn new-project!
   [template]

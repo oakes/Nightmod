@@ -1,30 +1,13 @@
 (ns nightmod.overlay
-  (:require [nightcode.dialogs :as dialogs]
-            [nightcode.editors :as editors]
+  (:require [nightcode.editors :as editors]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
-            [nightcode.utils :as nc-utils]
+            [nightmod.utils :as u]
             [seesaw.core :as s]))
-
-(defn new-file!
-  [& _]
-  (when (dialogs/show-file-path-dialog! nil)))
-
-(defn create-home-widgets
-  []
-  [(ui/button :id :new-file
-              :text (nc-utils/get-string :new_file)
-              :listen [:action new-file!]
-              :focusable? false)])
-
-(defn create-home-card
-  []
-  (s/border-panel :north (ui/wrap-panel :items (create-home-widgets))
-                  :center (s/scrollable (s/grid-panel :columns 5))))
 
 (defn show-home!
   [& _]
-  (reset! ui/tree-selection nil))
+  (reset! ui/tree-selection @u/project-dir))
 
 (defn create-home-button
   []
