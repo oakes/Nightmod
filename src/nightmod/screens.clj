@@ -1,6 +1,7 @@
 (ns nightmod.screens
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
+            [nightcode.editors :as editors]
             [nightcode.ui :as ui]
             [nightmod.utils :as u]
             [play-clj.core :refer :all]
@@ -37,6 +38,18 @@
 (defn new-project!
   [template]
   (load-project! (u/new-project! template)))
+
+(defn restart!
+  []
+  (reset! u/project-dir @u/project-dir))
+
+(def orig-save-file! editors/save-file!)
+(intern 'nightcode.editors
+        'save-file!
+        (fn [_ &]
+          (orig-save-file!)
+          (restart!)
+          true))
 
 (defscreen main-screen
   :on-show
@@ -127,9 +140,15 @@
     (case (text-button! (:actor screen) :get-name)
       "home" (do (u/toggle-glass! false)
                (set-screen! nightmod main-screen))
-      "restart" (reset! u/project-dir @u/project-dir)
+      "restart" (restart!)
       "files" (u/toggle-glass!)
       nil)
+    nil)
+  :on-touch-down
+  (fn [screen entities]
+    (some-> (or (editors/get-selected-text-area)
+                (ui/get-editor-pane))
+            s/request-focus!)
     nil))
 
 (defgame nightmod
