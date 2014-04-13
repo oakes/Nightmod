@@ -84,9 +84,11 @@
   [& args]
   (sandbox/set-policy!)
   (window/set-theme! args)
-  (add-watch u/project-dir :load-game (fn [_ _ _ path]
-                                        (load-game! path)))
-  (s/invoke-later
+  (add-watch u/project-dir
+             :load-game
+             (fn [_ _ _ path]
+               (load-game! path)))
+  (s/invoke-now
     (let [canvas (Canvas.)]
       (s/show! (reset! ui/root (create-window canvas)))
       (LwjglApplication. screens/nightmod canvas)))

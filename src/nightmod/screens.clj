@@ -36,16 +36,34 @@
   ; save in tree-projects so the up button is hidden correctly
   (swap! ui/tree-projects conj path)
   ; save in tree-selection so the file grid is displayed
-  (s/invoke-later
+  (s/invoke-now
     (reset! ui/tree-selection path)))
 
 (defn new-project!
   [template]
   (load-project! (u/new-project! template)))
 
+(defn focus-on-overlay!
+  []
+  (some-> (or (editors/get-selected-text-area)
+              (ui/get-editor-pane))
+          s/request-focus!))
+
+(defn home!
+  []
+  (s/invoke-now
+    (editors/remove-editors! @u/project-dir))
+  (u/toggle-glass! false)
+  (set-screen! nightmod main-screen))
+
 (defn restart!
   []
   (reset! u/project-dir @u/project-dir))
+
+(defn toggle-files!
+  []
+  (u/toggle-glass!)
+  (focus-on-overlay!))
 
 (def orig-save-file! editors/save-file!)
 (intern 'nightcode.editors
@@ -55,12 +73,10 @@
           (restart!)
           true))
 
-(defn focus-on-overlay!
-  []
-  (some-> (or (editors/get-selected-text-area)
-              (ui/get-editor-pane)
-              (u/glass))
-          s/request-focus!))
+(intern 'nightcode.editors
+        '*widgets*
+        [:up :save :undo :redo :font-dec :font-inc
+         :doc :paredit :paredit-help :close])
 
 (defscreen main-screen
   :on-show
@@ -149,11 +165,9 @@
   :on-ui-changed
   (fn [screen entities]
     (case (text-button! (:actor screen) :get-name)
-      "home" (do (u/toggle-glass! false)
-               (set-screen! nightmod main-screen))
+      "home" (home!)
       "restart" (restart!)
-      "files" (do (u/toggle-glass!)
-                (focus-on-overlay!))
+      "files" (toggle-files!)
       nil)
     nil)
   :on-touch-down

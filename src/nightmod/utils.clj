@@ -38,6 +38,6 @@
   ([]
     (-> (glass) .isVisible not toggle-glass!))
   ([show?]
-    (s/invoke-later
+    (s/invoke-now
       (.setVisible (glass) show?)
       (.revalidate @ui/root))))
