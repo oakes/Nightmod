@@ -27,11 +27,15 @@
            Long/parseLong
            u/format-date
            (try (catch Exception _)))
-       "Invalid")])
+       (.getName f))])
 
 (defn load-project!
   [path]
+  ; save in project-dir so the reset button works
   (reset! u/project-dir path)
+  ; save in tree-projects so the up button is hidden correctly
+  (swap! ui/tree-projects conj path)
+  ; save in tree-selection so the file grid is displayed
   (s/invoke-later
     (reset! ui/tree-selection path)))
 
@@ -50,6 +54,13 @@
           (orig-save-file!)
           (restart!)
           true))
+
+(defn focus-on-overlay!
+  []
+  (some-> (or (editors/get-selected-text-area)
+              (ui/get-editor-pane)
+              (u/glass))
+          s/request-focus!))
 
 (defscreen main-screen
   :on-show
@@ -141,14 +152,13 @@
       "home" (do (u/toggle-glass! false)
                (set-screen! nightmod main-screen))
       "restart" (restart!)
-      "files" (u/toggle-glass!)
+      "files" (do (u/toggle-glass!)
+                (focus-on-overlay!))
       nil)
     nil)
   :on-touch-down
   (fn [screen entities]
-    (some-> (or (editors/get-selected-text-area)
-                (ui/get-editor-pane))
-            s/request-focus!)
+    (focus-on-overlay!)
     nil))
 
 (defgame nightmod
@@ -160,6 +170,4 @@
            :show-error
            (fn [_ _ _ e]
              (when e
-               (->> (set-screen! nightmod blank-screen overlay-screen)
-                    (fn [])
-                    (app! :post-runnable)))))
+               (on-gl (set-screen! nightmod blank-screen overlay-screen)))))

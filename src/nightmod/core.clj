@@ -36,13 +36,6 @@
                                       (.setBounds pane 0 0 u/editor-width)))))
       (.add pane))))
 
-(defn create-canvas-pane
-  "Returns the pane with the canvas."
-  []
-  (let [canvas (Canvas.)]
-    (LwjglApplication. screens/nightmod canvas)
-    canvas))
-
 (defn load-game!
   "Loads game into the canvas and runs it in a sandbox."
   [path]
@@ -53,7 +46,7 @@
 
 (defn create-window
   "Creates the main window."
-  []
+  [canvas]
   (doto (s/frame :title (str "Nightmod "
                              (if-let [p (nc-utils/get-project "nightmod.core")]
                                (nth p 2)
@@ -63,7 +56,7 @@
                  :on-close :nothing)
     ; add canvas and editor pane
     (-> .getContentPane (doto
-                          (.add (s/border-panel :center (create-canvas-pane)))))
+                          (.add (s/border-panel :center canvas))))
     (-> .getGlassPane (doto
                         (.setLayout (BorderLayout.))
                         (.add (create-layered-pane) BorderLayout/EAST)
@@ -94,5 +87,7 @@
   (add-watch u/project-dir :load-game (fn [_ _ _ path]
                                         (load-game! path)))
   (s/invoke-later
-    (s/show! (reset! ui/root (create-window))))
+    (let [canvas (Canvas.)]
+      (s/show! (reset! ui/root (create-window canvas)))
+      (LwjglApplication. screens/nightmod canvas)))
   (Keyboard/enableRepeatEvents true))
