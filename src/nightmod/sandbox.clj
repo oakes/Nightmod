@@ -4,7 +4,8 @@
             [clojail.testers :as jail-test]
             [clojure.java.io :as io]
             [nightmod.screens :as s]
-            [nightmod.utils :as u])
+            [nightmod.utils :as u]
+            [play-clj.core :refer :all])
   (:import [java.io FilePermission]
            [java.lang.reflect ReflectPermission]))
 
@@ -28,7 +29,7 @@
        agent send send-off
        pmap pcalls
        System/out System/in System/err
-       set-screen! setScreen app! app on-gl})
+       set-screen-wrapper! set-screen! setScreen app! app on-gl})
    (jail-test/blacklist-nses '[clojure.main])
    (jail-test/blanket "clojail")])
 
@@ -64,13 +65,13 @@
       sb
       (try (catch Exception e (reset! u/error e)))))
 
-(intern 'play-clj.core
-        'wrapper
-        (fn [screen f]
-          (if (or (= screen (:screen s/main-screen))
-                  (= screen (:screen s/overlay-screen)))
-            (f)
-            (try
-              (jvm/jvm-sandbox f context)
-              (catch Exception e
-                (when (nil? @u/error) (reset! u/error e)))))))
+(set-screen-wrapper!
+  (fn [screen screen-fn]
+    (if (or (= screen (:screen s/main-screen))
+            (= screen (:screen s/overlay-screen)))
+      (screen-fn)
+      (try
+        (jvm/jvm-sandbox screen-fn context)
+        (catch Exception e
+          (when (nil? @u/error)
+            (reset! u/error e)))))))
