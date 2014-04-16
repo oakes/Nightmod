@@ -29,7 +29,7 @@
        agent send send-off
        pmap pcalls
        System/out System/in System/err
-       set-screen-wrapper! set-screen! setScreen app! app on-gl})
+       defgame set-screen! setScreen set-screen-wrapper! app! app on-gl})
    (jail-test/blacklist-nses '[clojure.main])
    (jail-test/blanket "clojail")])
 
