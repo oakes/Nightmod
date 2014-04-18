@@ -36,13 +36,20 @@
                                       (.setBounds pane 0 0 u/editor-width)))))
       (.add pane))))
 
+(defn protect-file!
+  "Prevents renaming or deleting a file."
+  [path]
+  (intern 'nightcode.file-browser
+          'protect-file?
+          #(= % path)))
+
 (defn load-game!
   "Loads game into the canvas and runs it in a sandbox."
   [path]
   (pom/add-classpath path)
-  (-> (io/file path "core.clj")
-      .getCanonicalPath
-      sandbox/run-file!))
+  (let [core (.getCanonicalPath (io/file path "core.clj"))]
+    (protect-file! core)
+    (sandbox/run-file! core)))
 
 (defn create-window
   "Creates the main window."
