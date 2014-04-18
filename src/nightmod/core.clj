@@ -47,10 +47,10 @@
 (defn create-window
   "Creates the main window."
   [canvas]
-  (doto (s/frame :title (str "Nightmod "
-                             (if-let [p (nc-utils/get-project "nightmod.core")]
-                               (nth p 2)
-                               "beta"))
+  (doto (s/frame :title (str "Nightmod " (or (some-> "nightmod.core"
+                                                     nc-utils/get-project
+                                                     (nth 2))
+                                             "beta"))
                  :width u/window-width
                  :height u/window-height
                  :on-close :nothing)
