@@ -43,14 +43,16 @@
                       :context context
                       :timeout 5000
                       :namespace 'nightmod.game
-                      :init '(require '[nightmod.public :refer :all]
-                                      '[play-clj.core :refer :all]
-                                      '[play-clj.g2d :refer :all]
-                                      '[play-clj.g2d-physics :refer :all]
-                                      '[play-clj.g3d :refer :all]
-                                      '[play-clj.math :refer :all]
-                                      '[play-clj.ui :refer :all]
-                                      '[play-clj.utils :refer :all])))
+                      :init '(do
+                               (require '[nightmod.public :refer :all]
+                                        '[play-clj.core :refer :all]
+                                        '[play-clj.g2d :refer :all]
+                                        '[play-clj.g3d :refer :all]
+                                        '[play-clj.math :refer :all]
+                                        '[play-clj.physics :refer :all]
+                                        '[play-clj.ui :refer :all]
+                                        '[play-clj.utils :refer :all])
+                               (init-bullet!))))
 
 (defn set-policy!
   []
