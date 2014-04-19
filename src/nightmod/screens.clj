@@ -31,6 +31,7 @@
 
 (defn load-project!
   [path]
+  (on-gl (set-screen! nightmod blank-screen overlay-screen))
   ; save in project-dir so the reset button works
   (reset! u/project-dir path)
   ; save in tree-projects so the up button is hidden correctly
