@@ -43,12 +43,6 @@
   [template]
   (load-project! (u/new-project! template)))
 
-(defn focus-on-overlay!
-  []
-  (some-> (or (editors/get-selected-text-area)
-              (ui/get-editor-pane))
-          s/request-focus!))
-
 (defn home!
   []
   (s/invoke-now
@@ -63,7 +57,7 @@
 (defn toggle-files!
   []
   (u/toggle-glass!)
-  (focus-on-overlay!))
+  (u/focus-on-text!))
 
 (def orig-save-file! editors/save-file!)
 (intern 'nightcode.editors
@@ -172,7 +166,7 @@
     nil)
   :on-touch-down
   (fn [screen entities]
-    (focus-on-overlay!)
+    (u/focus-on-text!)
     nil))
 
 (defgame nightmod
