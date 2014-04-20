@@ -52,7 +52,7 @@
                                         '[play-clj.physics :refer :all]
                                         '[play-clj.ui :refer :all]
                                         '[play-clj.utils :refer :all])
-                               (init-bullet!))))
+                               @init-bullet)))
 
 (defn set-policy!
   []
