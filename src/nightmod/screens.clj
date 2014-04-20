@@ -58,7 +58,7 @@
 (defn toggle-files!
   []
   (u/toggle-glass!)
-  (u/focus-on-text!))
+  (u/focus-on-overlay!))
 
 (def orig-save-file! editors/save-file!)
 (intern 'nightcode.editors
@@ -167,7 +167,7 @@
     nil)
   :on-touch-down
   (fn [screen entities]
-    (u/focus-on-text!)
+    (u/focus-on-overlay!)
     nil))
 
 (defgame nightmod
