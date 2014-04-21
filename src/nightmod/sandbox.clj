@@ -39,10 +39,13 @@
                  jvm/domain
                  jvm/context))
 
+(def game-ns 'nightmod.game)
+
 (def sb (jail/sandbox tester
                       :context context
                       :timeout 5000
-                      :namespace 'nightmod.game
+                      :namespace game-ns
+                      :max-defs 1000
                       :init '(do
                                (require '[nightmod.public :refer :all]
                                         '[play-clj.core :refer :all]
@@ -63,9 +66,14 @@
   (System/setProperty "java.security.policy"
                       (-> "java.policy" io/resource .toString)))
 
+(defn clear-ns!
+  [nspace]
+  (doall (map #(ns-unmap nspace %) (keys (ns-interns nspace)))))
+
 (defn run-file!
   [path]
   (reset! u/error nil)
+  (clear-ns! game-ns)
   (-> (format "(do %s\n)" (slurp path))
       jail/safe-read
       sb
