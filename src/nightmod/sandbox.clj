@@ -52,6 +52,11 @@
                                         '[play-clj.physics :refer :all]
                                         '[play-clj.ui :refer :all]
                                         '[play-clj.utils :refer :all])
+                               ; initialize box2d
+                               (try (Class/forName
+                                      "com.badlogic.gdx.physics.box2d.World")
+                                 (catch Exception _))
+                               ; initialize bullet
                                @init-bullet)))
 
 (defn set-policy!
