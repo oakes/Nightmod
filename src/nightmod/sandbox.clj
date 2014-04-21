@@ -80,4 +80,5 @@
         (jvm/jvm-sandbox screen-fn context)
         (catch Exception e
           (when (nil? @u/error)
-            (reset! u/error e)))))))
+            (reset! u/error e))
+          nil)))))
