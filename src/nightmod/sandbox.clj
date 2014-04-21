@@ -50,8 +50,7 @@
                                         '[play-clj.g3d :refer :all]
                                         '[play-clj.math :refer :all]
                                         '[play-clj.physics :refer :all]
-                                        '[play-clj.ui :refer :all]
-                                        '[play-clj.utils :refer :all])
+                                        '[play-clj.ui :refer :all])
                                ; initialize box2d
                                (try (Class/forName
                                       "com.badlogic.gdx.physics.box2d.World")
