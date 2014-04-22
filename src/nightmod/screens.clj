@@ -94,9 +94,9 @@
                            (filter #(.isDirectory %))
                            (map read-title)
                            (map create-button))]
-      (-> (cons (label "New Game:" ui-skin) new-games)
-          (concat (when (seq saved-games)
-                    (cons (label "Load Game:" ui-skin) saved-games)))
+      (-> (when (seq saved-games)
+            (cons (label "Load Game:" ui-skin) saved-games))
+          (concat (cons (label "New Game:" ui-skin) new-games))
           (vertical :pack)
           (scroll-pane (style :scroll-pane nil nil nil nil nil))
           vector
