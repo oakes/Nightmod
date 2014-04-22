@@ -45,7 +45,7 @@
                       :context context
                       :timeout 5000
                       :namespace game-ns
-                      :max-defs 1000
+                      :max-defs Integer/MAX_VALUE
                       :init '(do
                                (require '[nightmod.public :refer :all]
                                         '[play-clj.core :refer :all]

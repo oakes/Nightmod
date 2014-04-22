@@ -1,7 +1,7 @@
 (defproject nightmod "0.0.1-SNAPSHOT"
   :description "FIXME: write description"
   
-  :dependencies [[clojail "1.0.6"]
+  :dependencies [[org.clojars.oakes/clojail "1.0.6"]
                  [com.badlogicgames.gdx/gdx "1.0.0"]
                  [com.badlogicgames.gdx/gdx-backend-lwjgl "1.0.0"]
                  [com.badlogicgames.gdx/gdx-box2d "1.0.0"]
