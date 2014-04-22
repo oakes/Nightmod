@@ -1,8 +1,7 @@
 (defproject nightmod "0.0.1-SNAPSHOT"
   :description "FIXME: write description"
   
-  :dependencies [[org.clojars.oakes/clojail "1.0.6"]
-                 [com.badlogicgames.gdx/gdx "1.0.0"]
+  :dependencies [[com.badlogicgames.gdx/gdx "1.0.0"]
                  [com.badlogicgames.gdx/gdx-backend-lwjgl "1.0.0"]
                  [com.badlogicgames.gdx/gdx-box2d "1.0.0"]
                  [com.badlogicgames.gdx/gdx-box2d-platform "1.0.0"
@@ -20,6 +19,7 @@
                                lein-droid
                                lein-fruit
                                play-clj/lein-template]]
+                 [org.clojars.oakes/clojail "1.0.6"]
                  [org.clojure/clojure "1.6.0"]
                  [org.eclipse.jgit "3.2.0.201312181205-r"]
                  [play-clj "0.3.1-SNAPSHOT"]
