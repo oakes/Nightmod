@@ -22,7 +22,7 @@
                  [org.clojars.oakes/clojail "1.0.6"]
                  [org.clojure/clojure "1.6.0"]
                  [org.eclipse.jgit "3.2.0.201312181205-r"]
-                 [play-clj "0.3.1-SNAPSHOT"]
+                 [play-clj "0.3.1"]
                  [seesaw "1.4.4"]]
   
   :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
