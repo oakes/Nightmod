@@ -3,6 +3,7 @@
             [clojure.java.io :as io]
             [nightcode.editors :as editors]
             [nightcode.ui :as ui]
+            [nightcode.utils :as nc-utils]
             [nightmod.utils :as u]
             [play-clj.core :refer :all]
             [play-clj.ui :refer :all]
@@ -17,8 +18,7 @@
 
 (defn read-title
   [f]
-  [(.getCanonicalPath f)
-   (or (-> (io/file f u/properties-file)
+  [(or (-> (io/file f u/properties-file)
             slurp
             edn/read-string
             :title
@@ -27,7 +27,8 @@
            Long/parseLong
            u/format-date
            (try (catch Exception _)))
-       (.getName f))])
+       (.getName f))
+   (.getCanonicalPath f)])
 
 (defn load-project!
   [path]
@@ -80,14 +81,11 @@
     (when-not @u/main-dir
       (reset! u/main-dir (u/get-data-dir)))
     (let [ui-skin (skin "uiskin.json")
-          create-button (fn [[k v]]
-                          (text-button v ui-skin :set-name k))
-          template-names ["Arcade" "Platformer"
-                          "Orthogonal RPG" "Isometric RPG"
-                          "Barebones 2D" "Barebones 3D"]
+          create-button (fn [[display-name path]]
+                          (text-button display-name ui-skin :set-name path))
           new-games (->> (for [i (range (count templates))]
-                           [(nth templates i)
-                            (nth template-names i)])
+                           [(nc-utils/get-string (nth templates i))
+                            (nth templates i)])
                          (map create-button))
           saved-games (->> (io/file @u/main-dir)
                            .listFiles
