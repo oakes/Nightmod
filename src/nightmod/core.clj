@@ -24,10 +24,9 @@
   java.awt.Component (children [this] nil))
 
 (defn set-hint-container!
+  "Sets the container in which the hints will be stored."
   [container]
-  (intern 'nightcode.shortcuts
-          '*hint-container*
-          container))
+  (intern 'nightcode.shortcuts '*hint-container* container))
 
 (defn create-layered-pane
   "Returns the layered pane holding the editor pane."
