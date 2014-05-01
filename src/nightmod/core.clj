@@ -84,7 +84,7 @@
                            (show-external-editor! main-window editor-window)
                            (show-internal-editor! main-window editor-window)))
         window-btn (ui/button :id :window
-                              :text (nc-utils/get-string :toggle-window)
+                              :text (nc-utils/get-string :window)
                               :focusable? false
                               :listen [:action toggle-window!])]
     (.addWindowListener editor-window
@@ -110,9 +110,9 @@
   "Loads game into the canvas and runs it in a sandbox."
   [path]
   (pom/add-classpath path)
-  (let [core (.getCanonicalPath (io/file path "core.clj"))]
-    (protect-file! core)
-    (sandbox/run-file! core)))
+  (doto (.getCanonicalPath (io/file path "core.clj"))
+    protect-file!
+    sandbox/run-file!))
 
 (defn create-window
   "Creates the main window."
