@@ -42,17 +42,18 @@
   []
   (when (.isVisible (glass))
     (s/invoke-now
-      (let [pane (s/select @ui/root [:#editor-pane])
-            pane-pos (.getLocationOnScreen pane)
-            mouse-pos (.getMousePosition @ui/root)]
-        (SwingUtilities/convertPointToScreen mouse-pos @ui/root)
-        (doto (Robot.)
-          (.mouseMove
-            (+ (. pane-pos x) (- (.getWidth pane) 5))
-            (+ (. pane-pos y) 5))
-          (.mousePress InputEvent/BUTTON1_MASK)
-          (.mouseRelease InputEvent/BUTTON1_MASK)
-          (.mouseMove (. mouse-pos x) (. mouse-pos y))))
+      (when-let [pane (s/select @ui/root [:#editor-pane])]
+        (let [pane-pos (.getLocationOnScreen pane)
+              mouse-pos (.getMousePosition @ui/root)]
+          (when (and pane-pos mouse-pos)
+            (SwingUtilities/convertPointToScreen mouse-pos @ui/root)
+            (doto (Robot.)
+              (.mouseMove
+                (+ (. pane-pos x) (- (.getWidth pane) 5))
+                (+ (. pane-pos y) 5))
+              (.mousePress InputEvent/BUTTON1_MASK)
+              (.mouseRelease InputEvent/BUTTON1_MASK)
+              (.mouseMove (. mouse-pos x) (. mouse-pos y))))))
       (some-> (editors/get-selected-text-area) s/request-focus!))))
 
 (defn toggle-glass!

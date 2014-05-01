@@ -9,6 +9,8 @@
   (:import [java.io FilePermission]
            [java.lang.reflect ReflectPermission]))
 
+(def manager (asset-manager))
+
 (def tester
   [(jail-test/blacklist-objects
      [clojure.lang.Compiler clojure.lang.Namespace
@@ -30,6 +32,7 @@
        pmap pcalls
        System/out System/in System/err
        defgame set-screen! setScreen set-screen-wrapper! app! app on-gl
+       set-asset-manager!
        reify proxy gen-class})
    (jail-test/blacklist-nses '[clojure.main])
    (jail-test/blanket "clojail")])
@@ -75,6 +78,7 @@
   [path]
   (reset! u/error nil)
   (clear-ns! game-ns)
+  (asset-manager! manager :clear)
   (-> (format "(do %s\n)" (slurp path))
       jail/safe-read
       sb
@@ -91,3 +95,5 @@
           (when (nil? @u/error)
             (reset! u/error e))
           nil)))))
+
+(set-asset-manager! manager)

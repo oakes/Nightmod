@@ -23,11 +23,18 @@
 (extend-protocol s-util/Children
   java.awt.Component (children [this] nil))
 
+(defn set-hint-container!
+  [container]
+  (intern 'nightcode.shortcuts
+          '*hint-container*
+          container))
+
 (defn create-layered-pane
   "Returns the layered pane holding the editor pane."
   []
-  (let [pane (editors/create-pane)]
-    (doto (JLayeredPane.)
+  (let [layered-pane (doto (JLayeredPane.) set-hint-container!)
+        pane (editors/create-pane)]
+    (doto layered-pane
       (.setPreferredSize (Dimension. u/editor-width u/window-height))
       (.addComponentListener (proxy [ComponentAdapter] []
                                (componentResized [e]
@@ -35,6 +42,63 @@
                                       .getHeight
                                       (.setBounds pane 0 0 u/editor-width)))))
       (.add pane))))
+
+(defn override-save-button!
+  "Makes the editor save button restart the game."
+  []
+  (let [orig-save-file! editors/save-file!]
+    (intern 'nightcode.editors
+            'save-file!
+            (fn [_ &]
+              (orig-save-file!)
+              (screens/restart!)
+              true))))
+
+(defn show-internal-editor!
+  "Shows the internal editor."
+  [main-window editor-window]
+  (let [editor-pane (ui/get-editor-pane)
+        l-pane (-> main-window .getGlassPane (s/select [:JLayeredPane]) first)]
+    (reset! ui/root main-window)
+    (u/toggle-glass! true)
+    (.add l-pane editor-pane)
+    (set-hint-container! l-pane)
+    (s/hide! editor-window)))
+
+(defn show-external-editor!
+  "Shows the external editor."
+  [main-window editor-window]
+  (let [editor-pane (ui/get-editor-pane)]
+    (u/toggle-glass! false)
+    (reset! ui/root editor-window)
+    (s/config! editor-window :content editor-pane)
+    (set-hint-container! (.getLayeredPane editor-window))
+    (s/show! editor-window)))
+
+(defn add-window-button!
+  "Adds the window button to the file browser view."
+  [main-window]
+  (let [external? (atom false)
+        editor-window (s/frame :width 800 :height 600 :on-close :hide)
+        toggle-window! (fn [& _]
+                         (if (swap! external? not)
+                           (show-external-editor! main-window editor-window)
+                           (show-internal-editor! main-window editor-window)))
+        window-btn (ui/button :id :window
+                              :text (nc-utils/get-string :toggle-window)
+                              :focusable? false
+                              :listen [:action toggle-window!])]
+    (.addWindowListener editor-window
+      (proxy [WindowAdapter] []
+        (windowClosing [e]
+          (toggle-window!))))
+    (intern 'nightcode.editors
+            '*widgets*
+            [:up :save :undo :redo :font-dec :font-inc
+             :doc :paredit :paredit-help :close])
+    (intern 'nightcode.file-browser
+            '*widgets*
+            [:up :new-file :edit :save :cancel window-btn])))
 
 (defn protect-file!
   "Prevents renaming or deleting a file."
@@ -53,14 +117,19 @@
 
 (defn create-window
   "Creates the main window."
-  [canvas]
-  (doto (s/frame :title (str "Nightmod " (or (some-> "nightmod.core"
-                                                     nc-utils/get-project
-                                                     (nth 2))
-                                             "beta"))
-                 :width u/window-width
-                 :height u/window-height
-                 :on-close :nothing)
+  []
+  (s/frame :title (str "Nightmod " (or (some-> "nightmod.core"
+                                               nc-utils/get-project
+                                               (nth 2))
+                                       "beta"))
+           :width u/window-width
+           :height u/window-height
+           :on-close :nothing))
+
+(defn init-window
+  "Adds content and listeners to the main window."
+  [window canvas]
+  (doto window
     ; add canvas and editor pane
     (-> .getContentPane (doto
                           (.add (s/border-panel :center canvas))))
@@ -68,20 +137,6 @@
                         (.setLayout (BorderLayout.))
                         (.add (create-layered-pane) BorderLayout/EAST)
                         (.setVisible false)))
-    ; listen for keys while modifier is down
-    (shortcuts/listen-for-shortcuts!
-      (fn [key-code]
-        (case key-code
-          ; page up
-          33 (editors/move-tab-selection! -1)
-          ; page down
-          34 (editors/move-tab-selection! 1)
-          ; Q
-          81 (window/confirm-exit-app!)
-          ; W
-          87 (editors/close-selected-editor!)
-          ; else
-          false)))
     ; set various window properties
     window/enable-full-screen!
     window/add-listener!))
@@ -96,7 +151,25 @@
              (fn [_ _ _ path]
                (load-game! path)))
   (s/invoke-now
-    (let [canvas (Canvas.)]
-      (s/show! (reset! ui/root (create-window canvas)))
+    ; listen for keys while modifier is down
+    (shortcuts/listen-for-shortcuts!
+      (fn [key-code]
+        (case key-code
+          ; page up
+          33 (editors/move-tab-selection! -1)
+          ; page down
+          34 (editors/move-tab-selection! 1)
+          ; Q
+          81 (window/confirm-exit-app!)
+          ; W
+          87 (editors/close-selected-editor!)
+          ; else
+          false)))
+    ; create the window
+    (let [window (create-window)
+          canvas (Canvas.)]
+      (override-save-button!)
+      (add-window-button! window)
+      (s/show! (reset! ui/root (init-window window canvas)))
       (LwjglApplication. screens/nightmod canvas)))
   (Keyboard/enableRepeatEvents true))

@@ -61,19 +61,6 @@
   (u/toggle-glass!)
   (u/focus-on-overlay!))
 
-(def orig-save-file! editors/save-file!)
-(intern 'nightcode.editors
-        'save-file!
-        (fn [_ &]
-          (orig-save-file!)
-          (restart!)
-          true))
-
-(intern 'nightcode.editors
-        '*widgets*
-        [:up :save :undo :redo :font-dec :font-inc
-         :doc :paredit :paredit-help :close])
-
 (defscreen main-screen
   :on-show
   (fn [screen entities]
