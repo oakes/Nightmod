@@ -24,6 +24,7 @@
                  [org.eclipse.jgit "3.2.0.201312181205-r"]
                  [play-clj "0.3.2-SNAPSHOT"]
                  [seesaw "1.4.4"]]
+  :uberjar-exclusions [#"clojure-clr.*\.zip"]
   
   :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
   :aot [nightmod.core]
