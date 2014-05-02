@@ -32,7 +32,8 @@
        pmap pcalls
        System/out System/in System/err
        defgame set-screen! setScreen set-screen-wrapper! app! app on-gl
-       set-asset-manager!
+       loader loader! resolver
+       asset-manager* asset-manager set-asset-manager!
        reify proxy gen-class})
    (jail-test/blacklist-nses '[clojure.main])
    (jail-test/blanket "clojail")])
