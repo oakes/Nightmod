@@ -79,7 +79,7 @@
   [path]
   (reset! u/error nil)
   (clear-ns! game-ns)
-  (asset-manager! manager :clear)
+  (on-gl (asset-manager! manager :clear))
   (-> (format "(do %s\n)" (slurp path))
       jail/safe-read
       sb
