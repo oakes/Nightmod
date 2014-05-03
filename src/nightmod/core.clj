@@ -84,7 +84,7 @@
                            (show-external-editor! main-window editor-window)
                            (show-internal-editor! main-window editor-window)))
         window-btn (ui/button :id :window
-                              :text (nc-utils/get-string :window)
+                              :text (nc-utils/get-string :toggle-window)
                               :focusable? false
                               :listen [:action toggle-window!])]
     (.addWindowListener editor-window
@@ -97,7 +97,7 @@
              :doc :paredit :paredit-help :close])
     (intern 'nightcode.file-browser
             '*widgets*
-            [:up :new-file :edit :save :cancel window-btn])))
+            [:up :new-file :edit :open-in-browser :save :cancel window-btn])))
 
 (defn protect-file!
   "Prevents renaming or deleting a file."
