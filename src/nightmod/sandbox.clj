@@ -11,6 +11,22 @@
 
 (def manager (asset-manager))
 
+(def blacklist-symbols
+  '#{alter-var-root resolve find-var with-redefs-fn intern
+     *read-eval* set! eval catch
+     addMethod forName
+     load load-file load-string load-reader
+     ns-resolve ns-publics ns-unmap ns-map ns-interns the-ns in-ns
+     push-thread-bindings pop-thread-bindings future future-call
+     agent send send-off
+     pmap pvalues pcalls
+     System/out System/in System/err
+     defscreen* defgame* defgame set-screen! setScreen set-screen-wrapper!
+     app! app on-gl
+     loader loader! resolver
+     asset-manager* asset-manager set-asset-manager!
+     reify proxy gen-class})
+
 (def tester
   [(jail-test/blacklist-objects
      [clojure.lang.Compiler clojure.lang.Namespace
@@ -21,20 +37,7 @@
       "java.security"
       "java.util.concurrent"
       "java.awt"])
-   (jail-test/blacklist-symbols
-    '#{alter-var-root resolve find-var with-redefs-fn intern
-       *read-eval* set! eval catch
-       addMethod forName
-       load load-file load-string load-reader
-       ns-resolve ns-publics ns-unmap ns-map ns-interns the-ns in-ns
-       push-thread-bindings pop-thread-bindings future-call
-       agent send send-off
-       pmap pcalls
-       System/out System/in System/err
-       defgame set-screen! setScreen set-screen-wrapper! app! app on-gl
-       loader loader! resolver
-       asset-manager* asset-manager set-asset-manager!
-       reify proxy gen-class})
+   (jail-test/blacklist-symbols blacklist-symbols)
    (jail-test/blacklist-nses '[clojure.main])
    (jail-test/blanket "clojail")])
 
@@ -84,6 +87,22 @@
       jail/safe-read
       sb
       (try (catch Exception e (reset! u/error e)))))
+
+(intern 'nightcode.completions
+        '*namespaces*
+        ['clojure.core
+         'nightmod.public
+         'play-clj.core
+         'play-clj.g2d
+         'play-clj.g3d
+         'play-clj.math
+         'play-clj.physics
+         'play-clj.ui])
+
+(intern 'nightcode.completions
+        'allow-symbol?
+        (fn [symbol-str ns]
+          (not (contains? blacklist-symbols (symbol symbol-str)))))
 
 (set-screen-wrapper!
   (fn [screen screen-fn]

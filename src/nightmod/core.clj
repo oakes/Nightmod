@@ -74,8 +74,8 @@
     (set-hint-container! (.getLayeredPane editor-window))
     (s/show! editor-window)))
 
-(defn add-window-button!
-  "Adds the window button to the file browser view."
+(defn adjust-widgets!
+  "Adds and removes widgets from the window."
   [main-window]
   (let [external? (atom false)
         editor-window (s/frame :width 800 :height 600 :on-close :hide)
@@ -168,7 +168,7 @@
     (let [window (create-window)
           canvas (Canvas.)]
       (override-save-button!)
-      (add-window-button! window)
+      (adjust-widgets! window)
       (s/show! (reset! ui/root (init-window window canvas)))
       (LwjglApplication. screens/nightmod canvas)))
   (Keyboard/enableRepeatEvents true))
