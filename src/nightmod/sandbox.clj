@@ -17,9 +17,6 @@
      addMethod forName
      load load-file load-string load-reader
      ns-resolve ns-publics ns-unmap ns-map ns-interns the-ns in-ns
-     push-thread-bindings pop-thread-bindings future future-call
-     agent send send-off
-     pmap pvalues pcalls
      System/out System/in System/err
      defscreen* defgame* defgame set-screen! setScreen set-screen-wrapper!
      app! app on-gl
@@ -104,16 +101,20 @@
         (fn [symbol-str ns]
           (not (contains? blacklist-symbols (symbol symbol-str)))))
 
+(defn run-in-sandbox!
+  [func]
+  (try
+    (jvm/jvm-sandbox func context)
+    (catch Exception e
+      (when (nil? @u/error)
+        (reset! u/error e))
+      nil)))
+
 (set-screen-wrapper!
   (fn [screen screen-fn]
     (if (or (= screen (:screen s/main-screen))
             (= screen (:screen s/overlay-screen)))
       (screen-fn)
-      (try
-        (jvm/jvm-sandbox screen-fn context)
-        (catch Exception e
-          (when (nil? @u/error)
-            (reset! u/error e))
-          nil)))))
+      (run-in-sandbox! screen-fn))))
 
 (set-asset-manager! manager)
