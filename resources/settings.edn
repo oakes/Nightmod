@@ -1,3 +1,3 @@
 {:title "%s"
- :about "This is a game."
+ :description "This is a game."
  :version 1}
