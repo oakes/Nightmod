@@ -18,7 +18,7 @@
 
 (defn read-title
   [f]
-  [(or (-> (io/file f u/game-file)
+  [(or (-> (io/file f u/settings-file)
             slurp
             edn/read-string
             :title
@@ -70,15 +70,16 @@
     (let [ui-skin (skin "uiskin.json")
           create-button (fn [[display-name path]]
                           (text-button display-name ui-skin :set-name path))
-          new-games (->> (for [i (range (count templates))]
-                           [(nc-utils/get-string (nth templates i))
-                            (nth templates i)])
-                         (map create-button))
           saved-games (->> (io/file @u/main-dir)
                            .listFiles
                            (filter #(.isDirectory %))
+                           (sort-by #(.getName %))
                            (map read-title)
-                           (map create-button))]
+                           (map create-button))
+          new-games (->> (for [i (range (count templates))
+                               :let [template (nth templates i)]]
+                           [(nc-utils/get-string template) template])
+                         (map create-button))]
       (-> (when (seq saved-games)
             (cons (label "Load Game:" ui-skin) saved-games))
           (concat (cons (label "New Game:" ui-skin) new-games))

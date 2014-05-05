@@ -16,8 +16,10 @@
                   :exclusions [leiningen
                                lein-ancient
                                lein-cljsbuild
+                               lein-clr
                                lein-droid
                                lein-fruit
+                               lein-typed
                                play-clj/lein-template]]
                  [org.clojars.oakes/clojail "1.0.6"]
                  [org.clojure/clojure "1.6.0"]

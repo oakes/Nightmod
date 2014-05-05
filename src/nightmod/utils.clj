@@ -12,7 +12,7 @@
 (def ^:const window-width 1200)
 (def ^:const window-height 768)
 (def ^:const editor-width 700)
-(def ^:const game-file ".game")
+(def ^:const settings-file "settings.edn")
 
 (def main-dir (atom nil))
 (def project-dir (atom nil))
@@ -31,10 +31,11 @@
   (let [project-name (str (System/currentTimeMillis))
         project-file (io/file @main-dir project-name)]
     (.mkdirs project-file)
-    (doseq [f (-> (io/resource template) io/file .listFiles)]
+    (doseq [f (-> template io/resource io/file .listFiles)]
       (io/copy f (io/file project-file (.getName f))))
-    (spit (io/file project-file game-file)
-          (pr-str {:title (nc-utils/get-string template)}))
+    (spit (io/file project-file settings-file)
+          (format (-> settings-file io/resource slurp)
+                  (nc-utils/get-string template)))
     (.getCanonicalPath project-file)))
 
 (defn glass
