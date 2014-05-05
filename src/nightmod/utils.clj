@@ -2,6 +2,7 @@
   (:require [clojure.java.io :as io]
             [nightcode.editors :as editors]
             [nightcode.ui :as ui]
+            [nightcode.utils :as nc-utils]
             [seesaw.core :as s])
   (:import [java.text SimpleDateFormat]
            [java.awt Robot]
@@ -11,7 +12,7 @@
 (def ^:const window-width 1200)
 (def ^:const window-height 768)
 (def ^:const editor-width 700)
-(def ^:const properties-file ".properties")
+(def ^:const game-file ".game")
 
 (def main-dir (atom nil))
 (def project-dir (atom nil))
@@ -32,6 +33,8 @@
     (.mkdirs project-file)
     (doseq [f (-> (io/resource template) io/file .listFiles)]
       (io/copy f (io/file project-file (.getName f))))
+    (spit (io/file project-file game-file)
+          (pr-str {:title (nc-utils/get-string template)}))
     (.getCanonicalPath project-file)))
 
 (defn glass

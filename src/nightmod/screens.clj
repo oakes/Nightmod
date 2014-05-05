@@ -18,7 +18,7 @@
 
 (defn read-title
   [f]
-  [(or (-> (io/file f u/properties-file)
+  [(or (-> (io/file f u/game-file)
             slurp
             edn/read-string
             :title
