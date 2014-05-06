@@ -12,9 +12,6 @@
 (declare nightmod main-screen blank-screen overlay-screen)
 
 (def ^:const border-space 5)
-(def ^:const templates ["arcade" "platformer"
-                        "orthogonal-rpg" "isometric-rpg"
-                        "barebones-2d" "barebones-3d"])
 
 (defn read-title
   [f]
@@ -76,8 +73,8 @@
                            (sort-by #(.getName %))
                            (map read-title)
                            (map create-button))
-          new-games (->> (for [i (range (count templates))
-                               :let [template (nth templates i)]]
+          new-games (->> (for [i (range (count u/templates))
+                               :let [template (nth u/templates i)]]
                            [(nc-utils/get-string template) template])
                          (map create-button))]
       (-> (when (seq saved-games)
@@ -97,7 +94,7 @@
   :on-ui-changed
   (fn [screen entities]
     (when-let [n (text-button! (:actor screen) :get-name)]
-      (if (contains? (set templates) n)
+      (if (contains? (set u/templates) n)
         (new-project! n)
         (load-project! n)))
     nil))
