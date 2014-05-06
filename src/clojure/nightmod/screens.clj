@@ -53,11 +53,6 @@
   []
   (reset! u/project-dir @u/project-dir))
 
-(defn toggle-files!
-  []
-  (u/toggle-glass!)
-  (u/focus-on-overlay!))
-
 (defscreen main-screen
   :on-show
   (fn [screen entities]
@@ -145,7 +140,7 @@
     (case (text-button! (:actor screen) :get-name)
       "home" (home!)
       "restart" (restart!)
-      "files" (toggle-files!)
+      "files" (u/toggle-glass!)
       nil)
     nil))
 

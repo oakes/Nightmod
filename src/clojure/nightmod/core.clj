@@ -13,9 +13,10 @@
             [seesaw.core :as s]
             [seesaw.util :as s-util])
   (:import [java.awt BorderLayout Canvas Dimension Window]
-           [java.awt.event ComponentAdapter WindowAdapter]
+           [java.awt.event ComponentAdapter KeyEvent KeyListener WindowAdapter]
            [javax.swing JLayeredPane]
-           [com.badlogic.gdx.backends.lwjgl LwjglApplication]
+           [com.badlogic.gdx.backends.lwjgl LwjglApplication LwjglInput]
+           [nightmod KeyCodeConverter]
            [org.lwjgl.input Keyboard])
   (:gen-class))
 
@@ -41,6 +42,33 @@
                                       .getHeight
                                       (.setBounds pane 0 0 u/editor-width)))))
       (.add pane))))
+
+(defn awt->gdx
+  "Translates key code from AWT to LibGDX."
+  [keycode]
+  (-> keycode KeyCodeConverter/translateFromAWT LwjglInput/getGdxKeyCode))
+
+(defn pass-key-events!
+  "Passes key events to the game."
+  [window game]
+  (.addKeyListener
+    window
+    (reify KeyListener
+      (keyReleased [this e]
+        (-> game
+            .getInput
+            .getInputProcessor
+            (.keyUp (awt->gdx (.getKeyCode e)))))
+      (keyTyped [this e]
+        (-> game
+            .getInput
+            .getInputProcessor
+            (.keyTyped (awt->gdx (.getKeyCode e)))))
+      (keyPressed [this e]
+        (-> game
+            .getInput
+            .getInputProcessor
+            (.keyDown (awt->gdx (.getKeyCode e))))))))
 
 (defn override-save-button!
   "Makes the editor save button restart the game."
@@ -131,7 +159,8 @@
   (doto window
     ; add canvas and editor pane
     (-> .getContentPane (doto
-                          (.add (s/border-panel :center canvas))))
+                          (.add (s/border-panel :center canvas
+                                                :focusable? false))))
     (-> .getGlassPane (doto
                         (.setLayout (BorderLayout.))
                         (.add (create-layered-pane) BorderLayout/EAST)
@@ -167,9 +196,10 @@
           false)))
     ; create the window
     (let [window (create-window)
-          canvas (Canvas.)]
+          canvas (doto (Canvas.) (.setFocusable false))]
       (override-save-button!)
       (adjust-widgets! window)
       (s/show! (reset! ui/root (init-window window canvas)))
-      (LwjglApplication. screens/nightmod canvas)))
+      (->> (LwjglApplication. screens/nightmod canvas)
+           (pass-key-events! window))))
   (Keyboard/enableRepeatEvents true))

@@ -4,10 +4,7 @@
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
             [seesaw.core :as s])
-  (:import [java.text SimpleDateFormat]
-           [java.awt Robot]
-           [java.awt.event InputEvent]
-           [javax.swing SwingUtilities]))
+  (:import [java.text SimpleDateFormat]))
 
 (def ^:const window-width 1200)
 (def ^:const window-height 768)
@@ -60,21 +57,10 @@
 
 (defn focus-on-overlay!
   []
-  (when (.isVisible (glass))
-    (s/invoke-now
-      (when-let [pane (s/select @ui/root [:#editor-pane])]
-        (let [pane-pos (.getLocationOnScreen pane)
-              mouse-pos (.getMousePosition @ui/root)]
-          (when (and pane-pos mouse-pos)
-            (SwingUtilities/convertPointToScreen mouse-pos @ui/root)
-            (doto (Robot.)
-              (.mouseMove
-                (+ (. pane-pos x) (- (.getWidth pane) 5))
-                (+ (. pane-pos y) 5))
-              (.mousePress InputEvent/BUTTON1_MASK)
-              (.mouseRelease InputEvent/BUTTON1_MASK)
-              (.mouseMove (. mouse-pos x) (. mouse-pos y))))))
-      (some-> (editors/get-selected-text-area) s/request-focus!))))
+  (s/invoke-now
+    (.grabFocus (or (editors/get-selected-text-area)
+                    (s/select @ui/root [:#editor-pane])
+                    (glass)))))
 
 (defn toggle-glass!
   ([]
@@ -82,5 +68,7 @@
   ([show?]
     (s/invoke-now
       (.setVisible (glass) show?)
-      (.revalidate @ui/root))
-    (focus-on-overlay!)))
+      (.revalidate @ui/root)
+      (if show?
+        (focus-on-overlay!)
+        (s/request-focus! @ui/root)))))
