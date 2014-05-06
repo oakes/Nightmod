@@ -147,10 +147,6 @@
       "restart" (restart!)
       "files" (toggle-files!)
       nil)
-    nil)
-  :on-touch-down
-  (fn [screen entities]
-    (u/focus-on-overlay!)
     nil))
 
 (defgame nightmod

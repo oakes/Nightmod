@@ -48,7 +48,7 @@
   (let [orig-save-file! editors/save-file!]
     (intern 'nightcode.editors
             'save-file!
-            (fn [_ &]
+            (fn [& _]
               (orig-save-file!)
               (screens/restart!)
               true))))
