@@ -1,6 +1,5 @@
-(defproject nightmod "0.0.1-SNAPSHOT"
-  :description "FIXME: write description"
-  
+(defproject nightmod "0.1.0-SNAPSHOT"
+  :description "A tool for making live-moddable games"
   :dependencies [[com.badlogicgames.gdx/gdx "1.0.0"]
                  [com.badlogicgames.gdx/gdx-backend-lwjgl "1.0.0"]
                  [com.badlogicgames.gdx/gdx-box2d "1.0.0"]
@@ -27,7 +26,9 @@
                  [play-clj "0.3.2"]
                  [seesaw "1.4.4"]]
   :uberjar-exclusions [#"clojure-clr.*\.zip"]
-  
+  :resource-paths ["resources"]
+  :source-paths ["src/clojure"]
+  :java-source-paths ["src/java"]
   :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
   :aot [nightmod.core]
-  :main nightmod.core)
+  :main ^:skip-aot nightmod.Nightmod)

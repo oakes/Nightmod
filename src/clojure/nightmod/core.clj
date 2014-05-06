@@ -144,6 +144,7 @@
   "Launches the main window."
   [& args]
   (sandbox/set-policy!)
+  (window/set-icon! "logo_launcher.png")
   (window/set-theme! args)
   (add-watch u/project-dir
              :load-game
