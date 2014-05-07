@@ -11,6 +11,12 @@
       (swap! score dec)))
   entities)
 
+(defn update-label!
+  [entities]
+  (doseq [e entities]
+    (when (:score? e)
+      (label! e :set-text (str @score)))))
+
 (defscreen main-screen
   ; runs when the screen first shows
   :on-show
@@ -59,12 +65,6 @@
   :on-timer
   (fn [screen entities]
     (conj entities (create-enemy))))
-
-(defn update-label!
-  [entities]
-  (doseq [e entities]
-    (when (:score? e)
-      (label! e :set-text (str @score)))))
 
 (defscreen score-screen
   :on-show
