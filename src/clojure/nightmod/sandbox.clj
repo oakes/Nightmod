@@ -66,6 +66,8 @@
                                ; initialize bullet
                                @init-bullet)))
 
+(def timers (atom []))
+
 (defn set-policy!
   []
   (System/setProperty "java.security.policy"
@@ -79,27 +81,41 @@
   [path]
   (reset! u/error nil)
   (clear-ns! game-ns)
+  (doseq [t @timers]
+    (.stop t))
+  (reset! timers [])
   (on-gl (asset-manager! manager :clear))
   (-> (format "(do %s\n)" (slurp path))
       jail/safe-read
       sb
       (try (catch Exception e (reset! u/error e)))))
 
-(intern 'nightcode.completions
-        '*namespaces*
-        ['clojure.core
-         'nightmod.public
-         'play-clj.core
-         'play-clj.g2d
-         'play-clj.g3d
-         'play-clj.math
-         'play-clj.physics
-         'play-clj.ui])
-
-(intern 'nightcode.completions
-        'allow-symbol?
-        (fn [symbol-str ns]
-          (not (contains? blacklist-symbols (symbol symbol-str)))))
+(defn override-functions!
+  []
+  ; keep a reference to all timers to we can stop them later
+  (let [create-and-add-timer! (deref #'play-clj.core/create-and-add-timer!)]
+    (intern 'play-clj.core
+            'create-and-add-timer!
+            (fn [screen id]
+              (let [t (create-and-add-timer! screen id)]
+                (swap! timers conj t)
+                t))))
+  ; set namespaces we want to provide completions for
+  (intern 'nightcode.completions
+          '*namespaces*
+          ['clojure.core
+           'nightmod.public
+           'play-clj.core
+           'play-clj.g2d
+           'play-clj.g3d
+           'play-clj.math
+           'play-clj.physics
+           'play-clj.ui])
+  ; set function that prevents blacklisted symbols from being in completions
+  (intern 'nightcode.completions
+          'allow-symbol?
+          (fn [symbol-str ns]
+            (not (contains? blacklist-symbols (symbol symbol-str))))))
 
 (defn run-in-sandbox!
   [func]
@@ -118,3 +134,4 @@
       (run-in-sandbox! screen-fn))))
 
 (set-asset-manager! manager)
+(override-functions!)
