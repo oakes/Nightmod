@@ -10,6 +10,7 @@
             [nightmod.screens :as screens]
             [nightmod.utils :as u]
             [nightmod.sandbox :as sandbox]
+            [play-clj.core :as play-clj]
             [seesaw.core :as s]
             [seesaw.util :as s-util])
   (:import [java.awt BorderLayout Canvas Dimension Window]
@@ -58,17 +59,20 @@
         (-> game
             .getInput
             .getInputProcessor
-            (.keyUp (awt->gdx (.getKeyCode e)))))
+            (.keyUp (awt->gdx (.getKeyCode e)))
+            play-clj/on-gl))
       (keyTyped [this e]
         (-> game
             .getInput
             .getInputProcessor
-            (.keyTyped (awt->gdx (.getKeyCode e)))))
+            (.keyTyped (.getKeyChar e))
+            play-clj/on-gl))
       (keyPressed [this e]
         (-> game
             .getInput
             .getInputProcessor
-            (.keyDown (awt->gdx (.getKeyCode e))))))))
+            (.keyDown (awt->gdx (.getKeyCode e)))
+            play-clj/on-gl)))))
 
 (defn override-save-button!
   "Makes the editor save button restart the game."

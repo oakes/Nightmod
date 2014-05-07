@@ -23,7 +23,7 @@
                  [org.clojars.oakes/clojail "1.0.6"]
                  [org.clojure/clojure "1.6.0"]
                  [org.eclipse.jgit "3.2.0.201312181205-r"]
-                 [play-clj "0.3.2"]
+                 [play-clj "0.3.3-SNAPSHOT"]
                  [seesaw "1.4.4"]]
   :uberjar-exclusions [#"clojure-clr.*\.zip"]
   :resource-paths ["resources"]
