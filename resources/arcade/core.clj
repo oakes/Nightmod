@@ -55,7 +55,7 @@
   ; runs when a key is pressed
   :on-key-down
   (fn [screen entities]
-    (when (= (:keycode screen) (key-code :space))
+    (when (= (:key screen) (key-code :space))
       (conj entities (create-missile))))
   ; runs when the mouse is clicked
   :on-touch-down
