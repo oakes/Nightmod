@@ -1,5 +1,7 @@
 (ns nightmod.utils
   (:require [clojure.java.io :as io]
+            [clojure.string :as string]
+            [nightcode.dialogs :as dialogs]
             [nightcode.editors :as editors]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
@@ -38,20 +40,44 @@
   [unix-time]
   (.format (SimpleDateFormat. "yyyy.MM.dd HH:mm:ss") unix-time))
 
-(defn new-project!
+(defn format-project-dir
+  [project-name]
+  (-> project-name
+      (string/replace " " "-")
+      nc-utils/format-project-name))
+
+(defn new-project-name!
   [template]
-  (let [project-name (str (System/currentTimeMillis))
-        project-file (io/file @main-dir project-name)]
-    (.mkdirs project-file)
-    (doseq [file-name (get template-files template)]
-      (-> (str template "/" file-name)
-          io/resource
-          io/input-stream
-          (io/copy (io/file project-file file-name))))
-    (->> (nc-utils/get-string template)
-         (format (slurp (io/resource settings-file)))
-         (spit (io/file project-file settings-file)))
-    (.getCanonicalPath project-file)))
+  (s/invoke-now
+    (dialogs/show-text-field-dialog!
+      (nc-utils/get-string :enter-game-name)
+      (nc-utils/get-string template))))
+
+(defn new-project-dir!
+  [project-name]
+  (let [dir-name (format-project-dir project-name)
+        project-file (io/file @main-dir dir-name)]
+    (cond
+      (= 0 (count dir-name))
+      (s/invoke-now
+        (dialogs/show-simple-dialog! (nc-utils/get-string :invalid-name)))
+      (.exists project-file)
+      (s/invoke-now
+        (dialogs/show-simple-dialog! (nc-utils/get-string :file-exists)))
+      :else
+      project-file)))
+
+(defn new-project!
+  [template project-name project-file]
+  (.mkdirs project-file)
+  (doseq [file-name (get template-files template)]
+    (-> (str template "/" file-name)
+        io/resource
+        io/input-stream
+        (io/copy (io/file project-file file-name))))
+  (->> (format (slurp (io/resource settings-file)) project-name)
+       (spit (io/file project-file settings-file)))
+  (.getCanonicalPath project-file))
 
 (defn glass
   []

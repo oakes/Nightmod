@@ -40,7 +40,10 @@
 
 (defn new-project!
   [template]
-  (load-project! (u/new-project! template)))
+  (when-let [project-name (u/new-project-name! template)]
+    (some->> (u/new-project-dir! project-name)
+             (u/new-project! template project-name)
+             load-project!)))
 
 (defn home!
   []
