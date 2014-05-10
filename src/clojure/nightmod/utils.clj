@@ -50,7 +50,7 @@
   [template]
   (s/invoke-now
     (dialogs/show-text-field-dialog!
-      (nc-utils/get-string :enter-game-name)
+      (nc-utils/get-string :enter-project-name)
       (nc-utils/get-string template))))
 
 (defn new-project-dir!
