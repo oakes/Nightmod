@@ -16,8 +16,7 @@
      *read-eval* set! eval catch
      addMethod forName
      load load-file load-string load-reader
-     ns-resolve ns-publics ns-unmap ns-map ns-interns the-ns in-ns
-     require import
+     ns-resolve ns-publics ns-unmap ns-map ns-interns the-ns in-ns require
      System/out System/in System/err
      defscreen* defgame* defgame set-screen! setScreen set-screen-wrapper!
      app! app on-gl
