@@ -13,8 +13,7 @@
 
 (defmacro load-game-file
   [n]
-  (some->> (or (io/resource n)
-               (throw (Throwable. (str "File not found: " n))))
+  (some->> (io/file @u/project-dir n)
            slurp
            (format "(do %s\n)")
            jail/safe-read))
