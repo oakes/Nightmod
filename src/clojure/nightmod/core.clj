@@ -18,7 +18,8 @@
            [javax.swing JLayeredPane]
            [com.badlogic.gdx.backends.lwjgl LwjglApplication LwjglInput]
            [nightmod KeyCodeConverter]
-           [org.lwjgl.input Keyboard])
+           [org.lwjgl.input Keyboard]
+           [org.lwjgl.opengl InputImplementation])
   (:gen-class))
 
 ; allow s/select to work with Canvas
@@ -44,35 +45,52 @@
                                       (.setBounds pane 0 0 u/editor-width)))))
       (.add pane))))
 
-(defn awt->gdx
+(defn awt->lwjgl
+  "Translates key code from AWT to LWJGL."
+  [key]
+  (KeyCodeConverter/translateFromAWT key))
+
+(defn awt->libgdx
   "Translates key code from AWT to LibGDX."
-  [keycode]
-  (-> keycode KeyCodeConverter/translateFromAWT LwjglInput/getGdxKeyCode))
+  [key]
+  (LwjglInput/getGdxKeyCode (awt->lwjgl key)))
 
 (defn pass-key-events!
   "Passes key events to the game."
   [window game]
-  (.addKeyListener
-    window
-    (reify KeyListener
-      (keyReleased [this e]
-        (-> game
-            .getInput
-            .getInputProcessor
-            (.keyUp (awt->gdx (.getKeyCode e)))
-            play-clj/on-gl))
-      (keyTyped [this e]
-        (-> game
-            .getInput
-            .getInputProcessor
-            (.keyTyped (.getKeyChar e))
-            play-clj/on-gl))
-      (keyPressed [this e]
-        (-> game
-            .getInput
-            .getInputProcessor
-            (.keyDown (awt->gdx (.getKeyCode e)))
-            play-clj/on-gl)))))
+  (let [key-buf-field (doto (.getDeclaredField Keyboard "keyDownBuffer")
+                        (.setAccessible true))
+        key-buf (.get key-buf-field nil)
+        impl-field (doto (.getDeclaredField Keyboard "implementation")
+                        (.setAccessible true))
+        impl (proxy [InputImplementation] []
+               (pollKeyboard [bb])
+               (readKeyboard [bb]))]
+    (.addKeyListener
+      window
+      (reify KeyListener
+        (keyReleased [this e]
+          (.set impl-field nil impl)
+          (.put key-buf (awt->lwjgl (.getKeyCode e)) (byte 0))
+          (-> game
+              .getInput
+              .getInputProcessor
+              (.keyUp (awt->libgdx (.getKeyCode e)))
+              play-clj/on-gl))
+        (keyTyped [this e]
+          (-> game
+              .getInput
+              .getInputProcessor
+              (.keyTyped (.getKeyChar e))
+              play-clj/on-gl))
+        (keyPressed [this e]
+          (.set impl-field nil impl)
+          (.put key-buf (awt->lwjgl (.getKeyCode e)) (byte 8))
+          (-> game
+              .getInput
+              .getInputProcessor
+              (.keyDown (awt->libgdx (.getKeyCode e)))
+              play-clj/on-gl))))))
 
 (defn override-save-button!
   "Makes the editor save button restart the game."
