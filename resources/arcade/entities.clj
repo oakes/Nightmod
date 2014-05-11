@@ -53,7 +53,7 @@
 
 (defn create-enemy
   []
-  (assoc (texture (rand-nth ["enemy.png"]))
+  (assoc (texture "enemy.png")
          :enemy? true
          :x (rand (game :width))
          :y (game :height)
