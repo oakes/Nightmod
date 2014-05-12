@@ -135,7 +135,6 @@
                            (show-internal-editor! main-window editor-window)))
         window-btn (ui/button :id :window
                               :text (nc-utils/get-string :toggle-window)
-                              :focusable? false
                               :listen [:action toggle-window!])]
     (.addWindowListener editor-window
       (proxy [WindowAdapter] []
