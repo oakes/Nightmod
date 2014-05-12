@@ -2,6 +2,7 @@
   (:require [cemerick.pomegranate :as pom]
             [clojure.java.io :as io]
             [nightcode.editors :as editors]
+            [nightcode.sandbox :as nc-sandbox]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
@@ -193,9 +194,10 @@
 (defn -main
   "Launches the main window."
   [& args]
-  (sandbox/set-policy!)
   (window/set-icon! "logo_launcher.png")
   (window/set-theme! args)
+  (nc-sandbox/set-home!)
+  (sandbox/set-policy!)
   (add-watch u/project-dir
              :load-game
              (fn [_ _ _ path]

@@ -34,7 +34,7 @@
 
 (defn get-data-dir
   []
-  (.getCanonicalPath (io/file (System/getProperty "user.home") "nightmod")))
+  (.getCanonicalPath (io/file (System/getProperty "user.home") "Nightmod")))
 
 (defn format-date
   [unix-time]
