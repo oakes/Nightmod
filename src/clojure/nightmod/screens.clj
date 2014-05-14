@@ -11,7 +11,7 @@
 
 (declare nightmod main-screen blank-screen overlay-screen)
 
-(def ^:const border-space 5)
+(def ^:const pad-space 5)
 
 (defn read-title
   [f]
@@ -56,6 +56,10 @@
   []
   (reset! u/project-dir @u/project-dir))
 
+(defn scrollify
+  [widget]
+  (scroll-pane widget (style :scroll-pane nil nil nil nil nil)))
+
 (defscreen main-screen
   :on-show
   (fn [screen entities]
@@ -74,14 +78,20 @@
           new-games (->> (for [i (range (count u/templates))
                                :let [template (nth u/templates i)]]
                            [(nc-utils/get-string template) template])
-                         (map create-button))]
-      (-> (when (seq saved-games)
-            (cons (label "Load Game:" ui-skin) saved-games))
-          (concat (cons (label "New Game:" ui-skin) new-games))
-          (vertical :pack)
-          (scroll-pane (style :scroll-pane nil nil nil nil nil))
-          vector
-          (table :align (align :center) :set-fill-parent true))))
+                         (map create-button))
+          saved-column (-> (label (nc-utils/get-string :load) ui-skin)
+                           (cons saved-games)
+                           (vertical :pack)
+                           scrollify)
+          load-column (-> (label (nc-utils/get-string :new) ui-skin)
+                          (cons new-games)
+                          (vertical :pack)
+                          scrollify)]
+      (table [(when (seq saved-games)
+                [saved-column :pad pad-space pad-space pad-space pad-space])
+              [load-column :pad pad-space pad-space pad-space pad-space]]
+             :align (align :center)
+             :set-fill-parent true)))
   :on-render
   (fn [screen entities]
     (clear!)
@@ -111,12 +121,12 @@
                   :set-wrap true
                   :set-alignment (bit-or (align :left) (align :bottom)))
            (scroll-pane (style :scroll-pane nil nil nil nil nil))
-           (assoc :id :error :x border-space :y border-space))
+           (assoc :id :error :x pad-space :y pad-space))
        (-> [(text-button "Home" ui-skin :set-name "home")
             (text-button "Restart" ui-skin :set-name "restart")
             (text-button "Files" ui-skin :set-name "files")]
            (vertical :pack)
-           (assoc :id :menu :x border-space))]))
+           (assoc :id :menu :x pad-space))]))
   :on-render
   (fn [screen entities]
     (->> (for [e entities]
@@ -135,7 +145,7 @@
       (case (:id e)
         :menu (assoc e :y (- height
                              (vertical! e :get-height)
-                             border-space))
+                             pad-space))
         :error (assoc e :width width :height height)
         e)))
   :on-ui-changed
