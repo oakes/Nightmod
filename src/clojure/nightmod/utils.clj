@@ -22,7 +22,16 @@
                                "enemy.png"
                                "entities.clj"
                                "player.png"]
-                     "platformer" ["core.clj"]
+                     "platformer" ["core.clj"
+                                   "entities.clj"
+                                   "level.tmx"
+                                   "player_jump.png"
+                                   "player_stand.png"
+                                   "player_walk1.png"
+                                   "player_walk2.png"
+                                   "player_walk3.png"
+                                   "tiles.png"
+                                   "utils.clj"]
                      "orthogonal-rpg" ["core.clj"]
                      "isometric-rpg" ["core.clj"]
                      "barebones-2d" ["core.clj"]
