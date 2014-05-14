@@ -1,4 +1,4 @@
-(defproject nightmod "0.1.0-SNAPSHOT"
+(defproject nightmod "0.0.1-SNAPSHOT"
   :description "A tool for making live-moddable games in Clojure"
   :dependencies [[com.badlogicgames.gdx/gdx "1.0.0"]
                  [com.badlogicgames.gdx/gdx-backend-lwjgl "1.0.0"]
