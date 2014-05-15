@@ -128,7 +128,6 @@
     (jvm/jvm-sandbox func context)
     (catch Exception e
       (when (nil? @u/error)
-        (.printStackTrace e)
         (reset! u/error e))
       nil)))
 
