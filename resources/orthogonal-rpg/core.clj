@@ -32,7 +32,7 @@
                 (->> entity
                      (move screen entities)
                      (animate screen)
-                     (prevent-move entities)
+                     (prevent-move screen entities)
                      (adjust-times screen))))
          (attack-player)
          (sort-by :y #(compare %2 %1))

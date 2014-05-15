@@ -5,12 +5,17 @@
  </tileset>
  <layer name="grass" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJztwwEJAAAMBKHrn/cDLMdAwVVTVVVVVVVVVVXV5w+7yE9Y
+   eJztzzEOgkAARNH1/kcTFO4ACNR7ACaxNYQOCa94zVTzaymlAgAAAAAA3NQzmmjjFe/oot/Zz/78yxBjTPGJOZadff2Dzzp06NBx5Y4jyuPr7B8AcCcbzwlG0w==
   </data>
  </layer>
  <layer name="water" width="50" height="50">
   <data encoding="base64" compression="zlib">
    eJztwQENAAAAwqD3T20ON6AAAAAAAAAAAADg3wAnEAAB
+  </data>
+ </layer>
+ <layer name="barriers" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2LdKQ2EYxvFEvAtL4j1YsWAdLREL1tGKBetoxYJ11kUXne16C47egqO3YPuPThne75P3DM8ffgRCTnjCSeOkUkoppVQyqkUd6tHgvCWkHvSiD/3OW0KawSzmMO+8JaQd7GIP+85bQrvApfcIKkIxSlCKDLKG58mmI44yVI4KVKIK1ahxXWSrHR3oRBdy6HZdZGsM45jAJKYw7brI1hrWsYFNbGHbc1BgZzj3HhG5jPN3j1JKJalGNKEZLWhFm+cgYwMYxBCGMYJR10W2FrCIJSxjBauui2wd4BBHOMYJTl0XhXWFa+8RkSuL+H/oBre4wz0e8IinPPc/4yXehCi9Go97i7oivHfjcR9RV4RnPR9Jex3W85G095U+H8lK5yNZfeIL33luf/48Ps1vcAEKdW1CKaWU+vd+AfooP4k=
   </data>
  </layer>
 </map>

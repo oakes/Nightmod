@@ -24,26 +24,27 @@
          false)))
 
 (defn get-x-velocity
-  [{:keys [me? x-velocity]}]
-  (if me?
+  [entity]
+  (if (:player? entity)
     (cond
       (or (key-pressed? :dpad-left) (touched? :left))
       (* -1 max-velocity)
       (or (key-pressed? :dpad-right) (touched? :right))
       max-velocity
       :else
-      x-velocity)
-    x-velocity))
+      (:x-velocity entity))
+    (:x-velocity entity)))
 
 (defn get-y-velocity
-  [{:keys [me? y-velocity can-jump?]}]
-  (if me?
+  [entity]
+  (if (:player? entity)
     (cond
-      (and can-jump? (or (key-pressed? :dpad-up) (touched? :up)))
+      (and (:can-jump? entity)
+           (or (key-pressed? :dpad-up) (touched? :up)))
       max-jump-velocity
       :else
-      y-velocity)
-    y-velocity))
+      (:y-velocity entity))
+    (:y-velocity entity)))
 
 (defn get-direction
   [{:keys [x-velocity direction]}]
@@ -54,10 +55,12 @@
     direction))
 
 (defn get-touching-tile
-  [screen {:keys [x y width height]} & layer-names]
+  [screen entity & layer-names]
   (let [layers (map #(tiled-map-layer screen %) layer-names)]
-    (->> (for [tile-x (range (int x) (+ x width))
-               tile-y (range (int y) (+ y height))]
+    (->> (for [tile-x (range (int (:x entity))
+                             (+ (:x entity) (:width entity)))
+               tile-y (range (int (:y entity))
+                             (+ (:y entity) (:height entity)))]
            (some #(when (tiled-map-cell % tile-x tile-y)
                     [tile-x tile-y])
                  layers))

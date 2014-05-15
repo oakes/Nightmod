@@ -8,30 +8,28 @@
 (def ^:const map-width 50)
 (def ^:const map-height 50)
 (def ^:const background-layer "grass")
-(def ^:const max-draw-time 0.2)
 (def ^:const max-attack-time 1)
 (def ^:const aggro-distance 6)
 (def ^:const attack-distance 1.5)
 
-(defn completely-on-layer?
+(defn on-layer?
   [screen entity & layer-names]
   (let [layers (map #(tiled-map-layer screen %) layer-names)]
     (->> (for [tile-x (range (int (:x entity))
                              (+ (:x entity) (:width entity)))
                tile-y (range (int (:y entity))
                              (+ (:y entity) (:height entity)))]
-           (-> (some #(tiled-map-cell % tile-x tile-y) layers)
-               nil?
-               not))
-         (drop-while identity)
+           (some #(tiled-map-cell % tile-x tile-y) layers))
+         (drop-while nil?)
          first
-         nil?)))
+         nil?
+         not)))
 
 (defn on-start-layer?
   [screen entity]
   (->> (for [layer-name (map-layer-names screen)]
          (or (= layer-name background-layer)
-             (= (completely-on-layer? screen entity layer-name)
+             (= (on-layer? screen entity layer-name)
                 (= layer-name (:start-layer entity)))))
        (drop-while identity)
        first

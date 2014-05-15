@@ -2,10 +2,10 @@
 
 (defn update-screen!
   [screen entities]
-  (doseq [{:keys [x y height me? to-destroy]} entities]
-    (when me?
-      (x! screen x)
-      (when (< y (- height))
+  (doseq [entity entities]
+    (when (:player? entity)
+      (x! screen (:x entity))
+      (when (< (:y entity) (- (:height entity)))
         (restart-game!))))
   entities)
 
@@ -27,11 +27,11 @@
          (render! screen)
          (update-screen! screen)))
   :on-resize
-  (fn [{:keys [width height] :as screen} entities]
+  (fn [screen entities]
     (orthographic! screen
                    :set-to-ortho
                    false
-                   (* vertical-tiles (/ width height))
+                   (* vertical-tiles (/ (:width screen) (:height screen)))
                    vertical-tiles)))
 
 (set-game-screen! main-screen)

@@ -24,25 +24,25 @@
            :y-velocity 0
            :x 12
            :y 10
-           :me? true
+           :player? true
            :can-jump? false
            :direction :right)))
 
 (defn move
-  [{:keys [delta-time]} {:keys [x y can-jump?] :as entity}]
+  [screen entity]
   (let [x-velocity (get-x-velocity entity)
         y-velocity (+ (get-y-velocity entity) gravity)
-        x-change (* x-velocity delta-time)
-        y-change (* y-velocity delta-time)]
+        x-change (* x-velocity (:delta-time screen))
+        y-change (* y-velocity (:delta-time screen))]
     (if (or (not= 0 x-change) (not= 0 y-change))
       (assoc entity
              :x-velocity (decelerate x-velocity)
              :y-velocity (decelerate y-velocity)
              :x-change x-change
              :y-change y-change
-             :x (+ x x-change)
-             :y (+ y y-change)
-             :can-jump? (if (> y-velocity 0) false can-jump?))
+             :x (+ (:x entity) x-change)
+             :y (+ (:y entity) y-change)
+             :can-jump? (if (> y-velocity 0) false (:can-jump? entity)))
       entity)))
 
 (defn animate
@@ -64,12 +64,12 @@
            {:direction direction})))
 
 (defn prevent-move
-  [screen {:keys [x y x-change y-change] :as entity}]
-  (let [old-x (- x x-change)
-        old-y (- y y-change)
+  [screen entity]
+  (let [old-x (- (:x entity) (:x-change entity))
+        old-y (- (:y entity) (:y-change entity))
         entity-x (assoc entity :y old-y)
         entity-y (assoc entity :x old-x)
-        up? (> y-change 0)]
+        up? (> (:y-change entity) 0)]
     (merge entity
            (when (get-touching-tile screen entity-x "walls")
              {:x-velocity 0 :x-change 0 :x old-x})

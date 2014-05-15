@@ -66,7 +66,7 @@
              :y (+ (:y entity) y-change))
       entity)))
 
-(defn animate-direction
+(defn animate
   [screen entity]
   (if-let [direction (get-direction entity)]
     (if-let [anim (get entity direction)]
@@ -75,25 +75,6 @@
              {:direction direction})
       entity)
     entity))
-
-(defn animate-water
-  [screen entity]
-  (if (completely-on-layer? screen entity "water")
-    (merge entity (texture entity :set-region-height pixels-per-tile))
-    entity))
-
-(defn update-texture-size
-  [entity]
-  (assoc entity
-         :width (/ (texture! entity :get-region-width) pixels-per-tile)
-         :height (/ (texture! entity :get-region-height) pixels-per-tile)))
-
-(defn animate
-  [screen entity]
-  (->> entity
-       (animate-direction screen)
-       (animate-water screen)
-       update-texture-size))
 
 (defn not-victim?
   [attacker victim]
@@ -148,7 +129,7 @@
        (conj entities)))
 
 (defn prevent-move
-  [entities entity]
+  [screen entities entity]
   (if (or (= (:health entity) 0)
           (< (:x entity) 0)
           (> (:x entity) (- map-width 1))
@@ -156,7 +137,8 @@
           (> (:y entity) (- map-height 1))
           (and (or (not= 0 (:x-change entity))
                    (not= 0 (:y-change entity)))
-               (near-entities? entities entity 1)))
+               (near-entities? entities entity 1))
+          (on-layer? screen entity "barriers"))
     (assoc entity
            :x-velocity 0
            :y-velocity 0
