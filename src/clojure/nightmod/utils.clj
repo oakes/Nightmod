@@ -32,7 +32,19 @@
                                    "player_walk3.png"
                                    "tiles.png"
                                    "utils.clj"]
-                     "orthogonal-rpg" ["core.clj"]
+                     "orthogonal-rpg" ["core.clj"
+                                       "enemy_down.png"
+                                       "enemy_left_stand.png"
+                                       "enemy_left_walk.png"
+                                       "enemy_up.png"
+                                       "entities.clj"
+                                       "level.tmx"
+                                       "player_down.png"
+                                       "player_left_stand.png"
+                                       "player_left_walk.png"
+                                       "player_up.png"
+                                       "tiles.png"
+                                       "utils.clj"]
                      "isometric-rpg" ["core.clj"]
                      "barebones-2d" ["core.clj"]
                      "barebones-3d" ["core.clj"]})

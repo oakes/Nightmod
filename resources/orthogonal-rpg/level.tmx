@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16">
+  <image source="tiles.png" width="400" height="224"/>
+ </tileset>
+ <layer name="grass" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwwEJAAAMBKHrn/cDLMdAwVVTVVVVVVVVVVXV5w+7yE9Y
+  </data>
+ </layer>
+ <layer name="water" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20ON6AAAAAAAAAAAADg3wAnEAAB
+  </data>
+ </layer>
+</map>
