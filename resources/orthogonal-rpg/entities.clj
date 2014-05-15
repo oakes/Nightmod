@@ -40,6 +40,7 @@
         stand-left (texture "enemy_left_stand.png")
         walk-left (texture "enemy_left_walk.png")]
     (assoc (create-character "grass" down up stand-left walk-left)
+           :hurt-sound (sound "enemy_hurt.wav")
            :npc? true)))
 
 (defn create-player
@@ -49,6 +50,8 @@
         stand-left (texture "player_left_stand.png")
         walk-left (texture "player_left_walk.png")]
     (assoc (create-character "grass" down up stand-left walk-left)
+           :hurt-sound (sound "player_hurt.wav")
+           :death-sound (sound "player_death.wav")
            :player? true)))
 
 (defn move
