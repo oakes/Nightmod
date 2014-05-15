@@ -17,7 +17,7 @@
 
 (defmacro load-game-file
   [n]
-  (some->> (io/file @u/project-dir (.getName (io/file n)))
+  (some->> (io/file @u/project-dir n)
            slurp
            (format "(do %s\n)")
            jail/safe-read))

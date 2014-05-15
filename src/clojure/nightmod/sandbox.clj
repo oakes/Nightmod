@@ -6,10 +6,15 @@
             [nightmod.screens :as s]
             [nightmod.utils :as u]
             [play-clj.core :refer :all])
-  (:import [java.io FilePermission]
+  (:import [com.badlogic.gdx.assets.loaders FileHandleResolver]
+           [com.badlogic.gdx.files FileHandle]
+           [java.io FilePermission]
            [java.lang.reflect ReflectPermission]))
 
-(def manager (asset-manager))
+(def manager (asset-manager*
+               (reify FileHandleResolver
+                 (resolve [this file-name]
+                   (FileHandle. (io/file @u/project-dir file-name))))))
 
 (def blacklist-symbols
   '#{alter-var-root resolve find-var with-redefs-fn intern

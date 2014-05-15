@@ -1,6 +1,5 @@
 (ns nightmod.core
-  (:require [cemerick.pomegranate :as pom]
-            [clojure.java.io :as io]
+  (:require [clojure.java.io :as io]
             [nightcode.editors :as editors]
             [nightcode.sandbox :as nc-sandbox]
             [nightcode.shortcuts :as shortcuts]
@@ -159,7 +158,6 @@
 (defn load-game!
   "Loads game into the canvas and runs it in a sandbox."
   [path]
-  (pom/add-classpath path)
   (doto (.getCanonicalPath (io/file path "core.clj"))
     protect-file!
     sandbox/run-file!))
