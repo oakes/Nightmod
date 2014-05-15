@@ -18,7 +18,6 @@
       (label! e :set-text (str @score)))))
 
 (defscreen main-screen
-  ; runs when the screen first shows
   :on-show
   (fn [screen entities]
     (update! screen :renderer (stage))
@@ -30,7 +29,7 @@
            :y 10
            :width 64
            :height 64))
-  ; runs every frame (many times per second)
+  
   :on-render
   (fn [screen entities]
     (clear!)
@@ -42,7 +41,7 @@
          (remove-enemies)
          (remove :remove?)
          (render! screen)))
-  ; runs when the mouse is moved
+  
   :on-mouse-moved
   (fn [screen entities]
     ; set the player's x position to the mouse position,
@@ -52,16 +51,16 @@
         (assoc e :x (- (:input-x screen)
                        (/ (texture! e :get-region-width) 2)))
         e)))
-  ; runs when a key is pressed
+  
   :on-key-down
   (fn [screen entities]
     (when (= (:key screen) (key-code :space))
       (conj entities (create-missile))))
-  ; runs when the mouse is clicked
+  
   :on-touch-down
   (fn [screen entities]
     (conj entities (create-missile)))
-  ; runs when the timer executes
+  
   :on-timer
   (fn [screen entities]
     (conj entities (create-enemy))))
@@ -73,10 +72,12 @@
     (assoc (label "0" (color :white))
            :score? true
            :x 5))
+  
   :on-render
   (fn [screen entities]
     (update-label! entities)
     (render! screen entities))
+  
   :on-resize
   (fn [screen entities]
     (height! screen 300)))

@@ -24,6 +24,7 @@
       (reduce #(randomize-locations screen %1 %2)
               []
               (flatten [(create-player) enemies]))))
+  
   :on-render
   (fn [screen entities]
     (clear!)
@@ -40,15 +41,18 @@
          (remove #(<= (:health %) 0))
          (render! screen)
          (update-screen! screen)))
+  
   :on-resize
   (fn [screen entities]
     (height! screen vertical-tiles))
+  
   :on-key-down
   (fn [screen entities]
     (when-let [player (get-player entities)]
       (cond
         (= (:key screen) (key-code :space))
         (attack entities player))))
+  
   :on-touch-down
   (fn [screen entities]
     (when-let [player (get-player entities)]

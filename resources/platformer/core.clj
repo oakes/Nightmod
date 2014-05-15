@@ -15,6 +15,7 @@
     (->> (orthogonal-tiled-map "level.tmx" (/ 1 16))
          (update! screen :camera (orthographic) :renderer))
     (create-player))
+  
   :on-render
   (fn [screen entities]
     (clear! 0.5 0.5 1 1)
@@ -26,6 +27,7 @@
                      (animate screen))))
          (render! screen)
          (update-screen! screen)))
+  
   :on-resize
   (fn [screen entities]
     (orthographic! screen
