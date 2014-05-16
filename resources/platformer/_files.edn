@@ -1,0 +1,10 @@
+["core.clj"
+ "entities.clj"
+ "level.tmx"
+ "player_jump.png"
+ "player_stand.png"
+ "player_walk1.png"
+ "player_walk2.png"
+ "player_walk3.png"
+ "tiles.png"
+ "utils.clj"]

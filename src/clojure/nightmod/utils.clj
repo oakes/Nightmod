@@ -1,5 +1,6 @@
 (ns nightmod.utils
-  (:require [clojure.java.io :as io]
+  (:require [clojure.edn :as edn]
+            [clojure.java.io :as io]
             [clojure.string :as string]
             [nightcode.dialogs :as dialogs]
             [nightcode.editors :as editors]
@@ -18,55 +19,6 @@
                 "isometric-rpg"
                 "barebones-2d"
                 "barebones-3d"])
-(def template-files {"arcade" ["core.clj"
-                               "enemy.png"
-                               "entities.clj"
-                               "player.png"]
-                     "platformer" ["core.clj"
-                                   "entities.clj"
-                                   "level.tmx"
-                                   "player_jump.png"
-                                   "player_stand.png"
-                                   "player_walk1.png"
-                                   "player_walk2.png"
-                                   "player_walk3.png"
-                                   "tiles.png"
-                                   "utils.clj"]
-                     "orthogonal-rpg" ["core.clj"
-                                       "enemy_down.png"
-                                       "enemy_hurt.wav"
-                                       "enemy_left_stand.png"
-                                       "enemy_left_walk.png"
-                                       "enemy_up.png"
-                                       "entities.clj"
-                                       "level.tmx"
-                                       "player_death.wav"
-                                       "player_down.png"
-                                       "player_hurt.wav"
-                                       "player_left_stand.png"
-                                       "player_left_walk.png"
-                                       "player_up.png"
-                                       "tiles.png"
-                                       "utils.clj"]
-                     "isometric-rpg" ["core.clj"
-                                      "enemy.png"
-                                      "enemy_hurt.wav"
-                                      "entities.clj"
-                                      "glove.png"
-                                      "grass.png"
-                                      "level.tmx"
-                                      "pine1.png"
-                                      "pine2.png"
-                                      "pine3.png"
-                                      "player.png"
-                                      "player_death.wav"
-                                      "player_hurt.wav"
-                                      "stash.png"
-                                      "tower.png"
-                                      "utils.clj"
-                                      "wagon.png"]
-                     "barebones-2d" ["core.clj"]
-                     "barebones-3d" ["core.clj"]})
 
 (def main-dir (atom nil))
 (def project-dir (atom nil))
@@ -110,7 +62,10 @@
 (defn new-project!
   [template project-name project-file]
   (.mkdirs project-file)
-  (doseq [file-name (get template-files template)]
+  (doseq [file-name (-> (str template "/_files.edn")
+                        io/resource
+                        slurp
+                        edn/read-string)]
     (-> (str template "/" file-name)
         io/resource
         io/input-stream
