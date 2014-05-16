@@ -24,8 +24,7 @@
      ns-resolve ns-publics ns-unmap ns-map ns-interns the-ns in-ns require
      System/out System/in System/err
      defscreen* defgame* defgame set-screen! setScreen set-screen-wrapper!
-     app! app on-gl
-     loader loader! resolver pref!
+     app! app on-gl pref!
      asset-manager* asset-manager set-asset-manager!
      reify proxy gen-class})
 
