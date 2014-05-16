@@ -48,7 +48,23 @@
                                        "player_up.png"
                                        "tiles.png"
                                        "utils.clj"]
-                     "isometric-rpg" ["core.clj"]
+                     "isometric-rpg" ["core.clj"
+                                      "enemy.png"
+                                      "enemy_hurt.wav"
+                                      "entities.clj"
+                                      "glove.png"
+                                      "grass.png"
+                                      "level.tmx"
+                                      "pine1.png"
+                                      "pine2.png"
+                                      "pine3.png"
+                                      "player.png"
+                                      "player_death.wav"
+                                      "player_hurt.wav"
+                                      "stash.png"
+                                      "tower.png"
+                                      "utils.clj"
+                                      "wagon.png"]
                      "barebones-2d" ["core.clj"]
                      "barebones-3d" ["core.clj"]})
 

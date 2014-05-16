@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="isometric" width="25" height="25" tilewidth="64" tileheight="32">
+ <tileset firstgid="1" name="grass" tilewidth="64" tileheight="32">
+  <image source="grass.png" width="64" height="32"/>
+ </tileset>
+ <tileset firstgid="2" name="wagon" tilewidth="128" tileheight="64">
+  <image source="wagon.png" width="128" height="64"/>
+ </tileset>
+ <tileset firstgid="3" name="stash" tilewidth="64" tileheight="32">
+  <image source="stash.png" width="64" height="32"/>
+ </tileset>
+ <tileset firstgid="4" name="tower" tilewidth="256" tileheight="128">
+  <image source="tower.png" width="256" height="128"/>
+ </tileset>
+ <tileset firstgid="5" name="pine1" tilewidth="256" tileheight="256">
+  <image source="pine1.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="6" name="pine2" tilewidth="256" tileheight="256">
+  <image source="pine2.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="7" name="pine3" tilewidth="256" tileheight="256">
+  <image source="pine3.png" width="256" height="256"/>
+ </tileset>
+ <layer name="grass" width="25" height="25">
+  <data encoding="base64" compression="zlib">
+   eJztwwEJAAAMBKH7/qWXY6Dgqqmq+uoB+w0Ccg==
+  </data>
+ </layer>
+ <layer name="things" width="25" height="25">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFtABsSGxWGtuFbj6t7WOmsfmUAJaBdsAoGBaAfaAdMMQAG2ElNAfDIc6YBtoBo2DIAQA3NwAz
+  </data>
+ </layer>
+ <objectgroup name="barriers" width="25" height="25">
+  <object x="130" y="481"/>
+  <object x="70" y="419" width="55" height="54"/>
+  <object x="29" y="315" width="67" height="68"/>
+  <object x="317" y="442" width="59" height="56"/>
+  <object x="355" y="-2" width="159" height="69"/>
+  <object x="551" y="30" width="57" height="49"/>
+  <object x="208" y="178" width="25" height="24"/>
+  <object x="513" y="167" width="25" height="21"/>
+  <object x="288" y="595" width="29" height="28"/>
+ </objectgroup>
+</map>
