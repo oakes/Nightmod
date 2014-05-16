@@ -1,6 +1,7 @@
 (ns nightmod.screens
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
+            [clojure.string :as string]
             [nightcode.editors :as editors]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
@@ -11,6 +12,7 @@
 
 (declare nightmod main-screen blank-screen overlay-screen)
 
+(def ^:const text-height 40)
 (def ^:const pad-space 5)
 
 (defn read-title
@@ -92,13 +94,16 @@
               [load-column :pad pad-space pad-space pad-space pad-space]]
              :align (align :center)
              :set-fill-parent true)))
+  
   :on-render
   (fn [screen entities]
     (clear!)
     (render! screen entities))
+  
   :on-resize
   (fn [screen entities]
     (height! screen (:height screen)))
+  
   :on-ui-changed
   (fn [screen entities]
     (when-let [n (text-button! (:actor screen) :get-name)]
@@ -119,41 +124,65 @@
     (let [ui-skin (skin "uiskin.json")]
       [(-> (label "" ui-skin
                   :set-wrap true
+                  :set-font-scale 0.8
                   :set-alignment (bit-or (align :left) (align :bottom)))
            (scroll-pane (style :scroll-pane nil nil nil nil nil))
-           (assoc :id :error :x pad-space :y pad-space))
-       (-> [(text-button "Home" ui-skin :set-name "home")
-            (text-button "Restart" ui-skin :set-name "restart")
-            (text-button "Files" ui-skin :set-name "files")]
-           (vertical :pack)
+           (assoc :id :text :x pad-space :y (+ text-height (* 2 pad-space))))
+       (-> [(check-box (nc-utils/get-string :stack-trace) ui-skin
+                       :set-name "stack-trace")
+            (text-button (nc-utils/get-string :copy) ui-skin
+                         :set-name "copy")]
+           (horizontal :space (* 2 pad-space) :pack)
+           (assoc :id :error-buttons :x pad-space :y pad-space))
+       (-> [(text-button (nc-utils/get-string :home) ui-skin
+                         :set-name "home")
+            (text-button (nc-utils/get-string :restart) ui-skin
+                         :set-name "restart")
+            (text-button (nc-utils/get-string :files) ui-skin
+                         :set-name "files")]
+           (horizontal :space (* 2 pad-space) :pack)
            (assoc :id :menu :x pad-space))]))
+  
   :on-render
   (fn [screen entities]
     (->> (for [e entities]
            (case (:id e)
-             :error (let [l (-> e (scroll-pane! :get-children) first)]
-                      (label! l :set-text (or (some-> @u/error .toString) ""))
-                      (assoc e :width (if (.isVisible (u/glass))
-                                        (- (game :width) u/editor-width)
-                                        (game :width))))
+             :text (do
+                     (->> [(some-> @u/error .toString)
+                           (when (and @u/error @u/stack-trace?)
+                             (for [elem (.getStackTrace @u/error)]
+                               (.toString elem)))]
+                          flatten
+                          (remove nil?)
+                          (string/join \newline)
+                          (label! (scroll-pane! e :get-widget) :set-text))
+                     (assoc e :width (if (.isVisible (u/glass))
+                                       (- (game :width) u/editor-width)
+                                       (game :width))))
+             :error-buttons (do
+                              (doseq [b (horizontal! e :get-children)]
+                                (actor! b :set-visible (some? @u/error)))
+                              e)
              e))
          (render! screen)))
+  
   :on-resize
   (fn [{:keys [width height] :as screen} entities]
     (height! screen height)
     (for [e entities]
       (case (:id e)
-        :menu (assoc e :y (- height
-                             (vertical! e :get-height)
-                             pad-space))
-        :error (assoc e :width width :height height)
+        :menu (assoc e :y (- height (vertical! e :get-height) pad-space))
+        :text (assoc e :width width :height (- height (* 2 (:y e))))
         e)))
+  
   :on-ui-changed
   (fn [screen entities]
     (case (text-button! (:actor screen) :get-name)
       "home" (home!)
       "restart" (restart!)
       "files" (u/toggle-glass!)
+      "stack-trace" (swap! u/stack-trace? not)
+      "copy" nil
       nil)
     nil))
 

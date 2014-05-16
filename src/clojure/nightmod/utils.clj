@@ -23,6 +23,7 @@
 (def main-dir (atom nil))
 (def project-dir (atom nil))
 (def error (atom nil))
+(def stack-trace? (atom false))
 
 (defn get-data-dir
   []
