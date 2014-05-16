@@ -42,9 +42,9 @@
                  height (/ (rectangle! r :get-height) (/ pixels-per-tile 2))]
              (rectangle! (rectangle x y width height) :overlaps rect)))
          (drop-while not)
-         first
-         nil?
-         not)))
+         (first)
+         (nil?)
+         (not))))
 
 (defn near-entity?
   [e e2 min]
@@ -57,9 +57,11 @@
   (some #(near-entity? entity % min-distance) entities))
 
 (defn invalid-location?
-  [screen entities entity]
-  (or (near-entities? entities entity 0)
-      (on-object-layer? screen entity "barriers")))
+  ([screen entities entity]
+    (invalid-location? screen entities entity 0))
+  ([screen entities entity min-distance]
+    (or (near-entities? entities entity min-distance)
+        (on-object-layer? screen entity "barriers"))))
 
 (defn decelerate
   [velocity]
@@ -131,7 +133,7 @@
            (filter (fn [[x y]]
                      (and (= x (int (Math/signum (float x-velocity))))
                           (= y (int (Math/signum (float y-velocity)))))))
-           first
+           (first)
            (.indexOf velocities)
            (nth directions)))
 

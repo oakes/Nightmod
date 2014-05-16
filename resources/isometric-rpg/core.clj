@@ -22,19 +22,10 @@
                       (update! screen
                                :attack-cursor (pixmap "glove.png")
                                :camera (orthographic)
-                               :renderer))
-          hurt-sound-1 (sound "player_hurt.wav")
-          hurt-sound-2 (sound "enemy_hurt.wav")
-          death-sound (sound "player_death.wav")
-          me (assoc (create-player)
-                    :x 0
-                    :y 0
-                    :hurt-sound hurt-sound-1
-                    :death-sound death-sound)]
-      (->> [(isometric->screen screen me)
-            (take 10 (repeatedly #(create-enemy)))]
-           flatten
-           (map #(if-not (:hurt-sound %) (assoc % :hurt-sound hurt-sound-2) %))
+                               :renderer))]
+      (->> [(create-player)
+            (take 8 (repeatedly #(create-enemy)))]
+           (flatten)
            (reduce #(randomize-locations screen %1 %2) []))))
 
   :on-render
@@ -94,7 +85,7 @@
                     :rect bar-x bar-y bar-w npc-bar-h
                     :set-color (color :green)
                     :rect bar-x bar-y (* bar-w pct) npc-bar-h)
-             vector
+             (vector)
              (draw! (-> main-screen :screen deref)))))))
 
 (defscreen overlay-screen

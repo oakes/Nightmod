@@ -125,9 +125,9 @@
   (->> (for [tile-x (range 0 (- map-width (:width entity)))
              tile-y (range 0 (- map-height (:height entity)))]
          {:x tile-x :y tile-y})
-       shuffle
+       (shuffle)
        (drop-while #(invalid-location? screen entities (merge entity %)))
-       first
+       (first)
        (merge entity {:id (count entities)})
        (conj entities)))
 

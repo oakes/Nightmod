@@ -15,6 +15,8 @@
            :attacks attacks
            :hits hits
            :deads deads
+           :x 0
+           :y 0
            :x-velocity 0
            :y-velocity 0
            :x-feet 0
@@ -36,7 +38,9 @@
            :attack-interval 0.25
            :health 40
            :x-feet 0.5
-           :y-feet 0.5)))
+           :y-feet 0.5
+           :hurt-sound (sound "player_hurt.wav")
+           :death-sound (sound "player_death.wav"))))
 
 (defn create-enemy
   []
@@ -47,7 +51,8 @@
            :max-velocity 1.5
            :health 40
            :x-feet 0.5
-           :y-feet 0.5)))
+           :y-feet 0.5
+           :hurt-sound (sound "enemy_hurt.wav"))))
 
 (defn move
   [screen entities entity]
@@ -74,7 +79,7 @@
     (merge entity
            (-> (get-in entity [:moves (:direction entity)])
                (animation! :get-key-frame 0)
-               texture))
+               (texture)))
     entity))
 
 (defn animate
@@ -145,17 +150,12 @@
   (->> (for [tile-x (range 0 (- map-width (:width entity)))
              tile-y (range 0 (- map-height (:height entity)))]
          (isometric->screen screen {:x tile-x :y tile-y}))
-       shuffle
-       (drop-while
-         #(or (near-entity? (merge entity %) (get-player entities) 5)
-              (invalid-location? screen entities (merge entity %))))
-       first
+       (shuffle)
+       (drop-while #(invalid-location? screen entities (merge entity %) 4))
+       (first)
        (merge entity)))
 
 (defn randomize-locations
   [screen entities entity]
-  (conj entities
-        (-> (if (:npc? entity)
-              (randomize-location screen entities entity)
-              entity)
-            (assoc :id (count entities)))))
+  (conj entities (assoc (randomize-location screen entities entity)
+                        :id (count entities))))

@@ -21,9 +21,9 @@
                              (+ (:y entity) (:height entity)))]
            (some #(tiled-map-cell % tile-x tile-y) layers))
          (drop-while nil?)
-         first
-         nil?
-         not)))
+         (first)
+         (nil?)
+         (not))))
 
 (defn on-start-layer?
   [screen entity]
@@ -32,8 +32,8 @@
              (= (on-layer? screen entity layer-name)
                 (= layer-name (:start-layer entity)))))
        (drop-while identity)
-       first
-       nil?))
+       (first)
+       (nil?)))
 
 (defn near-entity?
   [e e2 min-distance]
@@ -76,19 +76,13 @@
 (defn get-player-velocity
   [entity]
   [(cond
-     (or (key-pressed? :dpad-left) (touched? :left))
-     (* -1 max-velocity)
-     (or (key-pressed? :dpad-right) (touched? :right))
-     max-velocity
-     :else
-     (:x-velocity entity))
+     (or (key-pressed? :dpad-left) (touched? :left)) (* -1 max-velocity)
+     (or (key-pressed? :dpad-right) (touched? :right)) max-velocity
+     :else (:x-velocity entity))
    (cond
-     (or (key-pressed? :dpad-down) (touched? :down))
-     (* -1 max-velocity)
-     (or (key-pressed? :dpad-up) (touched? :up))
-     max-velocity
-     :else
-     (:y-velocity entity))])
+     (or (key-pressed? :dpad-down) (touched? :down)) (* -1 max-velocity)
+     (or (key-pressed? :dpad-up) (touched? :up)) max-velocity
+     :else (:y-velocity entity))])
 
 (defn get-npc-axis-velocity
   [diff]
@@ -124,10 +118,8 @@
 (defn get-direction
   [entity]
   (cond
-    (not= (:y-velocity entity) 0)
-    (if (> (:y-velocity entity) 0) :up :down)
-    (not= (:x-velocity entity) 0)
-    (if (> (:x-velocity entity) 0) :right :left)
+    (not= (:y-velocity entity) 0) (if (> (:y-velocity entity) 0) :up :down)
+    (not= (:x-velocity entity) 0) (if (> (:x-velocity entity) 0) :right :left)
     :else nil))
 
 (defn find-id
