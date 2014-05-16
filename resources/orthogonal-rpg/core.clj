@@ -36,9 +36,9 @@
                      (prevent-move screen entities)
                      (adjust-times screen))))
          (attack-player)
-         (sort-by :y #(compare %2 %1))
          (play-sounds!)
          (remove #(<= (:health %) 0))
+         (sort-by :y #(compare %2 %1))
          (render! screen)
          (update-screen! screen)))
   
