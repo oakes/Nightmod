@@ -8,7 +8,9 @@
             [nightmod.utils :as u]
             [play-clj.core :refer :all]
             [play-clj.ui :refer :all]
-            [seesaw.core :as s]))
+            [seesaw.core :as s])
+  (:import [java.awt Toolkit]
+           [java.awt.datatransfer Clipboard ClipboardOwner StringSelection]))
 
 (declare nightmod main-screen blank-screen overlay-screen)
 
@@ -61,6 +63,24 @@
 (defn scrollify
   [widget]
   (scroll-pane widget (style :scroll-pane nil nil nil nil nil)))
+
+(defn error-str
+  []
+  (->> [(some-> @u/error .toString)
+        (when (and @u/error @u/stack-trace?)
+          (for [elem (.getStackTrace @u/error)]
+            (.toString elem)))]
+       flatten
+       (remove nil?)
+       (string/join \newline)))
+
+(defn set-clipboard!
+  [s]
+  (let [clip-board (.getSystemClipboard (Toolkit/getDefaultToolkit))]
+    (.setContents clip-board
+      (StringSelection. s)
+      (reify ClipboardOwner
+        (lostOwnership [this clipboard contents])))))
 
 (defscreen main-screen
   :on-show
@@ -148,14 +168,7 @@
     (->> (for [e entities]
            (case (:id e)
              :text (do
-                     (->> [(some-> @u/error .toString)
-                           (when (and @u/error @u/stack-trace?)
-                             (for [elem (.getStackTrace @u/error)]
-                               (.toString elem)))]
-                          flatten
-                          (remove nil?)
-                          (string/join \newline)
-                          (label! (scroll-pane! e :get-widget) :set-text))
+                     (label! (scroll-pane! e :get-widget) :set-text (error-str))
                      (assoc e :width (if (.isVisible (u/glass))
                                        (- (game :width) u/editor-width)
                                        (game :width))))
@@ -182,7 +195,7 @@
       "restart" (restart!)
       "files" (u/toggle-glass!)
       "stack-trace" (swap! u/stack-trace? not)
-      "copy" nil
+      "copy" (set-clipboard! (error-str))
       nil)
     nil))
 
