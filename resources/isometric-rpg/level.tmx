@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="isometric" width="25" height="25" tilewidth="64" tileheight="32">
- <tileset firstgid="1" name="grass" tilewidth="64" tileheight="32">
-  <image source="grass.png" width="64" height="32"/>
+ <tileset firstgid="1" name="grass" tilewidth="64" tileheight="64">
+  <image source="grass.png" width="64" height="64"/>
  </tileset>
  <tileset firstgid="2" name="wagon" tilewidth="128" tileheight="64">
   <image source="wagon.png" width="128" height="64"/>
