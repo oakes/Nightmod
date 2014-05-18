@@ -92,7 +92,8 @@
   (-> (format "(do %s\n)" (slurp path))
       jail/safe-read
       sb
-      (try (catch Exception e (reset! u/error e)))))
+      (try (catch Exception e (reset! u/error {:message "Error during load"
+                                               :exception e})))))
 
 (defn override-functions!
   []
@@ -127,7 +128,9 @@
     (jvm/jvm-sandbox func context)
     (catch Exception e
       (when (nil? @u/error)
-        (reset! u/error e))
+        (reset! u/error {:message (some->> (:name (meta func))
+                                           (format "Error in %s"))
+                         :exception e}))
       nil)))
 
 (set-screen-wrapper!

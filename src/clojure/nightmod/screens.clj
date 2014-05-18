@@ -66,9 +66,10 @@
 
 (defn error-str
   []
-  (->> [(some-> @u/error .toString)
+  (->> [(some->> @u/error :message)
+        (some-> @u/error :exception .toString)
         (when (and @u/error @u/stack-trace?)
-          (for [elem (.getStackTrace @u/error)]
+          (for [elem (-> @u/error :exception .getStackTrace)]
             (.toString elem)))]
        flatten
        (remove nil?)
