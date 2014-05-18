@@ -1,14 +1,14 @@
 (defproject nightmod "0.0.1-SNAPSHOT"
   :description "A tool for making live-moddable games in Clojure"
-  :dependencies [[com.badlogicgames.gdx/gdx "1.0.0"]
-                 [com.badlogicgames.gdx/gdx-backend-lwjgl "1.0.0"]
-                 [com.badlogicgames.gdx/gdx-box2d "1.0.0"]
-                 [com.badlogicgames.gdx/gdx-box2d-platform "1.0.0"
+  :dependencies [[com.badlogicgames.gdx/gdx "1.0.1"]
+                 [com.badlogicgames.gdx/gdx-backend-lwjgl "1.0.1"]
+                 [com.badlogicgames.gdx/gdx-box2d "1.0.1"]
+                 [com.badlogicgames.gdx/gdx-box2d-platform "1.0.1"
                   :classifier "natives-desktop"]
-                 [com.badlogicgames.gdx/gdx-bullet "1.0.0"]
-                 [com.badlogicgames.gdx/gdx-bullet-platform "1.0.0"
+                 [com.badlogicgames.gdx/gdx-bullet "1.0.1"]
+                 [com.badlogicgames.gdx/gdx-bullet-platform "1.0.1"
                   :classifier "natives-desktop"]
-                 [com.badlogicgames.gdx/gdx-platform "1.0.0"
+                 [com.badlogicgames.gdx/gdx-platform "1.0.1"
                   :classifier "natives-desktop"]
                  [nightcode "0.3.5"
                   :exclusions [leiningen
