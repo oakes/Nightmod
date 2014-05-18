@@ -6,7 +6,6 @@
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
             [nightcode.window :as window]
-            [nightmod.git :as git]
             [nightmod.sandbox :as sandbox]
             [nightmod.screens :as screens]
             [nightmod.input :as input]
