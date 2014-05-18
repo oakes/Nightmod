@@ -7,159 +7,24 @@
             [nightcode.utils :as nc-utils]
             [nightcode.window :as window]
             [nightmod.git :as git]
-            [nightmod.screens :as screens]
-            [nightmod.utils :as u]
+            [nightmod.manager :as manager]
             [nightmod.sandbox :as sandbox]
-            [play-clj.core :as play-clj]
-            [seesaw.core :as s]
-            [seesaw.util :as s-util])
-  (:import [java.awt BorderLayout Canvas Dimension Window]
-           [java.awt.event ComponentAdapter KeyEvent KeyListener WindowAdapter]
-           [javax.swing JLayeredPane]
-           [com.badlogic.gdx.backends.lwjgl LwjglApplication LwjglInput]
-           [nightmod KeyCodeConverter]
-           [org.lwjgl.input Keyboard]
-           [org.lwjgl.opengl InputImplementation])
+            [nightmod.screens :as screens]
+            [nightmod.ui-canvas :as ui-canvas]
+            [nightmod.ui-overlay :as ui-overlay]
+            [nightmod.utils :as u]
+            [seesaw.core :as s])
+  (:import [java.awt BorderLayout Canvas]
+           [com.badlogic.gdx.backends.lwjgl LwjglApplication]
+           [org.lwjgl.input Keyboard])
   (:gen-class))
-
-; allow s/select to work with Canvas
-(extend-protocol s-util/Children
-  java.awt.Component (children [this] nil))
-
-(defn set-hint-container!
-  "Sets the container in which the hints will be stored."
-  [container]
-  (intern 'nightcode.shortcuts '*hint-container* container))
-
-(defn create-layered-pane
-  "Returns the layered pane holding the editor pane."
-  []
-  (let [layered-pane (doto (JLayeredPane.) set-hint-container!)
-        pane (editors/create-pane)]
-    (doto layered-pane
-      (.setPreferredSize (Dimension. u/editor-width u/window-height))
-      (.addComponentListener (proxy [ComponentAdapter] []
-                               (componentResized [e]
-                                 (->> (.getComponent e)
-                                      .getHeight
-                                      (.setBounds pane 0 0 u/editor-width)))))
-      (.add pane))))
-
-(defn awt->lwjgl
-  "Translates key code from AWT to LWJGL."
-  [key]
-  (KeyCodeConverter/translateFromAWT key))
-
-(defn awt->libgdx
-  "Translates key code from AWT to LibGDX."
-  [key]
-  (LwjglInput/getGdxKeyCode (awt->lwjgl key)))
-
-(defn pass-key-events!
-  "Passes key events to the game."
-  [window game]
-  (let [key-buf-field (doto (.getDeclaredField Keyboard "keyDownBuffer")
-                        (.setAccessible true))
-        key-buf (.get key-buf-field nil)
-        impl-field (doto (.getDeclaredField Keyboard "implementation")
-                        (.setAccessible true))
-        impl (proxy [InputImplementation] []
-               (pollKeyboard [bb])
-               (readKeyboard [bb]))]
-    (.addKeyListener
-      window
-      (reify KeyListener
-        (keyReleased [this e]
-          (.set impl-field nil impl)
-          (.put key-buf (awt->lwjgl (.getKeyCode e)) (byte 0))
-          (-> game
-              .getInput
-              .getInputProcessor
-              (.keyUp (awt->libgdx (.getKeyCode e)))
-              play-clj/on-gl))
-        (keyTyped [this e]
-          (-> game
-              .getInput
-              .getInputProcessor
-              (.keyTyped (.getKeyChar e))
-              play-clj/on-gl))
-        (keyPressed [this e]
-          (.set impl-field nil impl)
-          (.put key-buf (awt->lwjgl (.getKeyCode e)) (byte 8))
-          (-> game
-              .getInput
-              .getInputProcessor
-              (.keyDown (awt->libgdx (.getKeyCode e)))
-              play-clj/on-gl))))))
-
-(defn override-save-button!
-  "Makes the editor save button restart the game."
-  []
-  (let [orig-save-file! editors/save-file!]
-    (intern 'nightcode.editors
-            'save-file!
-            (fn [& _]
-              (orig-save-file!)
-              (screens/restart!)
-              true))))
-
-(defn show-internal-editor!
-  "Shows the internal editor."
-  [main-window editor-window]
-  (let [editor-pane (ui/get-editor-pane)
-        l-pane (-> main-window .getGlassPane (s/select [:JLayeredPane]) first)]
-    (reset! ui/root main-window)
-    (u/toggle-glass! true)
-    (.add l-pane editor-pane)
-    (set-hint-container! l-pane)
-    (s/hide! editor-window)))
-
-(defn show-external-editor!
-  "Shows the external editor."
-  [main-window editor-window]
-  (let [editor-pane (ui/get-editor-pane)]
-    (u/toggle-glass! false)
-    (reset! ui/root editor-window)
-    (s/config! editor-window :content editor-pane)
-    (set-hint-container! (.getLayeredPane editor-window))
-    (s/show! editor-window)))
-
-(defn adjust-widgets!
-  "Adds and removes widgets from the window."
-  [main-window]
-  (let [external? (atom false)
-        editor-window (s/frame :width 800 :height 600 :on-close :hide)
-        toggle-window! (fn [& _]
-                         (if (swap! external? not)
-                           (show-external-editor! main-window editor-window)
-                           (show-internal-editor! main-window editor-window)))
-        window-btn (ui/button :id :window
-                              :text (nc-utils/get-string :toggle-window)
-                              :listen [:action toggle-window!])]
-    (.addWindowListener editor-window
-      (proxy [WindowAdapter] []
-        (windowClosing [e]
-          (toggle-window!))))
-    (intern 'nightcode.editors
-            '*widgets*
-            [:up :save :undo :redo :font-dec :font-inc
-             :doc :paredit :paredit-help :close])
-    (intern 'nightcode.file-browser
-            '*widgets*
-            [:up :new-file :edit :open-in-browser :save :cancel window-btn])))
-
-(defn protect-file!
-  "Prevents renaming or deleting a file."
-  [path]
-  (intern 'nightcode.file-browser
-          'protect-file?
-          #(= % path)))
 
 (defn load-game!
   "Loads game into the canvas and runs it in a sandbox."
   [path]
-  (doto (.getCanonicalPath (io/file path "core.clj"))
-    protect-file!
+  (manager/clean!)
+  (doto (.getCanonicalPath (io/file path u/first-file))
+    ui-overlay/protect-file!
     sandbox/run-file!))
 
 (defn create-window
@@ -183,7 +48,8 @@
                                                 :focusable? false))))
     (-> .getGlassPane (doto
                         (.setLayout (BorderLayout.))
-                        (.add (create-layered-pane) BorderLayout/EAST)
+                        (.add (ui-overlay/create-layered-pane)
+                          BorderLayout/EAST)
                         (.setVisible false)))
     ; set various window properties
     window/enable-full-screen!
@@ -218,9 +84,9 @@
     ; create the window
     (let [window (create-window)
           canvas (doto (Canvas.) (.setFocusable false))]
-      (override-save-button!)
-      (adjust-widgets! window)
+      (ui-overlay/override-save-button!)
+      (ui-overlay/adjust-widgets! window)
       (s/show! (reset! ui/root (init-window window canvas)))
       (->> (LwjglApplication. screens/nightmod canvas)
-           (pass-key-events! window))))
+           (ui-canvas/pass-key-events! window))))
   (Keyboard/enableRepeatEvents true))

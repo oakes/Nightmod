@@ -12,7 +12,10 @@
 (def ^:const window-width 1200)
 (def ^:const window-height 768)
 (def ^:const editor-width 700)
+(def ^:const first-file "core.clj")
 (def ^:const settings-file "settings.edn")
+
+(def game-ns 'nightmod.game)
 (def templates ["arcade"
                 "platformer"
                 "orthogonal-rpg"
