@@ -47,12 +47,12 @@
     (:y-velocity entity)))
 
 (defn get-direction
-  [{:keys [x-velocity direction]}]
+  [entity]
   (cond
-    (> x-velocity 0) :right
-    (< x-velocity 0) :left
+    (> (:x-velocity entity) 0) :right
+    (< (:x-velocity entity) 0) :left
     :else
-    direction))
+    (:direction entity)))
 
 (defn get-touching-tile
   [screen entity & layer-names]
