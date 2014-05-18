@@ -51,8 +51,7 @@
   (cond
     (> (:x-velocity entity) 0) :right
     (< (:x-velocity entity) 0) :left
-    :else
-    (:direction entity)))
+    :else (:direction entity)))
 
 (defn get-touching-tile
   [screen entity & layer-names]
