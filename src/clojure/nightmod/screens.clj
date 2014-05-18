@@ -5,6 +5,7 @@
             [nightcode.editors :as editors]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
+            [nightmod.manager :as manager]
             [nightmod.utils :as u]
             [play-clj.core :refer :all]
             [play-clj.ui :refer :all]
@@ -16,6 +17,13 @@
 
 (def ^:const text-height 40)
 (def ^:const pad-space 5)
+
+(def templates ["arcade"
+                "platformer"
+                "orthogonal-rpg"
+                "isometric-rpg"
+                "barebones-2d"
+                "barebones-3d"])
 
 (defn read-title
   [f]
@@ -89,6 +97,7 @@
     (update! screen :renderer (stage) :camera (orthographic))
     (when-not @u/main-dir
       (reset! u/main-dir (u/get-data-dir)))
+    (manager/clean!)
     (let [ui-skin (skin "uiskin.json")
           create-button (fn [[display-name path]]
                           (text-button display-name ui-skin :set-name path))
@@ -98,8 +107,8 @@
                            (sort-by #(.getName %))
                            (map read-title)
                            (map create-button))
-          new-games (->> (for [i (range (count u/templates))
-                               :let [template (nth u/templates i)]]
+          new-games (->> (for [i (range (count templates))
+                               :let [template (nth templates i)]]
                            [(nc-utils/get-string template) template])
                          (map create-button))
           saved-column (-> (label (nc-utils/get-string :load) ui-skin)
@@ -128,7 +137,7 @@
   :on-ui-changed
   (fn [screen entities]
     (when-let [n (text-button! (:actor screen) :get-name)]
-      (if (contains? (set u/templates) n)
+      (if (contains? (set templates) n)
         (new-project! n)
         (load-project! n)))
     nil))

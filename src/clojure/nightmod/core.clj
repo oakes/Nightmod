@@ -7,7 +7,6 @@
             [nightcode.utils :as nc-utils]
             [nightcode.window :as window]
             [nightmod.git :as git]
-            [nightmod.manager :as manager]
             [nightmod.sandbox :as sandbox]
             [nightmod.screens :as screens]
             [nightmod.input :as input]
@@ -27,8 +26,7 @@
 (defn load-game!
   "Loads game into the canvas and runs it in a sandbox."
   [path]
-  (manager/clean!)
-  (doto (.getCanonicalPath (io/file path u/first-file))
+  (doto (.getCanonicalPath (io/file path "core.clj"))
     overlay/protect-file!
     sandbox/run-file!))
 
