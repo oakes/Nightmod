@@ -10,21 +10,26 @@
             [nightmod.manager :as manager]
             [nightmod.sandbox :as sandbox]
             [nightmod.screens :as screens]
-            [nightmod.ui-canvas :as ui-canvas]
-            [nightmod.ui-overlay :as ui-overlay]
+            [nightmod.input :as input]
+            [nightmod.overlay :as overlay]
             [nightmod.utils :as u]
-            [seesaw.core :as s])
+            [seesaw.core :as s]
+            [seesaw.util :as s-util])
   (:import [java.awt BorderLayout Canvas]
            [com.badlogic.gdx.backends.lwjgl LwjglApplication]
            [org.lwjgl.input Keyboard])
   (:gen-class))
+
+; allow s/select to work with Canvas
+(extend-protocol s-util/Children
+  java.awt.Component (children [this] nil))
 
 (defn load-game!
   "Loads game into the canvas and runs it in a sandbox."
   [path]
   (manager/clean!)
   (doto (.getCanonicalPath (io/file path u/first-file))
-    ui-overlay/protect-file!
+    overlay/protect-file!
     sandbox/run-file!))
 
 (defn create-window
@@ -48,7 +53,7 @@
                                                 :focusable? false))))
     (-> .getGlassPane (doto
                         (.setLayout (BorderLayout.))
-                        (.add (ui-overlay/create-layered-pane)
+                        (.add (overlay/create-layered-pane)
                           BorderLayout/EAST)
                         (.setVisible false)))
     ; set various window properties
@@ -84,9 +89,9 @@
     ; create the window
     (let [window (create-window)
           canvas (doto (Canvas.) (.setFocusable false))]
-      (ui-overlay/override-save-button!)
-      (ui-overlay/adjust-widgets! window)
+      (overlay/override-save-button!)
+      (overlay/adjust-widgets! window)
       (s/show! (reset! ui/root (init-window window canvas)))
       (->> (LwjglApplication. screens/nightmod canvas)
-           (ui-canvas/pass-key-events! window))))
+           (input/pass-key-events! window))))
   (Keyboard/enableRepeatEvents true))

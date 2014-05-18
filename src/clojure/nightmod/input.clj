@@ -1,15 +1,10 @@
-(ns nightmod.ui-canvas
-  (:require [play-clj.core :as play-clj]
-            [seesaw.util :as s-util])
+(ns nightmod.input
+  (:require [play-clj.core :as play-clj])
   (:import [java.awt.event ComponentAdapter KeyListener]
            [com.badlogic.gdx.backends.lwjgl LwjglInput]
            [nightmod KeyCodeConverter]
            [org.lwjgl.input Keyboard]
            [org.lwjgl.opengl InputImplementation]))
-
-; allow s/select to work with Canvas
-(extend-protocol s-util/Children
-  java.awt.Component (children [this] nil))
 
 (defn awt->lwjgl
   "Translates key code from AWT to LWJGL."

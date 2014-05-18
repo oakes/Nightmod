@@ -1,4 +1,4 @@
-(ns nightmod.ui-overlay
+(ns nightmod.overlay
   (:require [nightcode.editors :as editors]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]

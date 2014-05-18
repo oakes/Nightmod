@@ -3,6 +3,7 @@
             [clojail.jvm :as jvm]
             [clojail.testers :as jail-test]
             [clojure.java.io :as io]
+            [nightmod.screens :as screens]
             [nightmod.utils :as u]
             [play-clj.core :refer :all])
   (:import [java.io FilePermission]
@@ -102,3 +103,11 @@
         'allow-symbol?
         (fn [symbol-str ns]
           (not (contains? blacklist-symbols (symbol symbol-str)))))
+
+; sandbox all screen functions
+(set-screen-wrapper!
+  (fn [screen screen-fn]
+    (if (or (= screen (:screen screens/main-screen))
+            (= screen (:screen screens/overlay-screen)))
+      (screen-fn)
+      (run-in-sandbox! screen-fn))))

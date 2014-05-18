@@ -1,12 +1,11 @@
 (ns nightmod.manager
   (:require [clojure.java.io :as io]
-            [nightmod.sandbox :as sandbox]
-            [nightmod.screens :as screens]
             [nightmod.utils :as u]
             [play-clj.core :refer :all])
   (:import [com.badlogic.gdx.assets.loaders FileHandleResolver]
            [com.badlogic.gdx.files FileHandle]))
 
+; make all assets load relative to the current project's directory
 (def manager (asset-manager*
                (reify FileHandleResolver
                  (resolve [this file-name]
@@ -34,10 +33,3 @@
     (.stop t))
   (reset! timers [])
   (on-gl (asset-manager! manager :clear)))
-
-(set-screen-wrapper!
-  (fn [screen screen-fn]
-    (if (or (= screen (:screen screens/main-screen))
-            (= screen (:screen screens/overlay-screen)))
-      (screen-fn)
-      (sandbox/run-in-sandbox! screen-fn))))
