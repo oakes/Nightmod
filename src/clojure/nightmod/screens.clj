@@ -60,8 +60,10 @@
 (defn home!
   []
   (s/invoke-now
-    (editors/remove-editors! @u/project-dir))
+    (editors/remove-editors! @u/project-dir)
+    (reset! ui/tree-selection nil))
   (u/toggle-glass! false)
+  (manager/clean!)
   (set-screen! nightmod main-screen))
 
 (defn restart!
@@ -115,8 +117,6 @@
   (fn [screen entities]
     (when-not @u/main-dir
       (reset! u/main-dir (u/get-data-dir)))
-    (manager/clean!)
-    (s/invoke-now (reset! ui/tree-selection nil))
     (update! screen :renderer (stage) :camera (orthographic))
     (let [ui-skin (skin "uiskin.json")
           create-button (fn [[display-name path]]
