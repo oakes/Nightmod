@@ -1,0 +1,25 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(render-sorted! screen layer-names entities)</div><div class="c-head">(render-sorted! screen sort-fn layer-names entities)</div><div class="c-doc"><p>Draws the specified layer tiles and entities sorted by their position on the y axis. A custom sort function may be provided. This is primarily intended for games with isometric tiled maps, where the layer tiles often need to be sorted to overlap correctly with the entities.</p><pre>
+&#40;render-sorted! screen &#91;&quot;walls&quot;&#93; entities&#41;
+&#40;render-sorted! screen #&#40;sort-by :y %&#41; &#91;&quot;walls&quot;&#93; entities&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn render-sorted!
+  ([screen layer-names entities]
+    (render-sorted! sort-by-y screen layer-names entities))
+  ([{:keys [^BatchTiledMapRenderer renderer
+            ^Camera camera
+            update-fn!]
+     :as screen}
+    sort-fn layer-names entities]
+    (doseq [ln layer-names]
+      (when-not (get-in screen [:layers ln])
+        (update-fn! assoc-in [[:layers ln] (split-layer screen ln)])))
+    (when camera (.setView renderer camera))
+    (let [^SpriteBatch batch (.getSpriteBatch renderer)]
+      (.begin batch)
+      (doseq [entity (->> (map #(get-in screen [:layers %]) layer-names)
+                          (apply concat entities)
+                          sort-fn)]
+        (if-let [layer (:layer entity)]
+          (.renderTileLayer renderer layer)
+          (e/draw-entity! entity screen batch)))
+      (.end batch))
+    entities))</pre></div></div></div></body></html>

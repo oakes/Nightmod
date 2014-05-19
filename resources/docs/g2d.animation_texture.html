@@ -1,0 +1,7 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(animation->texture screen animation)</div><div class="c-head">(animation->texture screen animation is-looping?)</div><div class="c-doc"><p>Returns a <code>texture</code> entity with a frame from <code>animation</code> based on the total time the <code>screen</code> has been showing.</p><pre>
+&#40;animation-&gt;texture screen anim&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn animation->texture
+  ([{:keys [total-time] :as screen} ^Animation animation]
+    (texture* (.getKeyFrame animation total-time true)))
+  ([{:keys [total-time] :as screen} ^Animation animation is-looping?]
+    (texture* (.getKeyFrame animation total-time is-looping?))))</pre></div></div></div></body></html>

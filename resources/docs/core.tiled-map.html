@@ -1,0 +1,11 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(tiled-map s & options)</div><div class="c-doc"><p>Returns a <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/maps/tiled/TiledMap.html'>TiledMap</a>. Normally, you don't need to use this directly.</p></div></div><div class="c-head">Options</div><div class="java"><div class="j-item"><span class="j-name">:dispose</span><span class="j-args"></span><div class="j-doc">Disposes all resources like {@link Texture} instances that the map may own.</div></div><div class="j-item"><span class="j-name">:dispose</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-layers</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-properties</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-tile-sets</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:set-owned-resources</span><span class="j-args"><span class="j-arg"><span class="j-type">^com.badlogic.gdx.utils.Array</span> resources</span></span><div class="j-doc">Used by loaders to set resources when loading the map directly, without {@link AssetManager}. To be disposed in
+ {@link #dispose()}.</div></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn tiled-map*
+  ([]
+    (TiledMap.))
+  ([s]
+    (if (string? s)
+      (or (u/load-asset s TiledMap)
+          (.load (TmxMapLoader.) s))
+      s)))</pre><pre>(defmacro tiled-map
+  [s & options]
+  `(u/calls! ^TiledMap (tiled-map* ~s) ~@options))</pre></div></div></div></body></html>

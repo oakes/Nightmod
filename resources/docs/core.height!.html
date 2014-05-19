@@ -1,0 +1,5 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(height! screen new-height)</div><div class="c-doc"><p>Sets the height of the camera in <code>screen</code>, adjusting the width so the ratio remains in tact.</p><pre>
+&#40;height! screen 360&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn height!
+  [screen new-height]
+  (size! screen (* new-height (/ (game :width) (game :height))) new-height))</pre></div></div></div></body></html>

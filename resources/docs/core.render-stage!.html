@@ -1,0 +1,4 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(render-stage! screen)</div><div class="c-doc"><p>Calls the stage renderer from <code>screen</code>.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn render-stage!
+  [{:keys [^Stage renderer] :as screen}]
+  (doto renderer .act .draw)
+  nil)</pre></div></div></div></body></html>

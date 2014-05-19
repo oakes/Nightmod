@@ -1,0 +1,5 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(map-layer-names screen)</div><div class="c-doc"><p>Returns a list with strings cooresponding to the name of each layer in the tiled map in <code>screen</code>.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn map-layer-names
+  [screen]
+  (doall
+    (for [^MapLayer layer (map-layers screen)]
+      (.getName layer))))</pre></div></div></div></body></html>

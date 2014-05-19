@@ -1,0 +1,36 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(texture arg & options)</div><div class="c-doc"><p>Returns an entity based on <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/TextureRegion.html'>TextureRegion</a>.</p><pre>
+; load image.png
+&#40;texture &quot;image.png&quot;&#41;
+; load image.png, flip it, and only display the specified region
+&#40;texture &quot;image.png&quot;
+         :flip true false
+         :set-region 0 0 100 100&#41;
+; create a new texture based on an existing one
+&#40;texture &#40;texture &quot;image.png&quot;&#41;&#41;
+; rotate a texture 45 degress
+&#40;assoc &#40;texture &quot;image.png&quot;&#41;
+       :angle 45&#41;
+</pre></div></div><div class="c-head">Options</div><div class="java"><div class="j-item"><span class="j-name">:flip</span><span class="j-args"><span class="j-arg"><span class="j-type">^boolean</span> x</span>, <span class="j-arg"><span class="j-type">^boolean</span> y</span></span></div><div class="j-item"><span class="j-name">:get-region-height</span><span class="j-args"></span><div class="j-doc">Returns the region's height.</div></div><div class="j-item"><span class="j-name">:get-region-width</span><span class="j-args"></span><div class="j-doc">Returns the region's width.</div></div><div class="j-item"><span class="j-name">:get-region-x</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-region-y</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-texture</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-u</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-u2</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-v</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-v2</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:is-flip-x</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:is-flip-y</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:scroll</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> x-amount</span>, <span class="j-arg"><span class="j-type">^float</span> y-amount</span></span><div class="j-doc">Offsets the region relative to the current region. Generally the region's size should be the entire size of the texture in
+ the direction(s) it is scrolled.</div></div><div class="j-item"><span class="j-name">:set-region</span><span class="j-args"><span class="j-arg"><span class="j-type">^Texture</span> texture</span></span><div class="j-doc">Sets the texture and sets the coordinates to the size of the specified texture.</div></div><div class="j-item"><span class="j-name">:set-region</span><span class="j-args"><span class="j-arg"><span class="j-type">^int</span> x</span>, <span class="j-arg"><span class="j-type">^int</span> y</span>, <span class="j-arg"><span class="j-type">^int</span> width</span>, <span class="j-arg"><span class="j-type">^int</span> height</span></span></div><div class="j-item"><span class="j-name">:set-region</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> u</span>, <span class="j-arg"><span class="j-type">^float</span> v</span>, <span class="j-arg"><span class="j-type">^float</span> u2</span>, <span class="j-arg"><span class="j-type">^float</span> v2</span></span></div><div class="j-item"><span class="j-name">:set-region</span><span class="j-args"><span class="j-arg"><span class="j-type">^TextureRegion</span> region</span></span><div class="j-doc">Sets the texture and coordinates to the specified region.</div></div><div class="j-item"><span class="j-name">:set-region</span><span class="j-args"><span class="j-arg"><span class="j-type">^TextureRegion</span> region</span>, <span class="j-arg"><span class="j-type">^int</span> x</span>, <span class="j-arg"><span class="j-type">^int</span> y</span>, <span class="j-arg"><span class="j-type">^int</span> width</span>, <span class="j-arg"><span class="j-type">^int</span> height</span></span><div class="j-doc">Sets the texture to that of the specified region and sets the coordinates relative to the specified region.</div></div><div class="j-item"><span class="j-name">:set-region-height</span><span class="j-args"><span class="j-arg"><span class="j-type">^int</span> height</span></span></div><div class="j-item"><span class="j-name">:set-region-width</span><span class="j-args"><span class="j-arg"><span class="j-type">^int</span> width</span></span></div><div class="j-item"><span class="j-name">:set-region-x</span><span class="j-args"><span class="j-arg"><span class="j-type">^int</span> x</span></span></div><div class="j-item"><span class="j-name">:set-region-y</span><span class="j-args"><span class="j-arg"><span class="j-type">^int</span> y</span></span></div><div class="j-item"><span class="j-name">:set-texture</span><span class="j-args"><span class="j-arg"><span class="j-type">^Texture</span> texture</span></span></div><div class="j-item"><span class="j-name">:set-u</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> u</span></span></div><div class="j-item"><span class="j-name">:set-u2</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> u2</span></span></div><div class="j-item"><span class="j-name">:set-v</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> v</span></span></div><div class="j-item"><span class="j-name">:set-v2</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> v2</span></span></div><div class="j-item"><span class="j-name">:split</span><span class="j-args"><span class="j-arg"><span class="j-type">^int</span> tile-width</span>, <span class="j-arg"><span class="j-type">^int</span> tile-height</span></span><div class="j-doc">Helper function to create tiles out of this TextureRegion starting from the top left corner going to the right and ending at
+ the bottom right corner. Only complete tiles will be returned so if the region's width or height are not a multiple of the
+ tile width and height not all of the region will be used. This will not work on texture regions returned form a TextureAtlas
+ that either have whitespace removed or where flipped before the region is split.</div></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn texture*
+  [arg]
+  (TextureEntity.
+    (cond
+      (string? arg)
+      (-> (or (u/load-asset arg Texture)
+              (Texture. ^String arg))
+          TextureRegion.)
+      (isa? (type arg) Pixmap)
+      (-> ^Pixmap arg Texture. TextureRegion.)
+      (isa? (type arg) TextureRegion)
+      arg
+      (:object arg)
+      (TextureRegion. ^TextureRegion (:object arg))
+      :else
+      (TextureRegion. arg))))</pre><pre>(defmacro texture
+  [arg & options]
+  `(let [entity# (texture* ~arg)]
+     (u/calls! ^TextureRegion (u/get-obj entity# :object) ~@options)
+     entity#))</pre></div></div></div></body></html>

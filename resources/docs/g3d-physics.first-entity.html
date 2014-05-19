@@ -1,0 +1,4 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(first-entity screen entities)</div><div class="c-doc"><p>Returns the first entity in a contact. May only be used in contact functions such as :on-begin-contact.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn first-entity
+  [screen entities]
+  (-> (u/get-obj screen :first-body)
+      (find-body entities)))</pre></div></div></div></body></html>

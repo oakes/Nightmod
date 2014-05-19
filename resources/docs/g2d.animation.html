@@ -1,0 +1,15 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(animation duration textures & options)</div><div class="c-doc"><p>Returns an <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/Animation.html'>Animation</a>.</p><pre>
+&#40;animation 0.2
+           &#91;walk-1 walk-2 walk-3&#93;
+           :set-play-mode &#40;play-mode :loop-pingpong&#41;&#41;
+</pre></div></div><div class="c-head">Options</div><div class="java"><div class="j-item"><span class="j-name">:get-key-frame</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> state-time</span>, <span class="j-arg"><span class="j-type">^boolean</span> looping</span></span><div class="j-doc">Returns a {@link TextureRegion} based on the so called state time. This is the amount of seconds an object has spent in the
+ state this Animation instance represents, e.g. running, jumping and so on. The mode specifies whether the animation is
+ looping or not.</div></div><div class="j-item"><span class="j-name">:get-key-frame</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> state-time</span></span><div class="j-doc">Returns a {@link TextureRegion} based on the so called state time. This is the amount of seconds an object has spent in the
+ state this Animation instance represents, e.g. running, jumping and so on using the mode specified by
+ {@link #setPlayMode(PlayMode)} method.</div></div><div class="j-item"><span class="j-name">:get-key-frame-index</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> state-time</span></span><div class="j-doc">Returns the current frame number.</div></div><div class="j-item"><span class="j-name">:get-key-frames</span><span class="j-args"></span><div class="j-doc">Returns the keyFrames[] array where all the TextureRegions of the animation are stored.</div></div><div class="j-item"><span class="j-name">:get-play-mode</span><span class="j-args"></span><div class="j-doc">Returns the animation play mode.</div></div><div class="j-item"><span class="j-name">:is-animation-finished</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> state-time</span></span><div class="j-doc">Whether the animation would be finished if played without looping (PlayMode#NORMAL), given the state time.</div></div><div class="j-item"><span class="j-name">:set-play-mode</span><span class="j-args"><span class="j-arg"><span class="j-type">^Animation.PlayMode</span> play-mode</span></span><div class="j-doc">Sets the animation play mode.</div></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn animation*
+  [duration textures]
+  (Animation. duration
+              (u/gdx-array (map #(u/get-obj % :object) textures))
+              (play-mode :normal)))</pre><pre>(defmacro animation
+  [duration textures & options]
+  `(u/calls! ^Animation (animation* ~duration ~textures) ~@options))</pre></div></div></div></body></html>

@@ -1,0 +1,15 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(bullet-3d type & options)</div><div class="c-doc"><p>Returns a world based on btDynamicsWorld.</p><pre>
+&#40;bullet-3d :rigid&#41; ; can only handle rigid bodies
+&#40;bullet-3d :soft-rigid&#41; ; can handle soft and rigid bodies
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn bullet-3d*
+  [type]
+  @init-bullet
+  (case type
+    :rigid (discrete-dynamics)
+    :soft-rigid (soft-rigid-dynamics)
+    (u/throw-key-not-found type)))</pre><pre>(defmacro bullet-3d
+  [type & options]
+  `(let [world# (bullet-3d* ~type)
+         ^btDynamicsWorld object# (:object world#)]
+     (u/calls! object# ~@options)
+     world#))</pre></div></div></div></body></html>

@@ -1,0 +1,17 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(step! screen)</div><div class="c-head">(step! screen entities)</div><div class="c-doc"><p>Runs the physics simulations for a single frame and optionally returns the <code>entities</code> with their positions updated.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn step!
+  ([{:keys [world time-step velocity-iterations position-iterations]
+     :or {time-step (/ 1 60) velocity-iterations 10 position-iterations 10}
+     :as screen}]
+    (.step world time-step velocity-iterations position-iterations))
+  ([screen entities]
+    (step! screen)
+    (map (fn [e]
+           (if (:body e)
+             (assoc e
+                    :x (body-x e)
+                    :y (body-y e)
+                    :angle (body-angle e)
+                    :origin-x (body-origin-x e)
+                    :origin-y (body-origin-y e))
+             e))
+         entities)))</pre></div></div></div></body></html>

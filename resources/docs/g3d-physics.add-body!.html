@@ -1,0 +1,10 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(add-body! screen body)</div><div class="c-doc"><p>Adds the <code>body</code> to the <code>screen</code> and returns it.</p><pre>
+&#40;add-body! screen &#40;rigid-body info&#41;&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn add-body!
+  [screen body]
+  (cond
+    (isa? (type (:object body)) btRigidBody)
+    (bullet-3d! screen :add-rigid-body (:object body))
+    (isa? (type (:object body)) btSoftBody)
+    (bullet-3d! screen :add-soft-body (:object body)))
+  body)</pre></div></div></div></body></html>

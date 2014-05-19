@@ -1,0 +1,5 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(cone-shape radius height & options)</div><div class="c-doc"><p>Returns a btConeShape.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn cone-shape*
+  [radius height]
+  (btConeShape. radius height))</pre><pre>(defmacro cone-shape
+  [radius height & options]
+  `(u/calls! ^btConeShape (cone-shape* ~radius ~height) ~@options))</pre></div></div></div></body></html>

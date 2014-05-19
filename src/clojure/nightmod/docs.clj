@@ -7,35 +7,29 @@
             [nightmod.sandbox :as sandbox]
             [seesaw.core :as s])
   (:import [javax.swing.event TreeSelectionListener]
+           [javax.swing.text.html HTMLEditorKit StyleSheet]
            [javax.swing.tree DefaultMutableTreeNode DefaultTreeModel
             TreeSelectionModel]))
-
-(defn get-groups
-  [{:keys [ns groups]}]
-  (let [ns (when (> (count ns) 0) ns)]
-    (map #(assoc % :ns (or ns "play-clj.core")) groups)))
 
 (defn blacklisted?
   [{:keys [name]}]
   (contains? sandbox/blacklist-symbols (symbol name)))
 
-(def doc-list (->> (io/resource "doc.edn")
+(def doc-list (->> (io/resource "docs/index.edn")
                    slurp
                    edn/read-string
-                   (map get-groups)
-                   (apply concat)
                    (remove blacklisted?)))
 
-(def doc-map (into {} doc-list))
+(def doc-map (into {} (map #(vector (:name %) (:file %)) doc-list)))
 
 (def ns-list (vec (group-by :ns doc-list)))
 
 (defn update-content!
   [node]
-  (let [content (s/select @ui/root [:#docs-content])]
-    (doto content
-      (.setText (:docstring node))
-      (.setCaretPosition 0))))
+  (doto (s/select @ui/root [:#docs-content])
+    (.setText (or (some->> node :file (str "docs/") io/resource slurp)
+                  ""))
+    (.setCaretPosition 0)))
 
 (defn var-node
   [{:keys [ns name] :as node}]
@@ -74,9 +68,12 @@
 
 (defn create-content
   []
-  (s/editor-pane :id :docs-content
-                 :editable? false
-                 :content-type "text/html"))
+  (let [css (doto (StyleSheet.) (.importStyleSheet (io/resource "docs.css")))
+        kit (doto (HTMLEditorKit.) (.setStyleSheet css))]
+  (doto (s/editor-pane :id :docs-content
+                       :editable? false
+                       :content-type "text/html")
+    (.setEditorKit kit))))
 
 (defn search!
   [& _])

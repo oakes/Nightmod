@@ -1,0 +1,7 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(bundle & entities)</div><div class="c-doc"><p>Returns an entity containing other entities. This is a useful way to keep related entities together. They will be drawn in the order they appear in the internal :entities vector. Any keys in the bundle, such as :x and :y, will override the equivalent keys in each entity when being drawn.</p><pre>
+&#40;bundle &#40;shape :filled&#41; &#40;shape :line&#41;&#41;
+&#40;assoc &#40;bundle &#40;shape :filled&#41; &#40;shape :line&#41;&#41;
+       :x 100 :y 100&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn bundle
+  [& entities]
+  (BundleEntity. entities))</pre></div></div></div></body></html>

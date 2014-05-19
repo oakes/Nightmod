@@ -1,0 +1,8 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(size! screen width height)</div><div class="c-doc"><p>Sets the size of the camera in <code>screen</code>.</p><pre>
+&#40;size! screen 480 360&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn size!
+  [screen width height]
+  (let [^Camera camera (u/get-obj screen :camera)]
+    (set! (. camera viewportWidth) width)
+    (set! (. camera viewportHeight) height)
+    (.update camera)))</pre></div></div></div></body></html>

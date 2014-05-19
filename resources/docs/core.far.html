@@ -1,0 +1,4 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(far screen)</div><div class="c-doc"><p>Returns the far clipping plane distance of the camera in <code>screen</code>.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn far
+  [screen]
+  (let [^Camera camera (u/get-obj screen :camera)]
+    (. camera far)))</pre></div></div></div></body></html>

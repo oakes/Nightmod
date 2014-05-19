@@ -1,0 +1,7 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(segment a b & options)</div><div class="c-doc"><p>Returns a <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/math/collision/Segment.html'>Segment</a>.</p></div></div><div class="c-head">Options</div><div class="java"></div><div class="c-head">Source</div><div class="c-src"><pre>(defn segment*
+  ([a-x a-y a-z b-x b-y b-z]
+    (Segment. a-x a-y a-z b-x b-y b-z))
+  ([a b]
+    (Segment. a b)))</pre><pre>(defmacro segment
+  [a b & options]
+  `(u/calls! ^Segment (segment* ~a ~b) ~@options))</pre></div></div></div></body></html>

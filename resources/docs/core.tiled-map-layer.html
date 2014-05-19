@@ -1,0 +1,16 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(tiled-map-layer screen layer & options)</div><div class="c-doc"><p>Returns a <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/maps/tiled/TiledMapTileLayer.html'>TiledMapTileLayer</a> from the tiled map in <code>screen</code> that matches <code>layer</code>.</p><pre>
+&#40;tiled-map-layer screen &quot;water&quot;&#41;
+</pre></div></div><div class="c-head">Options</div><div class="java"><div class="j-item"><span class="j-name">:get-cell</span><span class="j-args"><span class="j-arg"><span class="j-type">^int</span> x</span>, <span class="j-arg"><span class="j-type">^int</span> y</span></span></div><div class="j-item"><span class="j-name">:get-height</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-name</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-objects</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-opacity</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-properties</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-tile-height</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-tile-width</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-width</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:is-visible</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:set-cell</span><span class="j-args"><span class="j-arg"><span class="j-type">^int</span> x</span>, <span class="j-arg"><span class="j-type">^int</span> y</span>, <span class="j-arg"><span class="j-type">^TiledMapTileLayer.Cell</span> cell</span></span><div class="j-doc">Sets the {@link Cell} at the given coordinates.</div></div><div class="j-item"><span class="j-name">:set-name</span><span class="j-args"><span class="j-arg"><span class="j-type">^String</span> name</span></span></div><div class="j-item"><span class="j-name">:set-opacity</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> opacity</span></span></div><div class="j-item"><span class="j-name">:set-visible</span><span class="j-args"><span class="j-arg"><span class="j-type">^boolean</span> visible</span></span></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn tiled-map-layer*
+  ([width height tile-width tile-height]
+    (TiledMapTileLayer. width height tile-width tile-height))
+  ([screen layer]
+    (if (isa? (type layer) MapLayer)
+        layer
+        (->> ^BatchTiledMapRenderer (u/get-obj screen :renderer)
+             .getMap
+             .getLayers
+             (drop-while #(not= layer (.getName ^MapLayer %)))
+             first))))</pre><pre>(defmacro tiled-map-layer
+  [screen layer & options]
+  `(let [^TiledMapTileLayer object# (tiled-map-layer* ~screen ~layer)]
+     (u/calls! object# ~@options)))</pre></div></div></div></body></html>

@@ -1,0 +1,17 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(screen->isometric screen entity)</div><div class="c-head">(screen->isometric screen x y)</div><div class="c-doc"><p>Returns a map with the provided x,y values converted from screen to isometric map coordinates.</p><pre>
+&#40;screen-&gt;isometric screen {:x 64 :y 32}&#41;
+&#40;screen-&gt;isometric screen 64 32&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn screen->isometric
+  ([screen {:keys [x y] :or {x 0 y 0} :as entity}]
+    (let [{:keys [unit-scale tile-width tile-height]} (tiled-map-prop screen)
+          half-tile-width (/ (* tile-width unit-scale) 2)
+          half-tile-height (/ (* tile-height unit-scale) 2)]
+      (assoc entity
+             :x (/ (- (/ x half-tile-width)
+                      (/ y half-tile-height))
+                   2)
+             :y (/ (+ (/ y half-tile-height)
+                      (/ x half-tile-width))
+                   2))))
+  ([screen x y]
+    (screen->isometric screen {:x x :y y})))</pre></div></div></div></body></html>

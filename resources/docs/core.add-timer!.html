@@ -1,0 +1,17 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(add-timer! screen id delay)</div><div class="c-head">(add-timer! screen id delay interval)</div><div class="c-head">(add-timer! screen id delay interval repeat)</div><div class="c-doc"><p>Returns a <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/utils/Timer.html'>Timer</a> that runs the :on-timer function according to the given arguments.</p><pre>
+; wait 2 seconds and run once
+&#40;add-timer! screen :spawn-enemy 2&#41;
+; wait 2 seconds and run forever at 10 second intervals
+&#40;add-timer! screen :spawn-enemy 2 10&#41;
+; wait 2 seconds, run once, and then run 3 more times at 10 second intervals
+&#40;add-timer! screen :spawn-enemy 2 10 3&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn add-timer!
+  ([screen id delay]
+    (doto (create-and-add-timer! screen id)
+      (.scheduleTask (task* screen id) delay)))
+  ([screen id delay interval]
+    (doto (create-and-add-timer! screen id)
+      (.scheduleTask (task* screen id) delay interval)))
+  ([screen id delay interval repeat]
+    (doto (create-and-add-timer! screen id)
+      (.scheduleTask (task* screen id) delay interval repeat))))</pre></div></div></div></body></html>

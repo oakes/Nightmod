@@ -1,0 +1,9 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(soft-body info & options)</div><div class="c-doc"><p>Returns a body based on btSoftBody.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn soft-body*
+  [info]
+  (assoc (Body3D. (btSoftBody. info))
+         :info info))</pre><pre>(defmacro soft-body
+  [info & options]
+  `(let [body# (soft-body* ~info)
+         ^btSoftBody object# (:object body#)]
+     (u/calls! object# ~@options)
+     body#))</pre></div></div></div></body></html>

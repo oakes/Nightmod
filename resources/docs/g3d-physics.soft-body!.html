@@ -1,0 +1,4 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(soft-body! object k & options)</div><div class="c-doc"><p>Calls a single method on a <code>soft-body</code>.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defmacro soft-body!
+  [object k & options]
+  `(let [^btSoftBody object# (:object (u/get-obj ~object :body))]
+     (u/call! object# ~k ~@options)))</pre></div></div></div></body></html>

@@ -1,0 +1,22 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(screenshot!)</div><div class="c-head">(screenshot! path)</div><div class="c-doc"><p>Captures a screenshot and either returns it as a <code>pixmap</code> or saves it to the specified path.</p><pre>
+&#40;screenshot!&#41;
+&#40;screenshot! &quot;out.png&quot;&#41;
+&#40;screenshot! &#40;files! :external &quot;out.png&quot;&#41;&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn screenshot!
+  ([]
+    (let [^Pixmap$Format pic-f (Pixmap$Format/RGBA8888)
+          ^Pixmap pic (Pixmap. ^long (game :width) ^long (game :height) pic-f)
+          pixel-data (ScreenUtils/getFrameBufferPixels true)
+          pixels (.getPixels pic)]
+      (doto pixels
+        (.clear)
+        (.put pixel-data)
+        (.position 0))
+      pic))
+  ([path]
+    (let [pic (screenshot!)
+          handle (if (string? path)
+                   (files! :local path)
+                   path)]
+      (PixmapIO/writePNG handle pic)
+      (pixmap! pic :dispose))))</pre></div></div></div></body></html>

@@ -1,0 +1,20 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(set-screen! game & screens)</div><div class="c-doc"><p>Creates and displays a screen for the <code>game</code> object, using one or more <code>screen</code> maps in the order they were provided.</p><pre>
+&#40;set-screen! my-game main-screen text-screen&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn set-screen!
+  [^Game game & screens]
+  (let [add-inputs! (fn []
+                      (input! :set-input-processor (InputMultiplexer.))
+                      (doseq [{:keys [screen]} screens]
+                        (doseq [[_ listener] (:input-listeners @screen)]
+                          (add-input! listener))))
+        run-fn! (fn [k & args]
+                  (doseq [screen screens]
+                    (apply (get screen k) args)))]
+    (.setScreen game (reify Screen
+                       (show [this] (add-inputs!) (run-fn! :show))
+                       (render [this d] (run-fn! :render d))
+                       (hide [this] (run-fn! :hide))
+                       (pause [this] (run-fn! :pause))
+                       (resize [this w h] (run-fn! :resize w h))
+                       (resume [this] (run-fn! :resume))
+                       (dispose [this])))))</pre></div></div></div></body></html>

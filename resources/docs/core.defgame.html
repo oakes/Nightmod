@@ -1,0 +1,8 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(defgame n & options)</div><div class="c-doc"><p>Defines a game. This should only be called once.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn defgame*
+  [{:keys [on-create]}]
+  (proxy [Game] []
+    (create []
+      (when on-create
+        (on-create this)))))</pre><pre>(defmacro defgame
+  [n & {:keys [] :as options}]
+  `(defonce ~n (defgame* ~options)))</pre></div></div></div></body></html>

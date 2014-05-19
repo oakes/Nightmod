@@ -1,0 +1,3 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(body-position! entity x y angle)</div><div class="c-doc"><p>Changes the position of the body in <code>entity</code>. The angle is in degrees.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn body-position!
+  [entity x y angle]
+  (body! entity :set-transform x y (* angle MathUtils/degreesToRadians)))</pre></div></div></div></body></html>

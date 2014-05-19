@@ -1,0 +1,5 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(sphere-shape radius & options)</div><div class="c-doc"><p>Returns a btSphereShape.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn sphere-shape*
+  [radius]
+  (btSphereShape. radius))</pre><pre>(defmacro sphere-shape
+  [radius & options]
+  `(u/calls! ^btSphereShape (sphere-shape* ~radius) ~@options))</pre></div></div></div></body></html>

@@ -1,0 +1,5 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(grid-point-2 x y & options)</div><div class="c-doc"><p>Returns a <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/math/GridPoint2.html'>GridPoint2</a>.</p></div></div><div class="c-head">Options</div><div class="java"><div class="j-item"><span class="j-name">:set</span><span class="j-args"><span class="j-arg"><span class="j-type">^GridPoint2</span> point</span></span><div class="j-doc">Sets the coordinates of this 2D grid point to that of another.</div></div><div class="j-item"><span class="j-name">:set</span><span class="j-args"><span class="j-arg"><span class="j-type">^int</span> x</span>, <span class="j-arg"><span class="j-type">^int</span> y</span></span><div class="j-doc">Sets the coordinates of this 2D grid point.</div></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn grid-point-2*
+  [x y]
+  (GridPoint2. x y))</pre><pre>(defmacro grid-point-2
+  [x y & options]
+  `(u/calls! ^GridPoint2 (grid-point-2* ~x ~y) ~@options))</pre></div></div></div></body></html>

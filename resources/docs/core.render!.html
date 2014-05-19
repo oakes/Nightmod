@@ -1,0 +1,12 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(render! screen)</div><div class="c-head">(render! screen entities)</div><div class="c-doc"><p>Calls the renderer from <code>screen</code> and optionally draws and returns the <code>entities</code>.</p><pre>
+&#40;render! screen entities&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn render!
+  ([{:keys [renderer] :as screen}]
+    (cond
+      (isa? (type renderer) BatchTiledMapRenderer)
+      (render-map! screen)
+      (isa? (type renderer) Stage)
+      (render-stage! screen)))
+  ([screen entities]
+    (render! screen)
+    (draw! screen entities)))</pre></div></div></div></body></html>

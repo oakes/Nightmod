@@ -1,0 +1,5 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(box-shape box-half-extents & options)</div><div class="c-doc"><p>Returns a btSphereShape.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn box-shape*
+  [box-half-extents]
+  (btBoxShape. box-half-extents))</pre><pre>(defmacro box-shape
+  [box-half-extents & options]
+  `(u/calls! ^btBoxShape (box-shape* ~box-half-extents) ~@options))</pre></div></div></div></body></html>

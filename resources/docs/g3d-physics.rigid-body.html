@@ -1,0 +1,9 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(rigid-body info & options)</div><div class="c-doc"><p>Returns a body based on btRigidBody.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn rigid-body*
+  [info]
+  (assoc (Body3D. (btRigidBody. info))
+         :info info))</pre><pre>(defmacro rigid-body
+  [info & options]
+  `(let [body# (rigid-body* ~info)
+         ^btRigidBody object# (:object body#)]
+     (u/calls! object# ~@options)
+     body#))</pre></div></div></div></body></html>

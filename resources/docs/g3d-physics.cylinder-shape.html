@@ -1,0 +1,5 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(cylinder-shape half-extents & options)</div><div class="c-doc"><p>Returns a btCylinderShape.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn cylinder-shape*
+  [half-extents]
+  (btCylinderShape. half-extents))</pre><pre>(defmacro cylinder-shape
+  [half-extents & options]
+  `(u/calls! ^btCylinderShape (cylinder-shape* ~half-extents) ~@options))</pre></div></div></div></body></html>

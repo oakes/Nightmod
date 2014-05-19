@@ -1,0 +1,21 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(audio! k & options)</div><div class="c-doc"><p>Calls a single method on <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/Audio.html'>Gdx.audio</a>.</p><pre>
+&#40;audio! :new-audio-recorder 44100 false&#41;
+</pre></div></div><div class="c-head">Options</div><div class="java"><div class="j-item"><span class="j-name">:new-audio-device</span><span class="j-args"><span class="j-arg"><span class="j-type">^int</span> sampling-rate</span>, <span class="j-arg"><span class="j-type">^boolean</span> is-mono</span></span><div class="j-doc">Creates a new {@link AudioDevice} either in mono or stereo mode. The AudioDevice has to be disposed via its
+ {@link AudioDevice#dispose()} method when it is no longer used.</div></div><div class="j-item"><span class="j-name">:new-audio-recorder</span><span class="j-args"><span class="j-arg"><span class="j-type">^int</span> sampling-rate</span>, <span class="j-arg"><span class="j-type">^boolean</span> is-mono</span></span><div class="j-doc">Creates a new {@link AudioRecorder}. The AudioRecorder has to be disposed after it is no longer used.</div></div><div class="j-item"><span class="j-name">:new-music</span><span class="j-args"><span class="j-arg"><span class="j-type">^FileHandle</span> file</span></span><div class="j-doc">Creates a new {@link Music} instance which is used to play back a music stream from a file. Currently supported formats are
+ WAV, MP3 and OGG. The Music instance has to be disposed if it is no longer used via the {@link Music#dispose()} method.
+ Music instances are automatically paused when {@link ApplicationListener#pause()} is called and resumed when
+ {@link ApplicationListener#resume()} is called.</div></div><div class="j-item"><span class="j-name">:new-sound</span><span class="j-args"><span class="j-arg"><span class="j-type">^FileHandle</span> file-handle</span></span><div class="j-doc"><p>
+ Creates a new {@link Sound} which is used to play back audio effects such as gun shots or explosions. The Sound's audio data
+ is retrieved from the file specified via the {@link FileHandle}. Note that the complete audio data is loaded into RAM. You
+ should therefore not load big audio files with this methods. The current upper limit for decoded audio is 1 MB.
+ </p>
+ 
+ <p>
+ Currently supported formats are WAV, MP3 and OGG.
+ </p>
+ 
+ <p>
+ The Sound has to be disposed if it is no longer used via the {@link Sound#dispose()} method.
+ </p></div></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defmacro audio!
+  [k & options]
+  `(u/call! ^Audio (Gdx/audio) ~k ~@options))</pre></div></div></div></body></html>

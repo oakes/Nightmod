@@ -1,0 +1,15 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(step! screen)</div><div class="c-head">(step! screen entities)</div><div class="c-doc"><p>Runs the physics simulations for a single frame and optionally returns the <code>entities</code> with their positions updated.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn step!
+  ([{:keys [delta-time max-sub-steps time-step]
+     :or {max-sub-steps 5 time-step (/ 1 60)}
+     :as screen}]
+    (bullet-3d! screen :step-simulation delta-time max-sub-steps time-step))
+  ([screen entities]
+    (step! screen)
+    (map (fn [e]
+           (if (:body e)
+             (assoc e
+                    :x (body-x e)
+                    :y (body-y e)
+                    :z (body-z e))
+             e))
+         entities)))</pre></div></div></div></body></html>

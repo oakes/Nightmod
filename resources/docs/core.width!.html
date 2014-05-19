@@ -1,0 +1,5 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(width! screen new-width)</div><div class="c-doc"><p>Sets the width of the camera in <code>screen</code>, adjusting the height so the ratio remains in tact.</p><pre>
+&#40;width! screen 480&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn width!
+  [screen new-width]
+  (size! screen new-width (* new-width (/ (game :height) (game :width)))))</pre></div></div></div></body></html>

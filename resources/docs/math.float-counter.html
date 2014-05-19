@@ -1,0 +1,5 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(float-counter window-size & options)</div><div class="c-doc"><p>Returns a <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/math/FloatCounter.html'>FloatCounter</a>.</p></div></div><div class="c-head">Options</div><div class="java"><div class="j-item"><span class="j-name">:put</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> value</span></span><div class="j-doc">Add a value and update all fields.</div></div><div class="j-item"><span class="j-name">:reset</span><span class="j-args"></span><div class="j-doc">Reset all values to their default value.</div></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn float-counter*
+  [window-size]
+  (FloatCounter. window-size))</pre><pre>(defmacro float-counter
+  [window-size & options]
+  `(u/calls! ^FloatCounter (float-counter* ~window-size) ~@options))</pre></div></div></div></body></html>

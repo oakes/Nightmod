@@ -1,0 +1,9 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(container child & options)</div><div class="c-doc"><p>Returns an entity based on <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/scenes/scene2d/ui/Container.html'>Container</a>.</p><pre>
+&#40;container entity&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn container*
+  [child]
+  (ActorEntity. (Container. (u/get-obj child :object))))</pre><pre>(defmacro container
+  [child & options]
+  `(let [entity# (container* ~child)]
+     (u/calls! ^Container (u/get-obj entity# :object) ~@options)
+     entity#))</pre></div></div></div></body></html>

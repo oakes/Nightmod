@@ -1,0 +1,5 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(capsule-shape radius height & options)</div><div class="c-doc"><p>Returns a btCapsuleShape.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn capsule-shape*
+  [radius height]
+  (btCapsuleShape. radius height))</pre><pre>(defmacro capsule-shape
+  [radius height & options]
+  `(u/calls! ^btCapsuleShape (capsule-shape* ~radius ~height) ~@options))</pre></div></div></div></body></html>

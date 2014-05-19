@@ -1,0 +1,5 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(shape-type k)</div><div class="c-doc"><p>Returns a static field from <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/graphics/glutils/ShapeRenderer.ShapeType.html'>ShapeRenderer.ShapeType</a>.</p><pre>
+&#40;shape-type :filled&#41;
+</pre></div></div><div class="c-head">Options</div><div class="java"><div class="j-item"><span class="j-name">:filled</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:line</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:point</span><span class="j-args"></span></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defmacro shape-type
+  [k]
+  `~(u/gdx-field :graphics :glutils "ShapeRenderer$ShapeType" (u/key->pascal k)))</pre></div></div></div></body></html>

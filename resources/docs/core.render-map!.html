@@ -1,0 +1,24 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(render-map! screen & [k & layer-names])</div><div class="c-doc"><p>Calls the tiled-map renderer from <code>screen</code>, optionally allowing you to specify which layers to render with or without.</p><pre>
+&#40;render-map! screen :with &quot;water&quot; &quot;grass&quot;&#41;
+&#40;render-map! screen :without &quot;desert&quot; &quot;rocks&quot;&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn render-map!
+  [{:keys [^BatchTiledMapRenderer renderer ^Camera camera] :as screen}
+   & [k & layer-names]]
+  (when camera (.setView renderer camera))
+  (if k
+    (let [all-layer-names (map-layer-names screen)]
+      ; make sure the layer names exist
+      (doseq [n layer-names]
+        (when-not (contains? (set all-layer-names) n)
+          (throw (Exception. (format "Layer \"%s\" does not exist." n)))))
+      ; render with or without the supplied layers
+      (->> (case k
+             :with (set layer-names)
+             :without (clojure.set/difference (set all-layer-names)
+                                              (set layer-names))
+             (u/throw-key-not-found k))
+           (map #(.indexOf ^java.util.List all-layer-names %))
+           int-array
+           (.render renderer)))
+    (.render renderer))
+  nil)</pre></div></div></div></body></html>

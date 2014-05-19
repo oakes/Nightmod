@@ -1,0 +1,4 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(direction screen)</div><div class="c-doc"><p>Returns the direction of the camera in <code>screen</code>.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn direction
+  [screen]
+  (let [^Camera camera (u/get-obj screen :camera)]
+    (. camera direction)))</pre></div></div></div></body></html>

@@ -1,0 +1,5 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(on-gl & body)</div><div class="c-doc"><p>Runs the macro body on the GL thread.</p><pre>
+&#40;on-gl &#40;set-screen! my-game main-screen&#41;&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defmacro on-gl
+  [& body]
+  `(app! :post-runnable (fn [] ~@body)))</pre></div></div></div></body></html>

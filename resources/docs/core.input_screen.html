@@ -1,0 +1,21 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(input->screen screen entity)</div><div class="c-head">(input->screen screen x y)</div><div class="c-head">(input->screen screen x y z)</div><div class="c-doc"><p>Returns a map with the provided x,y,z values converted from input to screen coordinates.</p><pre>
+&#40;input-&gt;screen screen {:x 10 :y 10 :z 0}&#41;
+&#40;input-&gt;screen screen 10 10&#41;
+&#40;input-&gt;screen screen 10 10 0&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn input->screen
+  ([screen {:keys [x y z] :or {x 0 y 0 z 0} :as entity}]
+    (try
+      (let [^Camera camera (u/get-obj screen :camera)
+            coords (m/vector-3 x y z)]
+        (.unproject camera coords)
+        (assoc entity
+               :x (. coords x)
+               :y (. coords y)
+               :z (. coords z)))
+      ; if there's no camera, just flip the y axis
+      (catch Exception _
+        (assoc entity :y (- (game :height) y)))))
+  ([screen x y]
+    (input->screen screen {:x x :y y}))
+  ([screen x y z]
+    (input->screen screen {:x x :y y :z z})))</pre></div></div></div></body></html>

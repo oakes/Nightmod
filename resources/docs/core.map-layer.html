@@ -1,0 +1,10 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(map-layer screen layer & options)</div><div class="c-doc"><p>Returns a <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/maps/MapLayer.html'>MapLayer</a> from the tiled map in <code>screen</code> that matches <code>layer</code>. This is necessary for non-tile layers, like object and image layers.</p><pre>
+&#40;map-layer screen &quot;objects&quot;&#41;
+</pre></div></div><div class="c-head">Options</div><div class="java"><div class="j-item"><span class="j-name">:get-name</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-objects</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-opacity</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:get-properties</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:is-visible</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:set-name</span><span class="j-args"><span class="j-arg"><span class="j-type">^String</span> name</span></span></div><div class="j-item"><span class="j-name">:set-opacity</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> opacity</span></span></div><div class="j-item"><span class="j-name">:set-visible</span><span class="j-args"><span class="j-arg"><span class="j-type">^boolean</span> visible</span></span></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn map-layer*
+  ([]
+    (MapLayer.))
+  ([screen layer]
+    (tiled-map-layer* screen layer)))</pre><pre>(defmacro map-layer
+  [screen layer & options]
+  `(let [^MapLayer object# (map-layer* ~screen ~layer)]
+     (u/calls! object# ~@options)))</pre></div></div></div></body></html>

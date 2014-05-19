@@ -1,0 +1,5 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(add! group & children)</div><div class="c-doc"><p>Adds the entities in <code>children</code> to the <code>group</code> entity of type <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/scenes/scene2d/ui/WidgetGroup.html'>WidgetGroup</a>.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn add!
+  [group & children]
+  (doseq [child children]
+    (add-to-group! [group child]))
+  group)</pre></div></div></div></body></html>
