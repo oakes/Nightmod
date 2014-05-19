@@ -18,8 +18,7 @@
      System/out System/in System/err
      defscreen* defgame* defgame set-screen! setScreen set-screen-wrapper!
      app! app on-gl pref!
-     asset-manager* asset-manager set-asset-manager!
-     reify proxy gen-class})
+     asset-manager* asset-manager set-asset-manager!})
 
 (def tester
   [(jail-test/blacklist-objects
