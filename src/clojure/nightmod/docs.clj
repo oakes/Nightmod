@@ -1,51 +1,87 @@
 (ns nightmod.docs
-  (:require [nightcode.editors :as editors]
+  (:require [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [nightcode.editors :as editors]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
+            [nightmod.sandbox :as sandbox]
             [seesaw.core :as s])
-  (:import [javax.swing ListModel]))
+  (:import [javax.swing.event TreeSelectionListener]
+           [javax.swing.tree DefaultMutableTreeNode DefaultTreeModel
+            TreeSelectionModel]))
 
-(def ns-list ['clojure.core
-              'nightmod.public
-              'play-clj.core
-              'play-clj.g2d
-              'play-clj.g2d-physics
-              'play-clj.g3d
-              'play-clj.g3d-physics
-              'play-clj.math
-              'play-clj.ui])
+(defn get-groups
+  [{:keys [ns groups]}]
+  (let [ns (when (> (count ns) 0) ns)]
+    (map #(assoc % :ns (or ns "play-clj.core")) groups)))
 
-(defn should-remove?
-  [n]
-  (or (.startsWith n "*")
-      (.endsWith n "*")))
+(defn blacklisted?
+  [{:keys [name]}]
+  (contains? sandbox/blacklist-symbols (symbol name)))
 
-(def ns-vars (->> ns-list
-                  (map #(keys (ns-publics %)))
-                  flatten
-                  (map str)
-                  (remove should-remove?)
-                  sort))
+(def doc-list (->> (io/resource "doc.edn")
+                   slurp
+                   edn/read-string
+                   (map get-groups)
+                   (apply concat)
+                   (remove blacklisted?)))
+
+(def doc-map (into {} doc-list))
+
+(def ns-list (vec (group-by :ns doc-list)))
+
+(defn update-content!
+  [node]
+  (let [content (s/select @ui/root [:#docs-content])]
+    (doto content
+      (.setText (:docstring node))
+      (.setCaretPosition 0))))
+
+(defn var-node
+  [{:keys [ns name] :as node}]
+  (proxy [DefaultMutableTreeNode] [node]
+    (isLeaf [] true)
+    (toString [] name)))
+
+(defn ns-node
+  [[ns items]]
+  (proxy [DefaultMutableTreeNode] []
+    (getChildAt [i] (var-node (nth items i)))
+    (getChildCount [] (count items))
+    (toString [] ns)))
+
+(defn root-node
+  []
+  (proxy [DefaultMutableTreeNode] []
+    (getChildAt [i] (ns-node (nth ns-list i)))
+    (getChildCount [] (count ns-list))))
 
 (defn create-sidebar
   []
-  (s/scrollable (s/listbox :model (reify ListModel
-                                    (addListDataListener [this l])
-                                    (getElementAt [this i]
-                                      (nth ns-vars i))
-                                    (getSize [this]
-                                      (count ns-vars))
-                                    (removeListDataListener [this l])))
-                :size [200 :by 0]))
+  (doto (s/tree)
+    (.setRootVisible false)
+    (.setShowsRootHandles true)
+    (.setModel (DefaultTreeModel. (root-node)))
+    (.addTreeSelectionListener
+      (reify TreeSelectionListener
+        (valueChanged [this e]
+          (update-content! (some-> e
+                                   .getPath
+                                   .getLastPathComponent
+                                   .getUserObject)))))
+    (-> .getSelectionModel
+        (.setSelectionMode TreeSelectionModel/SINGLE_TREE_SELECTION))))
 
 (defn create-content
   []
-  (s/scrollable (s/text "hi")))
+  (s/editor-pane :id :docs-content
+                 :editable? false
+                 :content-type "text/html"))
 
 (defn search!
   [& _])
 
-(def ^:dynamic *widgets* [:search])
+(def ^:dynamic *widgets* [])
 
 (defn create-widgets
   []
@@ -61,5 +97,5 @@
         widget-bar (ui/wrap-panel :items (map #(get widgets % %) *widgets*))]
     (s/border-panel :id :docs
                     :north widget-bar
-                    :west (create-sidebar)
-                    :center (create-content))))
+                    :west (s/scrollable (create-sidebar) :size [200 :by 0])
+                    :center (s/scrollable (create-content)))))

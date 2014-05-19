@@ -88,7 +88,7 @@
             [:up :new-file :edit :open-in-browser :save :cancel (window-btn)])
     (intern 'nightmod.docs
             '*widgets*
-            [:search (window-btn)])))
+            [(window-btn)])))
 
 (defn protect-file!
   "Prevents renaming or deleting a file."
