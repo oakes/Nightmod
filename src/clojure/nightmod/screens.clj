@@ -95,22 +95,23 @@
 
 (defn toggle-files!
   []
-  (if (.exists (io/file @ui/tree-selection))
-    (u/toggle-glass!)
-    (s/invoke-now
-      (reset! ui/tree-selection @u/project-dir))))
+  (let [selected? (.exists (io/file @ui/tree-selection))]
+    (when (or selected? (not (.isVisible (u/glass))))
+      (u/toggle-glass!))
+    (when-not selected?
+      (s/invoke-now
+        (reset! ui/tree-selection @u/project-dir)))))
 
 (defn toggle-docs!
   []
-  (when (or (not (.isVisible (u/glass)))
-            (= @ui/tree-selection u/docs-name))
-    (u/toggle-glass!))
-  (s/invoke-now
-    (if (.isVisible (u/glass))
-      (reset! ui/tree-selection u/docs-name)
-      (reset! ui/tree-selection @u/project-dir))
-    (some-> (s/select @ui/root [:#editor-pane])
-            (s/show-card! u/docs-name))))
+  (let [selected? (= @ui/tree-selection u/docs-name)]
+    (when (or selected? (not (.isVisible (u/glass))))
+      (u/toggle-glass!))
+    (when-not selected?
+      (s/invoke-now
+        (reset! ui/tree-selection u/docs-name)
+        (some-> (s/select @ui/root [:#editor-pane])
+                (s/show-card! u/docs-name))))))
 
 (defscreen main-screen
   :on-show
