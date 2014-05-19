@@ -47,7 +47,7 @@
                       :namespace u/game-ns
                       :max-defs Integer/MAX_VALUE
                       :init '(do
-                               (require '[nightmod.public :refer :all]
+                               (require '[nightmod.tools :refer :all]
                                         '[play-clj.core :refer :all]
                                         '[play-clj.g2d :refer :all]
                                         '[play-clj.g3d :refer :all]
@@ -90,7 +90,7 @@
 (intern 'nightcode.completions
         '*namespaces*
         ['clojure.core
-         'nightmod.public
+         'nightmod.tools
          'play-clj.core
          'play-clj.g2d
          'play-clj.g3d

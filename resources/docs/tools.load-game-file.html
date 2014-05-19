@@ -1,0 +1,8 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(load-game-file n)</div><div class="c-doc"><p>Loads a file into the namespace.</p><pre>
+&#40;load-game-file &quot;utils.clj&quot;&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defmacro load-game-file
+  [n]
+  (some->> (io/file @u/project-dir n)
+           slurp
+           (format "(do %s\n)")
+           jail/safe-read))</pre></div></div></div></body></html>
