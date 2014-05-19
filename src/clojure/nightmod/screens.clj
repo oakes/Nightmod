@@ -95,10 +95,10 @@
 
 (defn toggle-files!
   []
-  (when (.exists (io/file @ui/tree-selection))
-    (u/toggle-glass!))
-  (s/invoke-now
-    (reset! ui/tree-selection @u/project-dir)))
+  (if (.exists (io/file @ui/tree-selection))
+    (u/toggle-glass!)
+    (s/invoke-now
+      (reset! ui/tree-selection @u/project-dir))))
 
 (defn toggle-docs!
   []
