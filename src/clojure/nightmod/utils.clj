@@ -14,7 +14,7 @@
 (def ^:const editor-width 700)
 (def ^:const settings-file "settings.edn")
 (def ^:const docs-name "*Docs*")
-(def ^:const game-ns 'nightmod.game)
+(def ^:const game-ns 'nightmod.run)
 
 (def main-dir (atom nil))
 (def project-dir (atom nil))

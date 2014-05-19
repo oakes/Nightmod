@@ -47,7 +47,7 @@
                       :namespace u/game-ns
                       :max-defs Integer/MAX_VALUE
                       :init '(do
-                               (require '[nightmod.tools :refer :all]
+                               (require '[nightmod.game :refer :all]
                                         '[play-clj.core :refer :all]
                                         '[play-clj.g2d :refer :all]
                                         '[play-clj.g3d :refer :all]

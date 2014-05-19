@@ -1,7 +1,0 @@
-<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(set-game-screen! & game-screens)</div><div class="c-doc"><p>Displays one or more screens that you defined with <code>defscreen</code>. They will be run the order they are passed in. Note that only the first screen should call <code>&#40;clear!&#41;</code> in its :on-render function; if the others do, they will clear whatever was drawn by the preceding screens.</p><pre>
-&#40;set-game-screen! main-screen text-screen&#41;
-</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn set-game-screen!
-  [& game-screens]
-  (->> (conj (vec game-screens) screens/overlay-screen)
-       (apply set-screen! screens/nightmod)
-       on-gl))</pre></div></div></div></body></html>
