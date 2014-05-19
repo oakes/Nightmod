@@ -91,13 +91,33 @@
       (reify ClipboardOwner
         (lostOwnership [this clipboard contents])))))
 
+(defn toggle-files!
+  []
+  (when (.exists (io/file @ui/tree-selection))
+    (u/toggle-glass!))
+  (s/invoke-now
+    (reset! ui/tree-selection @u/project-dir)))
+
+(defn toggle-docs!
+  []
+  (when (or (not (.isVisible (u/glass)))
+            (= @ui/tree-selection u/docs-name))
+    (u/toggle-glass!))
+  (s/invoke-now
+    (if (.isVisible (u/glass))
+      (reset! ui/tree-selection u/docs-name)
+      (reset! ui/tree-selection @u/project-dir))
+    (some-> (s/select @ui/root [:#editor-pane])
+            (s/show-card! u/docs-name))))
+
 (defscreen main-screen
   :on-show
   (fn [screen entities]
-    (update! screen :renderer (stage) :camera (orthographic))
     (when-not @u/main-dir
       (reset! u/main-dir (u/get-data-dir)))
     (manager/clean!)
+    (s/invoke-now (reset! ui/tree-selection nil))
+    (update! screen :renderer (stage) :camera (orthographic))
     (let [ui-skin (skin "uiskin.json")
           create-button (fn [[display-name path]]
                           (text-button display-name ui-skin :set-name path))
@@ -169,7 +189,9 @@
             (text-button (nc-utils/get-string :restart) ui-skin
                          :set-name "restart")
             (text-button (nc-utils/get-string :files) ui-skin
-                         :set-name "files")]
+                         :set-name "files")
+            (text-button (nc-utils/get-string :docs) ui-skin
+                         :set-name "docs")]
            (horizontal :space (* 2 pad-space) :pack)
            (assoc :id :menu :x pad-space))]))
   
@@ -203,7 +225,8 @@
     (case (text-button! (:actor screen) :get-name)
       "home" (home!)
       "restart" (restart!)
-      "files" (u/toggle-glass!)
+      "files" (toggle-files!)
+      "docs" (toggle-docs!)
       "stack-trace" (swap! u/stack-trace? not)
       "copy" (set-clipboard! (error-str))
       nil)

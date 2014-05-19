@@ -13,6 +13,7 @@
 (def ^:const window-height 768)
 (def ^:const editor-width 700)
 (def ^:const settings-file "settings.edn")
+(def ^:const docs-name "*Docs*")
 (def ^:const game-ns 'nightmod.game)
 
 (def main-dir (atom nil))

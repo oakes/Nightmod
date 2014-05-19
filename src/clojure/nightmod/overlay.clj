@@ -1,5 +1,6 @@
 (ns nightmod.overlay
-  (:require [nightcode.editors :as editors]
+  (:require [nightmod.docs :as docs]
+            [nightcode.editors :as editors]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
             [nightmod.screens :as screens]
@@ -18,7 +19,8 @@
   "Returns the layered pane holding the editor pane."
   []
   (let [layered-pane (doto (JLayeredPane.) set-hint-container!)
-        pane (editors/create-pane)]
+        pane (doto (editors/create-pane)
+               (.add (docs/create-card) u/docs-name))]
     (doto layered-pane
       (.setPreferredSize (Dimension. u/editor-width u/window-height))
       (.addComponentListener (proxy [ComponentAdapter] []
@@ -45,7 +47,8 @@
   (let [editor-pane (ui/get-editor-pane)
         l-pane (-> main-window .getGlassPane (s/select [:JLayeredPane]) first)]
     (reset! ui/root main-window)
-    (u/toggle-glass! true)
+    (when @ui/tree-selection
+      (u/toggle-glass! true))
     (.add l-pane editor-pane)
     (set-hint-container! l-pane)
     (s/hide! editor-window)))
@@ -69,9 +72,9 @@
                          (if (swap! external? not)
                            (show-external-editor! main-window editor-window)
                            (show-internal-editor! main-window editor-window)))
-        window-btn (ui/button :id :window
-                              :text (nc-utils/get-string :toggle-window)
-                              :listen [:action toggle-window!])]
+        window-btn #(ui/button :id :window
+                               :text (nc-utils/get-string :toggle-window)
+                               :listen [:action toggle-window!])]
     (.addWindowListener editor-window
       (proxy [WindowAdapter] []
         (windowClosing [e]
@@ -82,7 +85,10 @@
              :doc :paredit :paredit-help :close])
     (intern 'nightcode.file-browser
             '*widgets*
-            [:up :new-file :edit :open-in-browser :save :cancel window-btn])))
+            [:up :new-file :edit :open-in-browser :save :cancel (window-btn)])
+    (intern 'nightmod.docs
+            '*widgets*
+            [:search (window-btn)])))
 
 (defn protect-file!
   "Prevents renaming or deleting a file."
