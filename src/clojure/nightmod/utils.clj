@@ -7,7 +7,8 @@
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
             [seesaw.core :as s])
-  (:import [java.text SimpleDateFormat]))
+  (:import [java.io StringWriter]
+           [java.text SimpleDateFormat]))
 
 (def ^:const window-width 1200)
 (def ^:const window-height 768)
@@ -17,10 +18,12 @@
 (def ^:const docs-name "*Docs*")
 (def ^:const repl-name "*REPL*")
 (def ^:const game-ns 'nightmod.run)
+(def ^:const out-char-limit 500)
 
 (def main-dir (atom nil))
 (def project-dir (atom nil))
 (def error (atom nil))
+(def out (atom ""))
 (def stack-trace? (atom false))
 
 (defn get-data-dir
@@ -93,3 +96,22 @@
       (if show?
         (focus-on-overlay!)
         (s/request-focus! @ui/root)))))
+
+(defn append-to-out!
+  [s]
+  (swap! out
+         (fn [out-old new-str]
+           (let [out-new (str out-old new-str)
+                 out-overflow (- (count out-new) out-char-limit)]
+             (if (> out-overflow 0)
+               (subs out-new out-overflow)
+               out-new)))
+         s))
+
+(defmacro capture-out!
+  [& body]
+  `(let [writer# (StringWriter.)
+         return# (binding [*out* writer#]
+                   (do ~@body))]
+     (append-to-out! (str writer#))
+     return#))

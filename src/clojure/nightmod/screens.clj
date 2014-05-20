@@ -74,9 +74,10 @@
   [widget]
   (scroll-pane widget (style :scroll-pane nil nil nil nil nil)))
 
-(defn error-str
+(defn out-str
   []
-  (->> [(some->> @u/error :message)
+  (->> [(when (seq @u/out) @u/out)
+        (some->> @u/error :message)
         (some-> @u/error :exception .toString)
         (when (and @u/error @u/stack-trace?)
           (for [elem (-> @u/error :exception .getStackTrace)]
@@ -220,7 +221,7 @@
     (->> (for [e entities]
            (case (:id e)
              :text (do
-                     (label! (scroll-pane! e :get-widget) :set-text (error-str))
+                     (label! (scroll-pane! e :get-widget) :set-text (out-str))
                      (assoc e :width (if (.isVisible (u/glass))
                                        (- (game :width) u/editor-width)
                                        (game :width))))
@@ -249,7 +250,7 @@
       "docs" (toggle-docs!)
       "repl" (toggle-repl!)
       "stack-trace" (swap! u/stack-trace? not)
-      "copy" (set-clipboard! (error-str))
+      "copy" (set-clipboard! (out-str))
       nil)
     nil))
 

@@ -65,11 +65,20 @@
   (System/setProperty "java.security.policy"
                       (-> "java.policy" io/resource .toString)))
 
+(defn reset-atoms!
+  []
+  (reset! u/error nil)
+  (reset! u/out ""))
+
+(defn add-to-form
+  [form]
+  `(u/capture-out! (reset-atoms!) ~form))
+
 (defn run-file!
   [path]
-  (reset! u/error nil)
   (-> (format "(do %s\n)" (slurp path))
       jail/safe-read
+      add-to-form
       sb
       (try (catch Exception e (reset! u/error {:message "Error during load"
                                                :exception e})))))
@@ -77,7 +86,7 @@
 (defn run-in-sandbox!
   [func]
   (try
-    (jvm/jvm-sandbox func context)
+    (jvm/jvm-sandbox #(u/capture-out! (func)) context)
     (catch Exception e
       (when (nil? @u/error)
         (reset! u/error {:message (some->> (:name (meta func))
