@@ -11,7 +11,7 @@
 
 (def blacklist-symbols
   '#{alter-var-root resolve find-var with-redefs-fn intern
-     *read-eval* set! eval catch
+     *read-eval* eval
      addMethod forName
      load load-file load-string load-reader
      ns-resolve ns-publics ns-unmap ns-map ns-interns the-ns in-ns require
