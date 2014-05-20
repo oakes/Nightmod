@@ -14,7 +14,6 @@ whatever was drawn by the preceding screens.
 
     (set-game-screen! main-screen text-screen)"
   [& game-screens]
-  (manager/stop-timers!)
   (->> (conj (vec game-screens) screens/overlay-screen)
        (apply set-screen! screens/nightmod)
        on-gl))
