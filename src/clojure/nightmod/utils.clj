@@ -12,8 +12,10 @@
 (def ^:const window-width 1200)
 (def ^:const window-height 768)
 (def ^:const editor-width 700)
+(def ^:const core-file "core.clj")
 (def ^:const settings-file "settings.edn")
 (def ^:const docs-name "*Docs*")
+(def ^:const repl-name "*REPL*")
 (def ^:const game-ns 'nightmod.run)
 
 (def main-dir (atom nil))

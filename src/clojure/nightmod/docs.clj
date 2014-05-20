@@ -54,7 +54,7 @@
 
 (defn create-sidebar
   []
-  (doto (s/tree)
+  (doto (s/tree :id :docs-sidebar)
     (.setRootVisible false)
     (.setShowsRootHandles true)
     (.setModel (DefaultTreeModel. (root-node)))
@@ -100,7 +100,6 @@
   []
   (let [widgets (create-widgets)
         widget-bar (ui/wrap-panel :items (map #(get widgets % %) *widgets*))]
-    (s/border-panel :id :docs
-                    :north widget-bar
+    (s/border-panel :north widget-bar
                     :west (s/scrollable (create-sidebar) :size [200 :by 0])
                     :center (s/scrollable (create-content)))))

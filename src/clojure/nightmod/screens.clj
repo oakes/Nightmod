@@ -111,7 +111,22 @@
       (s/invoke-now
         (reset! ui/tree-selection u/docs-name)
         (some-> (s/select @ui/root [:#editor-pane])
-                (s/show-card! u/docs-name))))))
+                (s/show-card! u/docs-name))
+        (some-> (s/select @ui/root [:#docs-sidebar])
+                s/request-focus!)))))
+
+(defn toggle-repl!
+  []
+  (let [selected? (= @ui/tree-selection u/repl-name)]
+    (when (or selected? (not (.isVisible (u/glass))))
+      (u/toggle-glass!))
+    (when-not selected?
+      (s/invoke-now
+        (reset! ui/tree-selection u/repl-name)
+        (some-> (s/select @ui/root [:#editor-pane])
+                (s/show-card! u/repl-name))
+        (some-> (s/select @ui/root [:#repl-console])
+                s/request-focus!)))))
 
 (defscreen main-screen
   :on-show
@@ -192,7 +207,9 @@
             (text-button (nc-utils/get-string :files) ui-skin
                          :set-name "files")
             (text-button (nc-utils/get-string :docs) ui-skin
-                         :set-name "docs")]
+                         :set-name "docs")
+            (text-button (nc-utils/get-string :repl) ui-skin
+                         :set-name "repl")]
            (horizontal :space (* 2 pad-space) :pack)
            (assoc :id :menu :x pad-space))]))
   
@@ -228,6 +245,7 @@
       "restart" (restart!)
       "files" (toggle-files!)
       "docs" (toggle-docs!)
+      "repl" (toggle-repl!)
       "stack-trace" (swap! u/stack-trace? not)
       "copy" (set-clipboard! (error-str))
       nil)

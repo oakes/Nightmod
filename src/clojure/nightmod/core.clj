@@ -25,7 +25,7 @@
 (defn load-game!
   "Loads game into the canvas and runs it in a sandbox."
   [path]
-  (doto (.getCanonicalPath (io/file path "core.clj"))
+  (doto (.getCanonicalPath (io/file path u/core-file))
     overlay/protect-file!
     sandbox/run-file!))
 

@@ -1,5 +1,6 @@
 (ns nightmod.overlay
   (:require [nightmod.docs :as docs]
+            [nightmod.repl :as repl]
             [nightcode.editors :as editors]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
@@ -20,7 +21,8 @@
   []
   (let [layered-pane (doto (JLayeredPane.) set-hint-container!)
         pane (doto (editors/create-pane)
-               (.add (docs/create-card) u/docs-name))]
+               (.add (docs/create-card) u/docs-name)
+               (.add (repl/create-card) u/repl-name))]
     (doto layered-pane
       (.setPreferredSize (Dimension. u/editor-width u/window-height))
       (.addComponentListener (proxy [ComponentAdapter] []
@@ -88,7 +90,10 @@
             [:up :new-file :edit :open-in-browser :save :cancel (window-btn)])
     (intern 'nightmod.docs
             '*widgets*
-            [(window-btn)])))
+            [(window-btn)])
+    (intern 'nightmod.repl
+            '*widgets*
+            [:restart (window-btn)])))
 
 (defn protect-file!
   "Prevents renaming or deleting a file."
