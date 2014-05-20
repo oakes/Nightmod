@@ -68,6 +68,7 @@
 
 (defn restart!
   []
+  (on-gl (set-screen! nightmod blank-screen overlay-screen))
   (reset! u/project-dir @u/project-dir))
 
 (defn scrollify

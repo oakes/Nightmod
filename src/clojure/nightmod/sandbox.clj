@@ -6,7 +6,7 @@
             [nightmod.screens :as screens]
             [nightmod.utils :as u]
             [play-clj.core :refer :all])
-  (:import [java.io FilePermission]
+  (:import [java.io FilePermission StringWriter]
            [java.lang.reflect ReflectPermission]))
 
 (def blacklist-symbols
@@ -65,34 +65,32 @@
   (System/setProperty "java.security.policy"
                       (-> "java.policy" io/resource .toString)))
 
-(defn reset-atoms!
-  []
-  (reset! u/error nil)
-  (reset! u/out ""))
-
-(defn add-to-form
-  [form]
-  `(u/capture-out! (reset-atoms!) ~form))
-
 (defn run-file!
   [path]
-  (-> (format "(do %s\n)" (slurp path))
-      jail/safe-read
-      add-to-form
-      sb
-      (try (catch Exception e (reset! u/error {:message "Error during load"
-                                               :exception e})))))
+  (reset! u/error nil)
+  (reset! u/out "")
+  (let [writer (StringWriter.)]
+    (-> (format "(do %s\n)" (slurp path))
+        jail/safe-read
+        (sb {#'*out* writer})
+        (try
+          (catch Exception e
+            (reset! u/error {:message "Error during load"
+                             :exception e}))
+          (finally (u/append-to-out! (str writer)))))))
 
 (defn run-in-sandbox!
   [func]
-  (try
-    (jvm/jvm-sandbox #(u/capture-out! (func)) context)
-    (catch Exception e
-      (when (nil? @u/error)
-        (reset! u/error {:message (some->> (:name (meta func))
-                                           (format "Error in %s"))
-                         :exception e}))
-      nil)))
+  (binding [*out* (StringWriter.)]
+    (try
+      (jvm/jvm-sandbox func context)
+      (catch Exception e
+        (when (nil? @u/error)
+          (reset! u/error {:message (some->> (:name (meta func))
+                                             (format "Error in %s"))
+                           :exception e}))
+        nil)
+      (finally (u/append-to-out! (str *out*))))))
 
 ; set namespaces we want to provide completions for
 (intern 'nightcode.completions

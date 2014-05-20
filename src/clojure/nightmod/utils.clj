@@ -7,8 +7,7 @@
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
             [seesaw.core :as s])
-  (:import [java.io StringWriter]
-           [java.text SimpleDateFormat]))
+  (:import [java.text SimpleDateFormat]))
 
 (def ^:const window-width 1200)
 (def ^:const window-height 768)
@@ -107,11 +106,3 @@
                (subs out-new out-overflow)
                out-new)))
          s))
-
-(defmacro capture-out!
-  [& body]
-  `(let [writer# (StringWriter.)
-         return# (binding [*out* writer#]
-                   (do ~@body))]
-     (append-to-out! (str writer#))
-     return#))

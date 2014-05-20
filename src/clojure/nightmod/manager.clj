@@ -26,10 +26,14 @@
   [nspace]
   (doall (map #(ns-unmap nspace %) (keys (ns-interns nspace)))))
 
+(defn stop-timers!
+  []
+  (doseq [t @timers]
+    (.stop t))
+  (reset! timers []))
+
 (defn clean!
   []
   (clear-ns! u/game-ns)
-  (doseq [t @timers]
-    (.stop t))
-  (reset! timers [])
+  (stop-timers!)
   (on-gl (asset-manager! manager :clear)))
