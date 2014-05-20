@@ -100,7 +100,9 @@
       (u/toggle-glass!))
     (when-not selected?
       (s/invoke-now
-        (reset! ui/tree-selection @u/project-dir)))))
+        (reset! ui/tree-selection @u/project-dir)))
+    (some-> (editors/get-selected-text-area)
+            s/request-focus!)))
 
 (defn toggle-docs!
   []
@@ -111,9 +113,9 @@
       (s/invoke-now
         (reset! ui/tree-selection u/docs-name)
         (some-> (s/select @ui/root [:#editor-pane])
-                (s/show-card! u/docs-name))
-        (some-> (s/select @ui/root [:#docs-sidebar])
-                s/request-focus!)))))
+                (s/show-card! u/docs-name))))
+    (some-> (s/select @ui/root [:#docs-sidebar])
+            s/request-focus!)))
 
 (defn toggle-repl!
   []
@@ -124,9 +126,9 @@
       (s/invoke-now
         (reset! ui/tree-selection u/repl-name)
         (some-> (s/select @ui/root [:#editor-pane])
-                (s/show-card! u/repl-name))
-        (some-> (s/select @ui/root [:#repl-console])
-                s/request-focus!)))))
+                (s/show-card! u/repl-name))))
+    (some-> (s/select @ui/root [:#repl-console])
+            s/request-focus!)))
 
 (defscreen main-screen
   :on-show

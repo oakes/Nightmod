@@ -80,8 +80,7 @@
 (defn focus-on-overlay!
   []
   (s/invoke-now
-    (.grabFocus (or (editors/get-selected-text-area)
-                    (s/select @ui/root [:#editor-pane])
+    (.grabFocus (or (s/select @ui/root [:#editor-pane])
                     (glass)))))
 
 (defn toggle-glass!
