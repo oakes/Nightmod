@@ -17,7 +17,7 @@
 (def ^:const docs-name "*Docs*")
 (def ^:const repl-name "*REPL*")
 (def ^:const game-ns 'nightmod.run)
-(def ^:const out-char-limit 500)
+(def ^:const out-char-limit 5000)
 
 (def main-dir (atom nil))
 (def project-dir (atom nil))
