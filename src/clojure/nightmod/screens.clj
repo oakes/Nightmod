@@ -157,11 +157,12 @@
                           (cons new-games)
                           (vertical :pack)
                           scrollify)]
-      (table [(when (seq saved-games)
-                [saved-column :pad pad-space pad-space pad-space pad-space])
-              [load-column :pad pad-space pad-space pad-space pad-space]]
-             :align (align :center)
-             :set-fill-parent true)))
+      [(assoc (shape :filled) :id :background)
+       (table [(when (seq saved-games)
+                 [saved-column :pad pad-space pad-space pad-space pad-space])
+               [load-column :pad pad-space pad-space pad-space pad-space]]
+              :align (align :center)
+              :set-fill-parent true)]))
   
   :on-render
   (fn [screen entities]
@@ -169,8 +170,14 @@
     (render! screen entities))
   
   :on-resize
-  (fn [screen entities]
-    (height! screen (:height screen)))
+  (fn [{:keys [width height] :as screen} entities]
+    (height! screen height)
+    (let [c1 (color :black)
+          c2 (color 79/256 90/256 100/256 1)]
+      (for [e entities]
+        (case (:id e)
+          :background (shape e :rect 0 0 width height c1 c1 c2 c2)
+          e))))
   
   :on-ui-changed
   (fn [screen entities]
