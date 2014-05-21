@@ -1,7 +1,8 @@
 (ns nightmod.manager
   (:require [clojure.java.io :as io]
             [nightmod.utils :as u]
-            [play-clj.core :refer :all])
+            [play-clj.core :refer :all]
+            [play-clj.utils :refer :all])
   (:import [com.badlogic.gdx.assets.loaders FileHandleResolver]
            [com.badlogic.gdx.files FileHandle]))
 
@@ -13,20 +14,7 @@
 (set-asset-manager! manager)
 
 ; keep a reference to all timers to we can stop them later
-(def timers (atom []))
-(let [create-and-add-timer! (deref #'play-clj.core/create-and-add-timer!)]
-  (intern 'play-clj.core
-          'create-and-add-timer!
-          (fn [screen id]
-            (let [t (create-and-add-timer! screen id)]
-              (swap! timers conj t)
-              t))))
-
-(defn stop-timers!
-  []
-  (doseq [t @timers]
-    (.stop t))
-  (reset! timers []))
+(track-timers!)
 
 (defn clear-ns!
   [nspace]
