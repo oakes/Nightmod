@@ -9,6 +9,11 @@
   (:import [java.io FilePermission StringWriter]
            [java.lang.reflect ReflectPermission]))
 
+(defn set-policy!
+  []
+  (System/setProperty "java.security.policy"
+                      (-> "java.policy" io/resource .toString)))
+
 (def blacklist-symbols
   '#{alter-var-root resolve find-var with-redefs-fn intern
      *read-eval* eval
@@ -40,36 +45,34 @@
                  jvm/domain
                  jvm/context))
 
-(def sb (jail/sandbox tester
-                      :context context
-                      :timeout 5000
-                      :namespace u/game-ns
-                      :max-defs Integer/MAX_VALUE
-                      :init '(do
-                               (require '[nightmod.game :refer :all]
-                                        '[play-clj.core :refer :all]
-                                        '[play-clj.g2d :refer :all]
-                                        '[play-clj.g3d :refer :all]
-                                        '[play-clj.math :refer :all]
-                                        '[play-clj.physics :refer :all]
-                                        '[play-clj.ui :refer :all])
-                               ; initialize box2d
-                               (try (Class/forName
-                                      "com.badlogic.gdx.physics.box2d.World")
-                                 (catch Exception _))
-                               ; initialize bullet
-                               @init-bullet)))
-
-(defn set-policy!
+(defn create-sandbox
   []
-  (System/setProperty "java.security.policy"
-                      (-> "java.policy" io/resource .toString)))
+  (jail/sandbox tester
+                :context context
+                :timeout 5000
+                :namespace u/game-ns
+                :max-defs Integer/MAX_VALUE
+                :init '(do
+                         (require '[nightmod.game :refer :all]
+                                  '[play-clj.core :refer :all]
+                                  '[play-clj.g2d :refer :all]
+                                  '[play-clj.g3d :refer :all]
+                                  '[play-clj.math :refer :all]
+                                  '[play-clj.physics :refer :all]
+                                  '[play-clj.ui :refer :all])
+                         ; initialize box2d
+                         (try (Class/forName
+                                "com.badlogic.gdx.physics.box2d.World")
+                           (catch Exception _))
+                         ; initialize bullet
+                         @init-bullet)))
 
 (defn run-file!
   [path]
   (reset! u/error nil)
   (reset! u/out "")
-  (let [writer (StringWriter.)]
+  (let [writer (StringWriter.)
+        sb (create-sandbox)]
     (-> (format "(do %s\n)" (slurp path))
         jail/safe-read
         (sb {#'*out* writer})

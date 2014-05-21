@@ -63,8 +63,8 @@
     (editors/remove-editors! @u/project-dir)
     (reset! ui/tree-selection nil))
   (u/toggle-glass! false)
-  (manager/clean!)
-  (set-screen! nightmod main-screen))
+  (set-screen! nightmod main-screen)
+  (manager/clean!))
 
 (defn restart!
   []
