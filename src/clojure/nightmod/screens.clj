@@ -32,10 +32,6 @@
             edn/read-string
             :title
             (try (catch Exception _)))
-       (-> (.getName f)
-           Long/parseLong
-           u/format-date
-           (try (catch Exception _)))
        (.getName f))
    (.getCanonicalPath f)])
 
