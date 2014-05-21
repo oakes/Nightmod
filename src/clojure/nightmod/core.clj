@@ -68,6 +68,11 @@
              :load-game
              (fn [_ _ _ path]
                (load-game! path)))
+  (when-not @u/main-dir
+    (->> (u/get-data-dir)
+         (reset! u/main-dir)
+         io/file
+         .mkdir))
   (s/invoke-now
     ; listen for keys while modifier is down
     (shortcuts/listen-for-shortcuts!

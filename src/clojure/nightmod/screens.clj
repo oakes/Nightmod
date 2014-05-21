@@ -135,8 +135,6 @@
 (defscreen main-screen
   :on-show
   (fn [screen entities]
-    (when-not @u/main-dir
-      (reset! u/main-dir (u/get-data-dir)))
     (update! screen :renderer (stage) :camera (orthographic))
     (let [ui-skin (skin "uiskin.json")
           create-button (fn [[display-name path]]
