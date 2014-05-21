@@ -42,7 +42,7 @@
 
 (def sb (jail/sandbox tester
                       :context context
-                      :timeout 5000
+                      :timeout 3000
                       :namespace u/game-ns
                       :max-defs Integer/MAX_VALUE
                       :init '(do
