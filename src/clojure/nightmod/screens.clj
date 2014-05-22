@@ -3,6 +3,7 @@
             [clojure.java.io :as io]
             [clojure.string :as string]
             [nightcode.editors :as editors]
+            [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
             [nightmod.manager :as manager]
@@ -61,17 +62,23 @@
     (editors/remove-editors! @u/project-dir)
     (reset! ui/tree-selection nil))
   (u/toggle-glass! false)
-  (set-screen! nightmod main-screen)
+  (on-gl (set-screen! nightmod main-screen))
   (manager/clean!))
 
 (defn restart!
   []
-  (on-gl (set-screen! nightmod blank-screen overlay-screen))
-  (reset! u/project-dir @u/project-dir))
+  (when @ui/tree-selection
+    (on-gl (set-screen! nightmod blank-screen overlay-screen))
+    (reset! u/project-dir @u/project-dir)))
 
 (defn scrollify
   [widget]
   (scroll-pane widget (style :scroll-pane nil nil nil nil nil)))
+
+(defn set-visible!
+  [entity show?]
+  (doseq [a (actor! entity :get-children)]
+    (actor! a :set-visible show?)))
 
 (defn out-str
   []
@@ -95,40 +102,43 @@
 
 (defn toggle-files!
   []
-  (let [selected? (.exists (io/file @ui/tree-selection))]
-    (when (or selected? (not (.isVisible (u/glass))))
-      (u/toggle-glass!))
-    (when-not selected?
-      (s/invoke-now
-        (reset! ui/tree-selection @u/project-dir)))
-    (some-> (editors/get-selected-text-area)
-            s/request-focus!)))
+  (when @ui/tree-selection
+    (let [selected? (.exists (io/file @ui/tree-selection))]
+      (when (or selected? (not (.isVisible (u/glass))))
+        (u/toggle-glass!))
+      (when-not selected?
+        (s/invoke-now
+          (reset! ui/tree-selection @u/project-dir)))
+      (some-> (editors/get-selected-text-area)
+              s/request-focus!))))
 
 (defn toggle-docs!
   []
-  (let [selected? (= @ui/tree-selection u/docs-name)]
-    (when (or selected? (not (.isVisible (u/glass))))
-      (u/toggle-glass!))
-    (when-not selected?
-      (s/invoke-now
-        (reset! ui/tree-selection u/docs-name)
-        (some-> (s/select @ui/root [:#editor-pane])
-                (s/show-card! u/docs-name))))
-    (some-> (s/select @ui/root [:#docs-sidebar])
-            s/request-focus!)))
+  (when @ui/tree-selection
+    (let [selected? (= @ui/tree-selection u/docs-name)]
+      (when (or selected? (not (.isVisible (u/glass))))
+        (u/toggle-glass!))
+      (when-not selected?
+        (s/invoke-now
+          (reset! ui/tree-selection u/docs-name)
+          (some-> (s/select @ui/root [:#editor-pane])
+                  (s/show-card! u/docs-name))))
+      (some-> (s/select @ui/root [:#docs-sidebar])
+              s/request-focus!))))
 
 (defn toggle-repl!
   []
-  (let [selected? (= @ui/tree-selection u/repl-name)]
-    (when (or selected? (not (.isVisible (u/glass))))
-      (u/toggle-glass!))
-    (when-not selected?
-      (s/invoke-now
-        (reset! ui/tree-selection u/repl-name)
-        (some-> (s/select @ui/root [:#editor-pane])
-                (s/show-card! u/repl-name))))
-    (some-> (s/select @ui/root [:#repl-console])
-            s/request-focus!)))
+  (when @ui/tree-selection
+    (let [selected? (= @ui/tree-selection u/repl-name)]
+      (when (or selected? (not (.isVisible (u/glass))))
+        (u/toggle-glass!))
+      (when-not selected?
+        (s/invoke-now
+          (reset! ui/tree-selection u/repl-name)
+          (some-> (s/select @ui/root [:#editor-pane])
+                  (s/show-card! u/repl-name))))
+      (some-> (s/select @ui/root [:#repl-console])
+              s/request-focus!))))
 
 (defscreen main-screen
   :on-show
@@ -190,7 +200,7 @@
   (fn [screen entities]
     (clear!)))
 
-(defn drawable-texture
+(defn texture-drawable
   [s]
   (drawable :texture-region (:object (texture s))))
 
@@ -201,24 +211,24 @@
     (binding [play-clj.utils/*asset-manager* nil]
       (let [ui-skin (skin "uiskin.json")
             home-style (style :image-button
-                              (drawable-texture "home_up.png")
-                              (drawable-texture "home_down.png")
+                              (texture-drawable "home_up.png")
+                              (texture-drawable "home_down.png")
                               nil nil nil nil)
             restart-style (style :image-button
-                                 (drawable-texture "restart_up.png")
-                                 (drawable-texture "restart_down.png")
+                                 (texture-drawable "restart_up.png")
+                                 (texture-drawable "restart_down.png")
                                  nil nil nil nil)
             files-style (style :image-button
-                               (drawable-texture "files_up.png")
-                               (drawable-texture "files_down.png")
+                               (texture-drawable "files_up.png")
+                               (texture-drawable "files_down.png")
                                nil nil nil nil)
             docs-style (style :image-button
-                              (drawable-texture "docs_up.png")
-                              (drawable-texture "docs_down.png")
+                              (texture-drawable "docs_up.png")
+                              (texture-drawable "docs_down.png")
                               nil nil nil nil)
             repl-style (style :image-button
-                              (drawable-texture "repl_up.png")
-                              (drawable-texture "repl_down.png")
+                              (texture-drawable "repl_up.png")
+                              (texture-drawable "repl_down.png")
                               nil nil nil nil)]
         [(-> (label "" ui-skin
                     :set-wrap true
@@ -239,6 +249,13 @@
               (image-button repl-style :set-name "repl")]
              (horizontal :space (* 2 pad-space) :pack)
              (assoc :id :menu :x pad-space))
+         (-> [(image-button (texture-drawable "home_key.png"))
+              (image-button (texture-drawable "restart_key.png"))
+              (image-button (texture-drawable "files_key.png"))
+              (image-button (texture-drawable "docs_key.png"))
+              (image-button (texture-drawable "repl_key.png"))]
+             (horizontal :space (* 2 pad-space) :pack)
+             (assoc :id :menu-keys :x pad-space))
          (assoc (label " " ui-skin :set-visible false) :menu-label? true)])))
   
   :on-render
@@ -250,10 +267,9 @@
                      (assoc e :width (if (.isVisible (u/glass))
                                        (- (game :width) u/editor-width)
                                        (game :width))))
-             :error-buttons (do
-                              (doseq [b (horizontal! e :get-children)]
-                                (actor! b :set-visible (some? @u/error)))
-                              e)
+             :error-buttons (doto e (set-visible! (some? @u/error)))
+             :menu (doto e (set-visible! (not @shortcuts/down?)))
+             :menu-keys (doto e (set-visible! @shortcuts/down?))
              e))
          (render! screen)))
   
@@ -263,6 +279,7 @@
     (for [e entities]
       (case (:id e)
         :menu (assoc e :y (- height (vertical! e :get-height) pad-space))
+        :menu-keys (assoc e :y (- height (vertical! e :get-height) pad-space))
         :text (assoc e :width width :height (- height (* 2 (:y e))))
         e)))
   

@@ -82,8 +82,23 @@
           33 (editors/move-tab-selection! -1)
           ; page down
           34 (editors/move-tab-selection! 1)
+          ; D
+          68 (do (screens/toggle-files!)
+               true)
+          ; E
+          69 (do (screens/toggle-repl!)
+               true)
+          ; H
+          72 (do (screens/home!)
+               true)
+          ; O
+          79 (do (screens/toggle-docs!)
+               true)
           ; Q
           81 (window/confirm-exit-app!)
+          ; R
+          82 (do (screens/restart!)
+               true)
           ; W
           87 (editors/close-selected-editor!)
           ; else
