@@ -15,8 +15,9 @@
           model-mat (material :set attr)
           model-attrs (bit-or (usage :position) (usage :normal))
           builder (model-builder)]
-      (model (model-builder! builder :create-box 2 2 2 model-mat model-attrs)
-             (vector-3 0 0 0))))
+      (-> (model-builder! builder :create-box 2 2 2 model-mat model-attrs)
+          (model)
+          (assoc :x 0 :y 0 :z 0))))
   
   :on-render
   (fn [screen entities]
