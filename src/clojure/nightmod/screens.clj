@@ -8,7 +8,9 @@
             [nightmod.manager :as manager]
             [nightmod.utils :as u]
             [play-clj.core :refer :all]
+            [play-clj.g2d :refer :all]
             [play-clj.ui :refer :all]
+            [play-clj.utils]
             [seesaw.core :as s])
   (:import [java.awt Toolkit]
            [java.awt.datatransfer Clipboard ClipboardOwner StringSelection]))
@@ -188,35 +190,56 @@
   (fn [screen entities]
     (clear!)))
 
+(defn drawable-texture
+  [s]
+  (drawable :texture-region (:object (texture s))))
+
 (defscreen overlay-screen
   :on-show
   (fn [screen entities]
     (update! screen :camera (orthographic) :renderer (stage))
-    (let [ui-skin (skin "uiskin.json")]
-      [(-> (label "" ui-skin
-                  :set-wrap true
-                  :set-font-scale 0.8
-                  :set-alignment (bit-or (align :left) (align :bottom)))
-           (scroll-pane (style :scroll-pane nil nil nil nil nil))
-           (assoc :id :text :x pad-space :y (+ text-height (* 2 pad-space))))
-       (-> [(check-box (nc-utils/get-string :stack-trace) ui-skin
-                       :set-name "stack-trace")
-            (text-button (nc-utils/get-string :copy) ui-skin
-                         :set-name "copy")]
-           (horizontal :space (* 2 pad-space) :pack)
-           (assoc :id :error-buttons :x pad-space :y pad-space))
-       (-> [(text-button (nc-utils/get-string :home) ui-skin
-                         :set-name "home")
-            (text-button (nc-utils/get-string :restart) ui-skin
-                         :set-name "restart")
-            (text-button (nc-utils/get-string :files) ui-skin
-                         :set-name "files")
-            (text-button (nc-utils/get-string :docs) ui-skin
-                         :set-name "docs")
-            (text-button (nc-utils/get-string :repl) ui-skin
-                         :set-name "repl")]
-           (horizontal :space (* 2 pad-space) :pack)
-           (assoc :id :menu :x pad-space))]))
+    (binding [play-clj.utils/*asset-manager* nil]
+      (let [ui-skin (skin "uiskin.json")
+            home-style (style :image-button
+                              (drawable-texture "home_up.png")
+                              (drawable-texture "home_down.png")
+                              nil nil nil nil)
+            restart-style (style :image-button
+                                 (drawable-texture "restart_up.png")
+                                 (drawable-texture "restart_down.png")
+                                 nil nil nil nil)
+            files-style (style :image-button
+                               (drawable-texture "files_up.png")
+                               (drawable-texture "files_down.png")
+                               nil nil nil nil)
+            docs-style (style :image-button
+                              (drawable-texture "docs_up.png")
+                              (drawable-texture "docs_down.png")
+                              nil nil nil nil)
+            repl-style (style :image-button
+                              (drawable-texture "repl_up.png")
+                              (drawable-texture "repl_down.png")
+                              nil nil nil nil)]
+        [(-> (label "" ui-skin
+                    :set-wrap true
+                    :set-font-scale 0.8
+                    :set-alignment (bit-or (align :left) (align :bottom)))
+             (scroll-pane (style :scroll-pane nil nil nil nil nil))
+             (assoc :id :text :x pad-space :y (+ text-height (* 2 pad-space))))
+         (-> [(check-box (nc-utils/get-string :stack-trace) ui-skin
+                         :set-name "stack-trace")
+              (text-button (nc-utils/get-string :copy) ui-skin
+                           :set-name "copy")]
+             (horizontal :space (* 2 pad-space) :pack)
+             (assoc :id :error-buttons :x pad-space :y pad-space))
+         (-> [(image-button home-style :set-name "home")
+              (image-button restart-style :set-name "restart")
+              (image-button files-style :set-name "files")
+              (image-button docs-style :set-name "docs")
+              (image-button repl-style :set-name "repl")]
+             (horizontal :space (* 2 pad-space) :pack)
+             (assoc :id :menu :x pad-space))
+         (assoc (label " " ui-skin :set-visible false) :menu-label? true)])))
   
   :on-render
   (fn [screen entities]
@@ -245,7 +268,7 @@
   
   :on-ui-changed
   (fn [screen entities]
-    (case (text-button! (:actor screen) :get-name)
+    (case (actor! (:actor screen) :get-name)
       "home" (home!)
       "restart" (restart!)
       "files" (toggle-files!)
