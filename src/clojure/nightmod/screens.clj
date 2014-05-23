@@ -322,8 +322,3 @@
            :clear-global-focus
            (fn [_ _ _ _]
              (u/clear-global-focus!)))
-
-(add-watch u/project-dir
-           :clear-global-focus
-           (fn [_ _ _ _]
-             (u/clear-global-focus!)))
