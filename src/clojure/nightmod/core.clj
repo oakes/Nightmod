@@ -86,7 +86,9 @@
           ; R
           82 (do (screens/restart!) true)
           ; W
-          87 (editors/close-selected-editor!)
+          87 (if (some-> @ui/tree-selection io/file .exists)
+               (editors/close-selected-editor!)
+               false)
           ; else
           false)))
     ; create the window
