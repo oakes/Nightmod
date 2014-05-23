@@ -26,7 +26,7 @@
       (-> ^Pixmap arg Texture. TextureRegion.)
       (isa? (type arg) TextureRegion)
       arg
-      (:object arg)
+      (isa? (type arg) TextureEntity)
       (TextureRegion. ^TextureRegion (:object arg))
       :else
       (TextureRegion. arg))))</pre><pre>(defmacro texture

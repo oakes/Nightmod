@@ -1,0 +1,9 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(run! screen-object fn-name & options)</div><div class="c-doc"><p>Runs a function defined in another screen. You may optionally pass a series of key-value pairs, which will be given to the function via its screen map.</p><pre>
+&#40;run! my-other-screen :on-show&#41;
+&#40;run! my-other-screen :on-change-color :color :blue&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn run!
+  [screen-object fn-name & options]
+  (let [execute-fn! (-> screen-object :screen deref :execute-fn!)
+        screen-fn (-> screen-object :options (get fn-name))]
+    (apply execute-fn! screen-fn options)
+    nil))</pre></div></div></div></body></html>

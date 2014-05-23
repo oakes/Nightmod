@@ -49,7 +49,7 @@
         widgets (create-widgets actions)
         widget-bar (ui/wrap-panel :items (map #(get widgets % %) *widgets*))]
     (doto (.getTextArea console)
-      (s/config!  :id :repl-console)
+      (s/config! :id :repl-console)
       (nc-utils/set-accessible-name! :repl-console))
     (run!)
     (s/border-panel :north widget-bar :center console)))

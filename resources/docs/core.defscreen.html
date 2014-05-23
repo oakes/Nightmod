@@ -28,7 +28,6 @@
     entities&#41;&#41;
 </pre><pre>
 ; input functions
-; Tip: use input-processor! to run these functions manually
 &#40;defscreen my-screen
   :on-key-down ; a key was pressed
   &#40;fn &#91;screen entities&#93;
@@ -73,7 +72,7 @@
     entities&#41;&#41;
 </pre><pre>
 ; gesture functions
-; Tip: use gesture-detector! to configure these functions and run them manually
+; Tip: use gesture-detector! to configure these functions
 &#40;defscreen my-screen
   :on-fling ; the user dragged over the screen and lifted
   &#40;fn &#91;screen entities&#93;
@@ -147,7 +146,7 @@
     entities&#41;&#41;
 </pre><pre>
 ; ui input functions &#40;for play-clj.ui&#41;
-; Tip: use change-listener! and click-listener! to configure these functions and run them manually
+; Tip: use click-listener! to configure these functions
 &#40;defscreen my-screen
   :on-ui-changed ; the ui entity was changed
   &#40;fn &#91;screen entities&#93;
@@ -201,7 +200,7 @@
     entities&#41;&#41;
 </pre><pre>
 ; ui drag functions &#40;for play-clj.ui&#41;
-; Tip: use drag-listener! to configure these functions and run them manually
+; Tip: use drag-listener! to configure these functions
 &#40;defscreen my-screen
   :on-ui-drag
   &#40;fn &#91;screen entities&#93;
@@ -226,7 +225,6 @@
     entities&#41;&#41;
 </pre><pre>
 ; ui focus functions &#40;for play-clj.ui&#41;
-; Tip: use focus-listener! to run these functions manually
 &#40;defscreen my-screen
   :on-ui-keyboard-focus-changed
   &#40;fn &#91;screen entities&#93;
@@ -242,7 +240,6 @@
     entities&#41;&#41;
 </pre><pre>
 ; ui gesture functions &#40;for play-clj.ui&#41;
-; Tip: use actor-gesture-listener! to configure these functions and run them manually
 &#40;defscreen my-screen
   :on-ui-fling ; the user dragged a finger over the screen and lifted it
   &#40;fn &#91;screen entities&#93;
@@ -320,6 +317,7 @@
     ; return a map with all values related to the screen
     {:screen screen
      :entities entities
+     :options options
      :show (fn []
              (swap! screen assoc
                     :total-time 0
