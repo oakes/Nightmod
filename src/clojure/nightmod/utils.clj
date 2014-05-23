@@ -87,10 +87,8 @@
         (.add (.getContentPane @ui/root) @editor BorderLayout/EAST)
         (.remove (.getContentPane @ui/root) @editor))
       (.revalidate @ui/root)
-      (if show?
-        ; make sure the editor displays the content
-        (reset! ui/tree-selection @ui/tree-selection)
-        ; focus on the main window so the game can receive keyboard events
+      ; focus on the root so the game can receive keyboard events
+      (when-not show?
         (s/request-focus! @ui/root)))))
 
 (defn append-to-out!

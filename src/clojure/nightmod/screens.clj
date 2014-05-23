@@ -108,11 +108,12 @@
     (let [selected? (.exists (io/file @ui/tree-selection))]
       (when (or selected? (u/editor-hidden?))
         (u/toggle-editor!))
-      (when-not selected?
-        (s/invoke-later
-          (reset! ui/tree-selection @u/project-dir)))
-      (some-> (editors/get-selected-text-area)
-              s/request-focus!))))
+      (s/invoke-later
+        (if selected?
+          (reset! ui/tree-selection @ui/tree-selection)
+          (reset! ui/tree-selection @u/project-dir))
+        (some-> (editors/get-selected-text-area)
+                s/request-focus!)))))
 
 (defn toggle-docs!
   []
@@ -120,13 +121,13 @@
     (let [selected? (= @ui/tree-selection u/docs-name)]
       (when (or selected? (u/editor-hidden?))
         (u/toggle-editor!))
-      (when-not selected?
-        (s/invoke-later
-          (reset! ui/tree-selection u/docs-name)
-          (some-> (s/select @ui/root [:#editor-pane])
-                  (s/show-card! u/docs-name))))
-      (some-> (s/select @ui/root [:#docs-sidebar])
-              s/request-focus!))))
+      (s/invoke-later
+        (when-not selected?
+          (reset! ui/tree-selection u/docs-name))
+        (some-> (s/select @ui/root [:#editor-pane])
+                (s/show-card! u/docs-name))
+        (some-> (s/select @ui/root [:#docs-sidebar])
+                s/request-focus!)))))
 
 (defn toggle-repl!
   []
@@ -134,13 +135,13 @@
     (let [selected? (= @ui/tree-selection u/repl-name)]
       (when (or selected? (u/editor-hidden?))
         (u/toggle-editor!))
-      (when-not selected?
-        (s/invoke-later
-          (reset! ui/tree-selection u/repl-name)
-          (some-> (s/select @ui/root [:#editor-pane])
-                  (s/show-card! u/repl-name))))
-      (some-> (s/select @ui/root [:#repl-console])
-              s/request-focus!))))
+      (s/invoke-later
+        (when-not selected?
+          (reset! ui/tree-selection u/repl-name))
+        (some-> (s/select @ui/root [:#editor-pane])
+                (s/show-card! u/repl-name))
+        (some-> (s/select @ui/root [:#repl-console])
+                s/request-focus!)))))
 
 (defscreen main-screen
   :on-show
