@@ -10,6 +10,7 @@
             [nightmod.utils :as u]
             [play-clj.core :refer :all]
             [play-clj.g2d :refer :all]
+            [play-clj.g3d-physics :refer :all]
             [play-clj.ui :refer :all]
             [play-clj.utils]
             [seesaw.core :as s])
@@ -298,6 +299,13 @@
 (defgame nightmod
   :on-create
   (fn [this]
+    ; initialize box2d
+    (try (Class/forName
+           "com.badlogic.gdx.physics.box2d.World")
+      (catch Exception _))
+    ; initialize bullet
+    @init-bullet
+    ; show the main screen
     (set-screen! this main-screen)))
 
 (add-watch u/error

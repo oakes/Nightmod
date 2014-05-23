@@ -52,20 +52,13 @@
                 :timeout 5000
                 :namespace u/game-ns
                 :max-defs Integer/MAX_VALUE
-                :init '(do
-                         (require '[nightmod.game :refer :all]
-                                  '[play-clj.core :refer :all]
-                                  '[play-clj.g2d :refer :all]
-                                  '[play-clj.g3d :refer :all]
-                                  '[play-clj.math :refer :all]
-                                  '[play-clj.physics :refer :all]
-                                  '[play-clj.ui :refer :all])
-                         ; initialize box2d
-                         (try (Class/forName
-                                "com.badlogic.gdx.physics.box2d.World")
-                           (catch Exception _))
-                         ; initialize bullet
-                         @init-bullet)))
+                :init '(require '[nightmod.game :refer :all]
+                                '[play-clj.core :refer :all]
+                                '[play-clj.g2d :refer :all]
+                                '[play-clj.g3d :refer :all]
+                                '[play-clj.math :refer :all]
+                                '[play-clj.physics :refer :all]
+                                '[play-clj.ui :refer :all])))
 
 (defn run-file!
   [path]
