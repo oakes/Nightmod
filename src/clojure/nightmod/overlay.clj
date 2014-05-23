@@ -40,6 +40,8 @@
   [main-window editor-window]
   (reset! ui/root main-window)
   (u/toggle-editor! true)
+  (when (nil? @ui/tree-selection)
+    (u/toggle-editor! false))
   (set-hint-container! (.getLayeredPane main-window))
   (s/hide! editor-window))
 
