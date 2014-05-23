@@ -43,7 +43,8 @@
   (when (nil? @ui/tree-selection)
     (u/toggle-editor! false))
   (set-hint-container! (.getLayeredPane main-window))
-  (s/hide! editor-window))
+  (s/hide! editor-window)
+  (u/clear-global-focus!))
 
 (defn show-external-editor!
   "Shows the external editor."
@@ -52,7 +53,8 @@
   (reset! ui/root editor-window)
   (s/config! editor-window :content @u/editor)
   (set-hint-container! (.getLayeredPane editor-window))
-  (s/show! editor-window))
+  (s/show! editor-window)
+  (u/clear-global-focus!))
 
 (defn enable-toggling!
   "Allows the editor pane to be toggled in and out of the main window."

@@ -62,8 +62,8 @@
   []
   (s/invoke-later
     (editors/remove-editors! @u/project-dir)
-    (reset! ui/tree-selection nil))
-  (u/toggle-editor! false)
+    (reset! ui/tree-selection nil)
+    (u/toggle-editor! false))
   (on-gl (set-screen! nightmod main-screen))
   (manager/clean!))
 
@@ -105,22 +105,23 @@
   []
   (when @ui/tree-selection
     (let [selected? (.exists (io/file @ui/tree-selection))]
-      (when (or selected? (u/editor-hidden?))
-        (u/toggle-editor!))
       (s/invoke-later
+        (when (or selected? (u/editor-hidden?))
+          (u/toggle-editor!))
         (if selected?
           (reset! ui/tree-selection @ui/tree-selection)
           (reset! ui/tree-selection @u/project-dir))
-        (some-> (editors/get-selected-text-area)
+        (some-> (or (editors/get-selected-text-area)
+                    @u/editor)
                 s/request-focus!)))))
 
 (defn toggle-docs!
   []
   (when @ui/tree-selection
     (let [selected? (= @ui/tree-selection u/docs-name)]
-      (when (or selected? (u/editor-hidden?))
-        (u/toggle-editor!))
       (s/invoke-later
+        (when (or selected? (u/editor-hidden?))
+          (u/toggle-editor!))
         (when-not selected?
           (reset! ui/tree-selection u/docs-name))
         (some-> (s/select @ui/root [:#editor-pane])
@@ -132,9 +133,9 @@
   []
   (when @ui/tree-selection
     (let [selected? (= @ui/tree-selection u/repl-name)]
-      (when (or selected? (u/editor-hidden?))
-        (u/toggle-editor!))
       (s/invoke-later
+        (when (or selected? (u/editor-hidden?))
+          (u/toggle-editor!))
         (when-not selected?
           (reset! ui/tree-selection u/repl-name))
         (some-> (s/select @ui/root [:#editor-pane])
@@ -313,3 +314,8 @@
            (fn [_ _ _ e]
              (when e
                (on-gl (set-screen! nightmod blank-screen overlay-screen)))))
+
+(add-watch ui/tree-selection
+           :clear-global-focus
+           (fn [_ _ _ _]
+             (u/clear-global-focus!)))

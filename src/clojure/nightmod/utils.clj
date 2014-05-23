@@ -7,7 +7,7 @@
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
             [seesaw.core :as s])
-  (:import [java.awt BorderLayout]
+  (:import [java.awt BorderLayout KeyboardFocusManager]
            [java.text SimpleDateFormat]))
 
 (def ^:const window-width 1200)
@@ -74,6 +74,11 @@
        (spit (io/file project-file settings-file)))
   (.getCanonicalPath project-file))
 
+(defn clear-global-focus!
+  []
+  (.clearGlobalFocusOwner
+    (KeyboardFocusManager/getCurrentKeyboardFocusManager)))
+
 (defn editor-hidden?
   []
   (-> @editor .getParent nil?))
@@ -82,14 +87,13 @@
   ([]
     (toggle-editor! (editor-hidden?)))
   ([show?]
-    (s/invoke-later
-      (if show?
-        (.add (.getContentPane @ui/root) @editor BorderLayout/EAST)
-        (.remove (.getContentPane @ui/root) @editor))
-      (.revalidate @ui/root)
-      ; focus on the root so the game can receive keyboard events
-      (when-not show?
-        (s/request-focus! @ui/root)))))
+    (if show?
+      (.add (.getContentPane @ui/root) @editor BorderLayout/EAST)
+      (.remove (.getContentPane @ui/root) @editor))
+    (.revalidate @ui/root)
+    ; focus on the root so the game can receive keyboard events
+    (when-not show?
+      (s/request-focus! @ui/root))))
 
 (defn append-to-out!
   [s]
