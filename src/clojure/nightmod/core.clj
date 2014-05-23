@@ -46,13 +46,10 @@
   (doto window
     ; add canvas and editor pane
     (-> .getContentPane (doto
+                          (.setLayout (BorderLayout.))
                           (.add (s/border-panel :center canvas
-                                                :focusable? false))))
-    (-> .getGlassPane (doto
-                        (.setLayout (BorderLayout.))
-                        (.add (overlay/create-layered-pane)
-                          BorderLayout/EAST)
-                        (.setVisible false)))
+                                                :focusable? false)
+                            BorderLayout/CENTER)))
     ; set various window properties
     window/enable-full-screen!
     window/add-listener!))
@@ -83,22 +80,17 @@
           ; page down
           34 (editors/move-tab-selection! 1)
           ; D
-          68 (do (screens/toggle-files!)
-               true)
+          68 (do (screens/toggle-files!) true)
           ; E
-          69 (do (screens/toggle-repl!)
-               true)
+          69 (do (screens/toggle-repl!) true)
           ; H
-          72 (do (screens/home!)
-               true)
+          72 (do (screens/home!) true)
           ; O
-          79 (do (screens/toggle-docs!)
-               true)
+          79 (do (screens/toggle-docs!) true)
           ; Q
           81 (window/confirm-exit-app!)
           ; R
-          82 (do (screens/restart!)
-               true)
+          82 (do (screens/restart!) true)
           ; W
           87 (editors/close-selected-editor!)
           ; else
@@ -107,7 +99,8 @@
     (let [window (create-window)
           canvas (doto (Canvas.) (.setFocusable false))]
       (overlay/override-save-button!)
-      (overlay/adjust-widgets! window)
+      (overlay/enable-toggling! window)
+      (reset! u/editor (overlay/create-editor-pane))
       (s/show! (reset! ui/root (init-window window canvas)))
       (->> (LwjglApplication. screens/nightmod canvas)
            (input/pass-key-events! window))))

@@ -7,7 +7,8 @@
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
             [seesaw.core :as s])
-  (:import [java.text SimpleDateFormat]))
+  (:import [java.awt BorderLayout]
+           [java.text SimpleDateFormat]))
 
 (def ^:const window-width 1200)
 (def ^:const window-height 768)
@@ -24,6 +25,7 @@
 (def error (atom nil))
 (def out (atom ""))
 (def stack-trace? (atom false))
+(def editor (atom nil))
 
 (defn get-data-dir
   []
@@ -75,25 +77,23 @@
        (spit (io/file project-file settings-file)))
   (.getCanonicalPath project-file))
 
-(defn glass
+(defn editor-hidden?
   []
-  (.getGlassPane @ui/root))
+  (-> @editor .getParent nil?))
 
-(defn focus-on-overlay!
-  []
-  (s/invoke-now
-    (.grabFocus (or (s/select @ui/root [:#editor-pane])
-                    (glass)))))
-
-(defn toggle-glass!
+(defn toggle-editor!
   ([]
-    (-> (glass) .isVisible not toggle-glass!))
+    (toggle-editor! (editor-hidden?)))
   ([show?]
     (s/invoke-now
-      (.setVisible (glass) show?)
+      (if show?
+        (.add (.getContentPane @ui/root) @editor BorderLayout/EAST)
+        (.remove (.getContentPane @ui/root) @editor))
       (.revalidate @ui/root)
       (if show?
-        (focus-on-overlay!)
+        ; make sure the editor displays the content
+        (reset! ui/tree-selection @ui/tree-selection)
+        ; focus on the main window so the game can receive keyboard events
         (s/request-focus! @ui/root)))))
 
 (defn append-to-out!

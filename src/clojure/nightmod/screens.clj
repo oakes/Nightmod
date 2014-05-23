@@ -61,7 +61,7 @@
   (s/invoke-now
     (editors/remove-editors! @u/project-dir)
     (reset! ui/tree-selection nil))
-  (u/toggle-glass! false)
+  (u/toggle-editor! false)
   (on-gl (set-screen! nightmod main-screen))
   (manager/clean!))
 
@@ -104,8 +104,8 @@
   []
   (when @ui/tree-selection
     (let [selected? (.exists (io/file @ui/tree-selection))]
-      (when (or selected? (not (.isVisible (u/glass))))
-        (u/toggle-glass!))
+      (when (or selected? (u/editor-hidden?))
+        (u/toggle-editor!))
       (when-not selected?
         (s/invoke-now
           (reset! ui/tree-selection @u/project-dir)))
@@ -116,8 +116,8 @@
   []
   (when @ui/tree-selection
     (let [selected? (= @ui/tree-selection u/docs-name)]
-      (when (or selected? (not (.isVisible (u/glass))))
-        (u/toggle-glass!))
+      (when (or selected? (u/editor-hidden?))
+        (u/toggle-editor!))
       (when-not selected?
         (s/invoke-now
           (reset! ui/tree-selection u/docs-name)
@@ -130,8 +130,8 @@
   []
   (when @ui/tree-selection
     (let [selected? (= @ui/tree-selection u/repl-name)]
-      (when (or selected? (not (.isVisible (u/glass))))
-        (u/toggle-glass!))
+      (when (or selected? (u/editor-hidden?))
+        (u/toggle-editor!))
       (when-not selected?
         (s/invoke-now
           (reset! ui/tree-selection u/repl-name)
@@ -262,11 +262,9 @@
   (fn [screen entities]
     (->> (for [e entities]
            (case (:id e)
-             :text (do
-                     (label! (scroll-pane! e :get-widget) :set-text (out-str))
-                     (assoc e :width (if (.isVisible (u/glass))
-                                       (- (game :width) u/editor-width)
-                                       (game :width))))
+             :text (do (label! (scroll-pane! e :get-widget)
+                               :set-text (out-str))
+                     e)
              :error-buttons (doto e (set-visible! (some? @u/error)))
              :menu (doto e (set-visible! (not @shortcuts/down?)))
              :menu-keys (doto e (set-visible! @shortcuts/down?))

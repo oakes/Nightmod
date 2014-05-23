@@ -16,21 +16,13 @@
   [container]
   (intern 'nightcode.shortcuts '*hint-container* container))
 
-(defn create-layered-pane
-  "Returns the layered pane holding the editor pane."
+(defn create-editor-pane
+  "Returns the editor pane."
   []
-  (let [layered-pane (doto (JLayeredPane.) set-hint-container!)
-        pane (doto (editors/create-pane)
-               (.add (docs/create-card) u/docs-name)
-               (.add (repl/create-card) u/repl-name))]
-    (doto layered-pane
-      (.setPreferredSize (Dimension. u/editor-width u/window-height))
-      (.addComponentListener (proxy [ComponentAdapter] []
-                               (componentResized [e]
-                                 (->> (.getComponent e)
-                                      .getHeight
-                                      (.setBounds pane 0 0 u/editor-width)))))
-      (.add pane))))
+  (doto (editors/create-pane)
+    (.add (docs/create-card) u/docs-name)
+    (.add (repl/create-card) u/repl-name)
+    (.setPreferredSize (Dimension. u/editor-width 0))))
 
 (defn override-save-button!
   "Makes the editor save button restart the game."
@@ -46,27 +38,22 @@
 (defn show-internal-editor!
   "Shows the internal editor."
   [main-window editor-window]
-  (let [editor-pane (ui/get-editor-pane)
-        l-pane (-> main-window .getGlassPane (s/select [:JLayeredPane]) first)]
-    (reset! ui/root main-window)
-    (when @ui/tree-selection
-      (u/toggle-glass! true))
-    (.add l-pane editor-pane)
-    (set-hint-container! l-pane)
-    (s/hide! editor-window)))
+  (reset! ui/root main-window)
+  (u/toggle-editor! true)
+  (set-hint-container! (.getLayeredPane main-window))
+  (s/hide! editor-window))
 
 (defn show-external-editor!
   "Shows the external editor."
   [main-window editor-window]
-  (let [editor-pane (ui/get-editor-pane)]
-    (u/toggle-glass! false)
-    (reset! ui/root editor-window)
-    (s/config! editor-window :content editor-pane)
-    (set-hint-container! (.getLayeredPane editor-window))
-    (s/show! editor-window)))
+  (u/toggle-editor! false)
+  (reset! ui/root editor-window)
+  (s/config! editor-window :content @u/editor)
+  (set-hint-container! (.getLayeredPane editor-window))
+  (s/show! editor-window))
 
-(defn adjust-widgets!
-  "Adds and removes widgets from the window."
+(defn enable-toggling!
+  "Allows the editor pane to be toggled in and out of the main window."
   [main-window]
   (let [external? (atom false)
         editor-window (s/frame :width 800 :height 600 :on-close :hide)
@@ -77,23 +64,18 @@
         window-btn #(ui/button :id :window
                                :text (nc-utils/get-string :toggle-window)
                                :listen [:action toggle-window!])]
-    (.addWindowListener editor-window
-      (proxy [WindowAdapter] []
-        (windowClosing [e]
-          (toggle-window!))))
-    (intern 'nightcode.editors
-            '*widgets*
-            [:up :save :undo :redo :font-dec :font-inc
-             :doc :paredit :paredit-help :close])
-    (intern 'nightcode.file-browser
-            '*widgets*
-            [:up :new-file :edit :open-in-browser :save :cancel (window-btn)])
-    (intern 'nightmod.docs
-            '*widgets*
-            [(window-btn)])
-    (intern 'nightmod.repl
-            '*widgets*
-            [:restart (window-btn)])))
+    (.addWindowListener editor-window (proxy [WindowAdapter] []
+                                        (windowClosing [e]
+                                          (toggle-window!))))
+    (intern 'nightcode.ui 'get-editor-pane (fn [] @u/editor))
+    (intern 'nightcode.editors '*widgets* [:up :save :undo :redo
+                                           :font-dec :font-inc
+                                           :doc :paredit :paredit-help :close])
+    (intern 'nightcode.file-browser '*widgets* [:up :new-file :edit
+                                                :open-in-browser :save :cancel
+                                                (window-btn)])
+    (intern 'nightmod.docs '*widgets* [(window-btn)])
+    (intern 'nightmod.repl '*widgets* [:restart (window-btn)])))
 
 (defn protect-file!
   "Prevents renaming or deleting a file."
