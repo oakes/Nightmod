@@ -20,7 +20,6 @@
     (let [screen (->> (/ 1 pixels-per-tile)
                       (isometric-tiled-map "level.tmx")
                       (update! screen
-                               :attack-cursor (pixmap "glove.png")
                                :camera (orthographic)
                                :renderer))]
       (->> [(create-player)
@@ -57,13 +56,7 @@
             y (:input-y screen)
             victim (get-entity-at-cursor screen entities x y)
             victim (when (can-attack? me victim) victim)]
-        (attack screen me victim entities))))
-
-  :on-mouse-moved
-  (fn [{:keys [input-x input-y] :as screen} entities]
-    (if (get-entity-at-cursor screen entities input-x input-y)
-      (input! :set-cursor-image (:attack-cursor screen) 0 0)
-      (input! :set-cursor-image nil 0 0))))
+        (attack screen me victim entities)))))
 
 (defscreen npc-health-screen
   :on-show

@@ -66,7 +66,8 @@
     (u/toggle-editor! false))
   (on-gl
     (set-screen! nightmod main-screen)
-    (input! :set-cursor-image nil 0 0))
+    (try (input! :set-cursor-image nil 0 0)
+      (catch Exception _)))
   (manager/clean!))
 
 (defn restart!
