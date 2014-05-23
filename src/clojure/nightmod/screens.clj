@@ -64,7 +64,9 @@
     (editors/remove-editors! @u/project-dir)
     (reset! ui/tree-selection nil)
     (u/toggle-editor! false))
-  (on-gl (set-screen! nightmod main-screen))
+  (on-gl
+    (set-screen! nightmod main-screen)
+    (input! :set-cursor-image nil 0 0))
   (manager/clean!))
 
 (defn restart!
@@ -316,6 +318,11 @@
                (on-gl (set-screen! nightmod blank-screen overlay-screen)))))
 
 (add-watch ui/tree-selection
+           :clear-global-focus
+           (fn [_ _ _ _]
+             (u/clear-global-focus!)))
+
+(add-watch u/project-dir
            :clear-global-focus
            (fn [_ _ _ _]
              (u/clear-global-focus!)))
