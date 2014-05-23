@@ -43,10 +43,9 @@
 
 (defn new-project-name!
   [template]
-  (s/invoke-now
-    (dialogs/show-text-field-dialog!
-      (nc-utils/get-string :enter-project-name)
-      (nc-utils/get-string template))))
+  (dialogs/show-text-field-dialog!
+    (nc-utils/get-string :enter-project-name)
+    (nc-utils/get-string template)))
 
 (defn new-project-dir!
   [project-name]
@@ -54,11 +53,9 @@
         project-file (io/file @main-dir dir-name)]
     (cond
       (= 0 (count dir-name))
-      (s/invoke-now
-        (dialogs/show-simple-dialog! (nc-utils/get-string :invalid-name)))
+      (dialogs/show-simple-dialog! (nc-utils/get-string :invalid-name))
       (.exists project-file)
-      (s/invoke-now
-        (dialogs/show-simple-dialog! (nc-utils/get-string :file-exists)))
+      (dialogs/show-simple-dialog! (nc-utils/get-string :file-exists))
       :else
       project-file)))
 
@@ -85,7 +82,7 @@
   ([]
     (toggle-editor! (editor-hidden?)))
   ([show?]
-    (s/invoke-now
+    (s/invoke-later
       (if show?
         (.add (.getContentPane @ui/root) @editor BorderLayout/EAST)
         (.remove (.getContentPane @ui/root) @editor))

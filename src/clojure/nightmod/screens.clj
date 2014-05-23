@@ -46,19 +46,20 @@
   ; save in tree-projects so the up button is hidden correctly
   (swap! ui/tree-projects conj path)
   ; save in tree-selection so the file grid is displayed
-  (s/invoke-now
+  (s/invoke-later
     (reset! ui/tree-selection path)))
 
 (defn new-project!
   [template]
-  (when-let [project-name (u/new-project-name! template)]
-    (some->> (u/new-project-dir! project-name)
-             (u/new-project! template project-name)
-             load-project!)))
+  (s/invoke-later
+    (when-let [project-name (u/new-project-name! template)]
+      (some->> (u/new-project-dir! project-name)
+               (u/new-project! template project-name)
+               load-project!))))
 
 (defn home!
   []
-  (s/invoke-now
+  (s/invoke-later
     (editors/remove-editors! @u/project-dir)
     (reset! ui/tree-selection nil))
   (u/toggle-editor! false)
@@ -107,7 +108,7 @@
       (when (or selected? (u/editor-hidden?))
         (u/toggle-editor!))
       (when-not selected?
-        (s/invoke-now
+        (s/invoke-later
           (reset! ui/tree-selection @u/project-dir)))
       (some-> (editors/get-selected-text-area)
               s/request-focus!))))
@@ -119,7 +120,7 @@
       (when (or selected? (u/editor-hidden?))
         (u/toggle-editor!))
       (when-not selected?
-        (s/invoke-now
+        (s/invoke-later
           (reset! ui/tree-selection u/docs-name)
           (some-> (s/select @ui/root [:#editor-pane])
                   (s/show-card! u/docs-name))))
@@ -133,7 +134,7 @@
       (when (or selected? (u/editor-hidden?))
         (u/toggle-editor!))
       (when-not selected?
-        (s/invoke-now
+        (s/invoke-later
           (reset! ui/tree-selection u/repl-name)
           (some-> (s/select @ui/root [:#editor-pane])
                   (s/show-card! u/repl-name))))

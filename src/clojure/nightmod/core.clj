@@ -61,16 +61,10 @@
   (window/set-theme! args)
   (nc-sandbox/set-home!)
   (sandbox/set-policy!)
-  (add-watch u/project-dir
-             :load-game
-             (fn [_ _ _ path]
-               (load-game! path)))
-  (when-not @u/main-dir
-    (->> (u/get-data-dir)
-         (reset! u/main-dir)
-         io/file
-         .mkdir))
-  (s/invoke-now
+  (add-watch u/project-dir :load-game (fn [_ _ _ path]
+                                        (load-game! path)))
+  (->> (u/get-data-dir) (reset! u/main-dir) io/file .mkdir)
+  (s/invoke-later
     ; listen for keys while modifier is down
     (shortcuts/listen-for-shortcuts!
       (fn [key-code]
