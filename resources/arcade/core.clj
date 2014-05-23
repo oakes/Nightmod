@@ -20,7 +20,7 @@
 (defscreen main-screen
   :on-show
   (fn [screen entities]
-    (update! screen :renderer (stage))
+    (update! screen :renderer (stage) :camera (orthographic))
     ; set a timer to spawn an enemy every 2 seconds
     (add-timer! screen :spawn-enemy 0 2)
     (assoc (texture "player.png")
@@ -41,6 +41,10 @@
          (remove-enemies)
          (remove :remove?)
          (render! screen)))
+  
+  :on-resize
+  (fn [screen entities]
+    (height! screen (:height screen)))
   
   :on-mouse-moved
   (fn [screen entities]

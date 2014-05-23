@@ -25,6 +25,10 @@
     (doto screen
       (perspective! :rotate-around (vector-3 0 0 0) (vector-3 0 1 0) 1)
       (perspective! :update))
-    (render! screen entities)))
+    (render! screen entities))
+  
+  :on-resize
+  (fn [screen entities]
+    (height! screen (:height screen))))
 
 (set-game-screen! main-screen)
