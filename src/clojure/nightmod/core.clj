@@ -79,12 +79,12 @@
           33 (editors/move-tab-selection! -1)
           ; page down
           34 (editors/move-tab-selection! 1)
+          ; B
+          66 (do (screens/home!) true)
           ; D
           68 (do (screens/toggle-files!) true)
           ; E
           69 (do (screens/toggle-repl!) true)
-          ; H
-          72 (do (screens/home!) true)
           ; O
           79 (do (screens/toggle-docs!) true)
           ; Q
