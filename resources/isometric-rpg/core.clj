@@ -1,5 +1,7 @@
 (load-game-file "entities.clj")
 
+(declare main-screen npc-health-screen overlay-screen)
+
 (defn update-screen!
   [screen entities]
   (doseq [entity entities]
@@ -31,6 +33,11 @@
   (fn [screen entities]
     (clear!)
     (let [me (get-player entities)]
+      ; update health bars
+      (->> (get-entity-at-cursor screen entities (game :x) (game :y))
+           (run! npc-health-screen :on-update-health-bar :entity))
+      (run! overlay-screen :on-update-health-bar :entity me)
+      ; run game logic
       (->> entities
            (map (fn [entity]
                   (->> entity
@@ -62,24 +69,25 @@
   :on-show
   (fn [screen entities]
     (shape :filled))
-
+  
   :on-render
   (fn [screen entities]
-    (when-let [e (get-entity-at-cursor (-> main-screen :screen deref)
-                                         (-> main-screen :entities deref)
-                                         (game :x)
-                                         (game :y))]
-      (let [bar-x (:x e)
+    (draw! (-> main-screen :screen deref) entities))
+  
+  :on-update-health-bar
+  (fn [screen entities]
+    (if-let [e (:entity screen)]
+      (let [bar (first entities)
+            bar-x (:x e)
             bar-y (+ (:y e) (:height e))
             bar-w (:width e)
             pct (/ (:health e) (+ (:health e) (:wounds e)))]
-        (->> (shape (first entities)
-                    :set-color (color :red)
-                    :rect bar-x bar-y bar-w npc-bar-h
-                    :set-color (color :green)
-                    :rect bar-x bar-y (* bar-w pct) npc-bar-h)
-             (vector)
-             (draw! (-> main-screen :screen deref)))))))
+        (shape bar
+               :set-color (color :red)
+               :rect bar-x bar-y bar-w npc-bar-h
+               :set-color (color :green)
+               :rect bar-x bar-y (* bar-w pct) npc-bar-h))
+      (shape (first entities)))))
 
 (defscreen overlay-screen
   :on-show
@@ -89,23 +97,24 @@
             :id :bar
             :x 5
             :y 5)])
-
+  
   :on-render
   (fn [screen entities]
-    (->> (for [entity entities]
-           (case (:id entity)
-             :bar (let [me (get-player (-> main-screen :entities deref))
-                        pct (/ (:health me) (+ (:health me) (:wounds me)))]
-                    (shape entity
-                           :set-color (color :red)
-                           :rect 0 0 bar-w bar-h
-                           :set-color (color :green)
-                           :rect 0 0 bar-w (* bar-h pct)))
-             entity))
-         (render! screen)))
+    (render! screen entities))
 
   :on-resize
   (fn [screen entities]
-    (height! screen 300)))
+    (height! screen 300))
+  
+  :on-update-health-bar
+  (fn [screen entities]
+    (let [bar (first entities)
+          player (:entity screen)
+          pct (/ (:health player) (+ (:health player) (:wounds player)))]
+      (shape bar
+             :set-color (color :red)
+             :rect 0 0 bar-w bar-h
+             :set-color (color :green)
+             :rect 0 0 bar-w (* bar-h pct)))))
 
 (set-game-screen! main-screen npc-health-screen overlay-screen)

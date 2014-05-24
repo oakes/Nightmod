@@ -74,7 +74,7 @@
     (intern 'nightcode.ui 'get-editor-pane (fn [] @u/editor))
     (intern 'nightcode.editors '*widgets* [:up :save :undo :redo
                                            :font-dec :font-inc
-                                           :doc :paredit :paredit-help :close])
+                                           :doc :paredit :find :close])
     (intern 'nightcode.file-browser '*widgets* [:up :new-file :edit
                                                 :open-in-browser :save :cancel
                                                 (window-btn)])
