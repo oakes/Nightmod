@@ -1,5 +1,8 @@
 (defproject nightmod "0.1.0"
   :description "A tool for making live-moddable games in Clojure"
+  :url "https://github.com/oakes/Nightmod"
+  :license {:name "Public Domain"
+            :url "http://unlicense.org/UNLICENSE"}
   :dependencies [[com.badlogicgames.gdx/gdx "1.0.1"]
                  [com.badlogicgames.gdx/gdx-backend-lwjgl "1.0.1"]
                  [com.badlogicgames.gdx/gdx-box2d "1.0.1"]
