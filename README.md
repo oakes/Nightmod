@@ -4,4 +4,4 @@ Nightmod is a tool for making live-moddable games. You can view a game's code wh
 
 ## Licensing
 
-All files that originate from this project are dedicated to the public domain. All third-party code in this project remains under their original licenses. I would love pull requests, and will assume that they are also dedicated to the public domain.
+All files that originate from this project are dedicated to the public domain. I would love pull requests, and will assume that they are also dedicated to the public domain.
