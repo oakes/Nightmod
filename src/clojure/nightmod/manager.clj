@@ -16,8 +16,12 @@
 ; keep a reference to all timers to we can stop them later
 (track-timers!)
 
+(defn clear-ns!
+  [nspace]
+  (doall (map #(ns-unmap nspace %) (keys (ns-interns nspace)))))
+
 (defn clean!
   []
-  (remove-ns u/game-ns)
+  (clear-ns! u/game-ns)
   (stop-timers!)
   (on-gl (asset-manager! manager :clear)))
