@@ -24,7 +24,7 @@
                                play-clj/lein-template]]
                  [org.clojars.oakes/clojail "1.0.6"]
                  [org.clojure/clojure "1.6.0"]
-                 [play-clj "0.3.5"]
+                 [play-clj "0.3.6-SNAPSHOT"]
                  [seesaw "1.4.4"]]
   :uberjar-exclusions [#"clojure-clr.*\.zip"]
   :resource-paths ["resources"]
