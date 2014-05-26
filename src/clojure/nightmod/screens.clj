@@ -109,7 +109,7 @@
   (when @ui/tree-selection
     (let [selected? (.exists (io/file @ui/tree-selection))]
       (s/invoke-later
-        (when (or selected? (u/editor-hidden?))
+        (when (or selected? (not (.isVisible @u/editor)))
           (u/toggle-editor!))
         (if selected?
           (reset! ui/tree-selection @ui/tree-selection)
@@ -123,7 +123,7 @@
   (when @ui/tree-selection
     (let [selected? (= @ui/tree-selection u/docs-name)]
       (s/invoke-later
-        (when (or selected? (u/editor-hidden?))
+        (when (or selected? (not (.isVisible @u/editor)))
           (u/toggle-editor!))
         (when-not selected?
           (reset! ui/tree-selection u/docs-name))
@@ -137,7 +137,7 @@
   (when @ui/tree-selection
     (let [selected? (= @ui/tree-selection u/repl-name)]
       (s/invoke-later
-        (when (or selected? (u/editor-hidden?))
+        (when (or selected? (not (.isVisible @u/editor)))
           (u/toggle-editor!))
         (when-not selected?
           (reset! ui/tree-selection u/repl-name))

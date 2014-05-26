@@ -78,18 +78,29 @@
   (.clearGlobalFocusOwner
     (KeyboardFocusManager/getCurrentKeyboardFocusManager)))
 
-(defn editor-hidden?
-  []
-  (-> @editor .getParent nil?))
+(defn add!
+  [frame component]
+  (if (= :ext (s/id-of frame))
+    (.setContentPane frame component)
+    (.add (.getContentPane frame) component BorderLayout/EAST)))
+
+(defn remove!
+  [frame component]
+  (when-not (= :ext (s/id-of frame))
+    (.remove (.getContentPane frame) component)))
+
+(defn visibility!
+  [frame component show?]
+  (.setVisible component (or show? (= :ext (s/id-of frame)))))
 
 (defn toggle-editor!
   ([]
-    (toggle-editor! (editor-hidden?)))
+    (toggle-editor! (not (.isVisible @editor))))
   ([show?]
     (if show?
-      (.add (.getContentPane @ui/root) @editor BorderLayout/EAST)
-      (.remove (.getContentPane @ui/root) @editor))
-    (.setVisible @editor show?)
+      (add! @ui/root @editor)
+      (remove! @ui/root @editor))
+    (visibility! @ui/root @editor show?)
     (.revalidate @ui/root)
     ; focus on the root so the game can receive keyboard events
     (when-not show?

@@ -20,6 +20,7 @@
   "Returns the editor pane."
   []
   (doto (editors/create-pane)
+    (.setVisible false)
     (.add (docs/create-card) u/docs-name)
     (.add (repl/create-card) u/repl-name)
     (.setPreferredSize (Dimension. u/editor-width 0))))
@@ -38,10 +39,9 @@
 (defn show-internal-editor!
   "Shows the internal editor."
   [main-window editor-window]
+  (u/toggle-editor! false)
   (reset! ui/root main-window)
-  (u/toggle-editor! true)
-  (when (nil? @ui/tree-selection)
-    (u/toggle-editor! false))
+  (u/toggle-editor! (some? @ui/tree-selection))
   (set-hint-container! (.getLayeredPane main-window))
   (s/hide! editor-window)
   (u/clear-global-focus!))
@@ -51,7 +51,7 @@
   [main-window editor-window]
   (u/toggle-editor! false)
   (reset! ui/root editor-window)
-  (s/config! editor-window :content @u/editor)
+  (u/toggle-editor! (some? @ui/tree-selection))
   (set-hint-container! (.getLayeredPane editor-window))
   (s/show! editor-window)
   (u/clear-global-focus!))
@@ -60,7 +60,7 @@
   "Allows the editor pane to be toggled in and out of the main window."
   [main-window]
   (let [external? (atom false)
-        editor-window (s/frame :width 800 :height 600 :on-close :hide)
+        editor-window (s/frame :id :ext :width 800 :height 600 :on-close :hide)
         toggle-window! (fn [& _]
                          (if (swap! external? not)
                            (show-external-editor! main-window editor-window)

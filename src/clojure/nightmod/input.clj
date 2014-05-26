@@ -39,7 +39,7 @@
             ; a key was released in a game
             (and @ui/tree-selection
                  (shortcuts/focused-window? window)
-                 (u/editor-hidden?)
+                 (not (.isVisible @u/editor))
                  (= (.getID e) KeyEvent/KEY_RELEASED))
             (do
               (.set impl-field nil impl)
@@ -53,7 +53,7 @@
             ; a key was typed in a game
             (and @ui/tree-selection
                  (shortcuts/focused-window? window)
-                 (u/editor-hidden?)
+                 (not (.isVisible @u/editor))
                  (= (.getID e) KeyEvent/KEY_TYPED))
             (do
               (-> game
@@ -65,7 +65,7 @@
             ; a key was pressed in a game
             (and @ui/tree-selection
                  (shortcuts/focused-window? window)
-                 (u/editor-hidden?)
+                 (not (.isVisible @u/editor))
                  (= (.getID e) KeyEvent/KEY_PRESSED))
             (do
               (.set impl-field nil impl)
