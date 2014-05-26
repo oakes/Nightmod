@@ -1,6 +1,9 @@
-<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(width screen)</div><div class="c-doc"><p>Returns the width of the camera in <code>screen</code>.</p><pre>
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(width screen)</div><div class="c-doc"><p>Returns the width of the camera in <code>screen</code>. If there is no camera, it returns the overall width.</p><pre>
 &#40;width screen&#41;
 </pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn width
   [screen]
-  (let [^Camera camera (u/get-obj screen :camera)]
-    (. camera viewportWidth)))</pre></div></div></div></body></html>
+  (try
+    (let [^Camera camera (u/get-obj screen :camera)]
+      (. camera viewportWidth))
+    (catch Exception _
+      (game :width))))</pre></div></div></div></body></html>
