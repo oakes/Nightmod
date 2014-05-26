@@ -89,6 +89,7 @@
     (if show?
       (.add (.getContentPane @ui/root) @editor BorderLayout/EAST)
       (.remove (.getContentPane @ui/root) @editor))
+    (.setVisible @editor show?)
     (.revalidate @ui/root)
     ; focus on the root so the game can receive keyboard events
     (when-not show?
