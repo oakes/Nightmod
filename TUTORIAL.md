@@ -152,31 +152,23 @@ Now we can update our `:on-key-down` and `:on-touch-down` functions to move the 
 
 ## Camera
 
-You'll notice that when you resize your game's window, the image looks stretched. That's because the game still thinks it's 800x600 pixels in size, so it stretches accordingly. To make your game adjust its ratio for different screen sizes, you need to use a camera.
 
-First, you need to create a camera and add it to the screen map in the `:on-show` function, like this:
+
+To make your game adjust its ratio for different screen sizes, you need to use a camera. Your game should already create one in the `:on-show` function, like this:
 
 ```clojure
     (update! screen :renderer (stage) :camera (orthographic))
 ````
 
-Orthographic cameras are for 2D games, so that's what we're using. Now, we need to create a new `defscreen` function called `:on-resize`, which will run whenever the screen resizes:
+Orthographic cameras are for 2D games, so that's what we're using. We also have a function called `:on-resize`, which will run whenever the screen resizes:
 
 ```clojure
   :on-resize
   (fn [screen entities]
-    )
+    (height! screen (:height screen)))
 ```
 
-Lastly, you'll need to make either the width or height of the screen a constant value, so the other dimension can adjust to keep a constant ratio. We'll make the screen's height a constant 600 units in size using the `height!` function, which returns `nil` so the entities vector won't be changed.
-
-```clojure
-  :on-resize
-  (fn [screen entities]
-    (height! screen 600))
-```
-
-Now, when you resize your game, the image is no longer stretched!
+The `height!` function is telling the camera to set its height to the new height of the screen, and automatically adjust its width so it matches the ratio of the screen itself. Try to temporarily change `(:height screen)` to an arbitrary number, such as 300. The image will now look bigger, because the camera's viewport is now smaller.
 
 ## Timers
 
