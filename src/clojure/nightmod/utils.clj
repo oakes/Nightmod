@@ -18,7 +18,6 @@
 (def ^:const docs-name "*Docs*")
 (def ^:const repl-name "*REPL*")
 (def ^:const game-ns 'nightmod.run)
-(def ^:const out-char-limit 5000)
 
 (def main-dir (atom nil))
 (def project-dir (atom nil))
@@ -95,13 +94,7 @@
     (when-not show?
       (s/request-focus! @ui/root))))
 
-(defn append-to-out!
+(defn set-out!
   [s]
-  (swap! out
-         (fn [out-old new-str]
-           (let [out-new (str out-old new-str)
-                 out-overflow (- (count out-new) out-char-limit)]
-             (if (> out-overflow 0)
-               (subs out-new out-overflow)
-               out-new)))
-         s))
+  (when (seq s)
+    (reset! out s)))

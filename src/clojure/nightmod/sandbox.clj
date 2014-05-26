@@ -73,7 +73,7 @@
           (catch Exception e
             (reset! u/error {:message "Error during load"
                              :exception e}))
-          (finally (u/append-to-out! (str writer)))))))
+          (finally (u/set-out! (str writer)))))))
 
 (defn run-in-sandbox!
   [func]
@@ -86,7 +86,7 @@
                                              (format "Error in %s"))
                            :exception e}))
         nil)
-      (finally (u/append-to-out! (str *out*))))))
+      (finally (u/set-out! (str *out*))))))
 
 ; set namespaces we want to provide completions for
 (intern 'nightcode.completions
