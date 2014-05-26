@@ -1,11 +1,7 @@
 (ns nightmod.input
-  (:require [nightcode.shortcuts :as shortcuts]
-            [nightcode.ui :as ui]
-            [nightmod.utils :as u]
-            [play-clj.core :as play-clj])
-  (:import [java.awt KeyboardFocusManager KeyEventDispatcher]
-           [java.awt.event ComponentAdapter KeyEvent]
-           [com.badlogic.gdx.backends.lwjgl LwjglInput]
+  (:require [play-clj.core :as play-clj])
+  (:import [com.badlogic.gdx.backends.lwjgl LwjglInput]
+           [java.awt.event KeyListener]
            [nightmod KeyCodeConverter]
            [org.lwjgl.input Keyboard]
            [org.lwjgl.opengl InputImplementation]))
@@ -31,51 +27,28 @@
         impl (proxy [InputImplementation] []
                (pollKeyboard [bb])
                (readKeyboard [bb]))]
-    (.addKeyEventDispatcher
-      (KeyboardFocusManager/getCurrentKeyboardFocusManager)
-      (proxy [KeyEventDispatcher] []
-        (dispatchKeyEvent [^KeyEvent e]
-          (cond
-            ; a key was released in a game
-            (and @ui/tree-selection
-                 (shortcuts/focused-window? window)
-                 (not (.isVisible @u/editor))
-                 (= (.getID e) KeyEvent/KEY_RELEASED))
-            (do
-              (.set impl-field nil impl)
-              (.put key-buf (awt->lwjgl (.getKeyCode e)) (byte 0))
-              (-> game
-                  .getInput
-                  .getInputProcessor
-                  (.keyUp (awt->libgdx (.getKeyCode e)))
-                  play-clj/on-gl)
-              true)
-            ; a key was typed in a game
-            (and @ui/tree-selection
-                 (shortcuts/focused-window? window)
-                 (not (.isVisible @u/editor))
-                 (= (.getID e) KeyEvent/KEY_TYPED))
-            (do
-              (-> game
-                  .getInput
-                  .getInputProcessor
-                  (.keyTyped (.getKeyChar e))
-                  play-clj/on-gl)
-              true)
-            ; a key was pressed in a game
-            (and @ui/tree-selection
-                 (shortcuts/focused-window? window)
-                 (not (.isVisible @u/editor))
-                 (= (.getID e) KeyEvent/KEY_PRESSED))
-            (do
-              (.set impl-field nil impl)
-              (.put key-buf (awt->lwjgl (.getKeyCode e)) (byte 8))
-              (-> game
-                  .getInput
-                  .getInputProcessor
-                  (.keyDown (awt->libgdx (.getKeyCode e)))
-                  play-clj/on-gl)
-              true)
-            ; don't handle
-            :else
-            false))))))
+    (.addKeyListener
+      window
+      (reify KeyListener
+        (keyReleased [this e]
+          (.set impl-field nil impl)
+          (.put key-buf (awt->lwjgl (.getKeyCode e)) (byte 0))
+          (-> game
+              .getInput
+              .getInputProcessor
+              (.keyUp (awt->libgdx (.getKeyCode e)))
+              play-clj/on-gl))
+        (keyTyped [this e]
+          (-> game
+              .getInput
+              .getInputProcessor
+              (.keyTyped (.getKeyChar e))
+              play-clj/on-gl))
+        (keyPressed [this e]
+          (.set impl-field nil impl)
+          (.put key-buf (awt->lwjgl (.getKeyCode e)) (byte 1))
+          (-> game
+              .getInput
+              .getInputProcessor
+              (.keyDown (awt->libgdx (.getKeyCode e)))
+              play-clj/on-gl))))))
