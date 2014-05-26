@@ -282,11 +282,9 @@ If you try that, you'll get the dreaded error: `java.lang.RuntimeException: Can'
 
 ## Multiple Screens
 
-It is possible to have multiple screens for your game. You may want a title screen at first, and then go to your game when an item is clicked. You can do this by simply calling the same `set-screen!` function that is run in `defgame`. You'll need to pass the game object as the first parameter, so to do that you'll need to declare your symbols at the top of your file:
+It is possible to have multiple screens for your game. You may want a title screen at first, and then go to your game when an item is clicked. You can do this by simply calling the same `set-game-screen!` function that is run at the beginning of the game. You'll need to declare your symbols at the top of your file, so you can refer to them from anywhere below.
 
-`(declare hello-world title-screen main-screen)`
-
-Now you are free to call `(set-screen! hello-world main-screen)` inside your `title-screen` if you wish. You may also call it inside `main-screen` itself, which is useful if you want to restart the game!
+`(declare title-screen main-screen)`
 
 You may want to display two different screens at once. This is useful in situations where you want to overlay something on your game that you want to remain fixed and independent of the game's camera. For example, to display a label with the current frames per second, create another screen like this:
 
