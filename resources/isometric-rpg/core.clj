@@ -1,6 +1,10 @@
 (load-game-file "entities.clj")
 
-(declare main-screen npc-health-screen overlay-screen)
+(print "Press the arrow keys or left click to move."
+       \newline
+       "Right click on enemies to attack.")
+
+(declare main-screen npc-health-screen player-health-screen)
 
 (defn update-screen!
   [screen entities]
@@ -36,7 +40,7 @@
       ; update health bars
       (->> (get-entity-at-cursor screen entities (game :x) (game :y))
            (run! npc-health-screen :on-update-health-bar :entity))
-      (run! overlay-screen :on-update-health-bar :entity me)
+      (run! player-health-screen :on-update-health-bar :entity me)
       ; run game logic
       (->> entities
            (map (fn [entity]
@@ -63,6 +67,7 @@
             y (:input-y screen)
             victim (get-entity-at-cursor screen entities x y)
             victim (when (can-attack? me victim) victim)]
+        (print " ")
         (attack screen me victim entities)))))
 
 (defscreen npc-health-screen
@@ -89,14 +94,14 @@
                :rect bar-x bar-y (* bar-w pct) npc-bar-h))
       (shape (first entities)))))
 
-(defscreen overlay-screen
+(defscreen player-health-screen
   :on-show
   (fn [screen entities]
     (update! screen :camera (orthographic) :renderer (stage))
-    [(assoc (shape :filled)
-            :id :bar
-            :x 5
-            :y 5)])
+    (assoc (shape :filled)
+           :id :bar
+           :x 5
+           :y 5))
   
   :on-render
   (fn [screen entities]
@@ -117,4 +122,4 @@
              :set-color (color :green)
              :rect 0 0 bar-w (* bar-h pct)))))
 
-(set-game-screen! main-screen npc-health-screen overlay-screen)
+(set-game-screen! main-screen npc-health-screen player-health-screen)

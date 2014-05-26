@@ -4,7 +4,7 @@
   [screen entities]
   (doseq [entity entities]
     (when (:player? entity)
-      (x! screen (:x entity))
+      (position! screen (:x entity) (/ vertical-tiles 2))
       (when (< (:y entity) (- (:height entity)))
         (restart-game!))))
   entities)
@@ -30,10 +30,6 @@
   
   :on-resize
   (fn [screen entities]
-    (orthographic! screen
-                   :set-to-ortho
-                   false
-                   (* vertical-tiles (/ (:width screen) (:height screen)))
-                   vertical-tiles)))
+    (height! screen vertical-tiles)))
 
 (set-game-screen! main-screen)
