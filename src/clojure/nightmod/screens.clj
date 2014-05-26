@@ -317,8 +317,3 @@
            (fn [_ _ _ e]
              (when e
                (on-gl (set-screen! nightmod blank-screen overlay-screen)))))
-
-(add-watch ui/tree-selection
-           :clear-global-focus
-           (fn [_ _ _ _]
-             (u/clear-global-focus!)))

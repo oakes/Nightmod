@@ -73,10 +73,9 @@
        (spit (io/file project-file settings-file)))
   (.getCanonicalPath project-file))
 
-(defn clear-global-focus!
+(defn canvas-focus?
   []
-  (.clearGlobalFocusOwner
-    (KeyboardFocusManager/getCurrentKeyboardFocusManager)))
+  (-> (System/getProperty "os.name") string/lower-case (.indexOf "win") (>= 0)))
 
 (defn add!
   [frame component]

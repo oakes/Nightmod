@@ -48,7 +48,7 @@
     (-> .getContentPane (doto
                           (.setLayout (BorderLayout.))
                           (.add (s/border-panel :center canvas
-                                                :focusable? false)
+                                                :focusable? (u/canvas-focus?))
                             BorderLayout/CENTER)))
     ; set various window properties
     window/enable-full-screen!
@@ -92,12 +92,13 @@
           ; else
           false)))
     ; create the window
-    (let [window (create-window)
-          canvas (doto (Canvas.) (.setFocusable false))]
+    (let [canvas (doto (Canvas.) (.setFocusable (u/canvas-focus?)))
+          window (s/show! (init-window (create-window) canvas))
+          game (LwjglApplication. screens/nightmod canvas)]
       (overlay/override-save-button!)
       (overlay/enable-toggling! window)
       (reset! u/editor (overlay/create-editor-pane))
-      (s/show! (reset! ui/root (init-window window canvas)))
-      (->> (LwjglApplication. screens/nightmod canvas)
-           (input/pass-key-events! window))))
+      (reset! ui/root window)
+      (when-not (u/canvas-focus?)
+        (input/pass-key-events! window game))))
   (Keyboard/enableRepeatEvents true))
