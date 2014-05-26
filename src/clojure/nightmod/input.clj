@@ -1,6 +1,5 @@
 (ns nightmod.input
-  (:require [nightcode.shortcuts :as shortcuts]
-            [play-clj.core :as play-clj])
+  (:require [play-clj.core :as play-clj])
   (:import [com.badlogic.gdx.backends.lwjgl LwjglInput]
            [java.awt.event KeyEvent KeyListener]
            [nightmod KeyCodeConverter]
