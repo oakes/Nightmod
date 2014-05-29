@@ -3,6 +3,7 @@
             [clojail.jvm :as jvm]
             [clojail.testers :as jail-test]
             [clojure.java.io :as io]
+            [nightcode.utils :as nc-utils]
             [nightmod.screens :as screens]
             [nightmod.utils :as u]
             [play-clj.core :refer :all])
@@ -71,8 +72,9 @@
         (sb {#'*out* writer})
         (try
           (catch Exception e
-            (reset! u/error {:message "Error during load"
-                             :exception e}))
+            (reset! u/error
+                    {:message (nc-utils/get-string :error-load)
+                     :exception e}))
           (finally (u/set-out! (str writer)))))))
 
 (defn run-in-sandbox!
@@ -82,9 +84,10 @@
       (jvm/jvm-sandbox func context)
       (catch Exception e
         (when (nil? @u/error)
-          (reset! u/error {:message (some->> (:name (meta func))
-                                             (format "Error in %s"))
-                           :exception e}))
+          (reset! u/error
+                  {:message (some->> (:name (meta func))
+                                     (format (nc-utils/get-string :error-in)))
+                   :exception e}))
         nil)
       (finally (u/set-out! (str *out*))))))
 
