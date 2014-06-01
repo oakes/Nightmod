@@ -95,7 +95,7 @@
 (intern 'nightcode.completions
         '*namespaces*
         ['clojure.core
-         'nightmod.tools
+         u/game-ns
          'play-clj.core
          'play-clj.g2d
          'play-clj.g3d
