@@ -24,7 +24,8 @@
 (declare nightmod main-screen blank-screen overlay-screen)
 
 (def ^:const text-height 40)
-(def ^:const pad-space 5.0)
+(def ^:const pad-small 5.0)
+(def ^:const pad-large 20.0)
 (def ^:const tile-size 250)
 
 (def templates ["arcade"
@@ -124,7 +125,7 @@
      wrap-label!)
    :width tile-size
    :height tile-size
-   :pad pad-space pad-space pad-space pad-space])
+   :pad pad-small pad-small pad-small pad-small])
 
 (defn set-visible!
   [entity show?]
@@ -261,14 +262,20 @@
                            (apply concat))]
         [(assoc (shape :filled) :id :background)
          (-> (concat (when (seq saved-games)
-                       [[(label (nc-utils/get-string :load) ui-skin)
-                         :colspan col-count]])
+                       [[(label (nc-utils/get-string :load) ui-skin
+                                :set-font-scale 1.5)
+                         :colspan col-count
+                         :pad-top pad-large
+                         :pad-bottom pad-large]])
                      saved-games
                      [:row
-                      [(label (nc-utils/get-string :new) ui-skin)
-                       :colspan col-count]]
+                      [(label (nc-utils/get-string :new) ui-skin
+                              :set-font-scale 1.5)
+                       :colspan col-count
+                       :pad-top pad-large
+                       :pad-bottom pad-large]]
                      new-games)
-             (table :align (align :center) :pad pad-space)
+             (table :align (align :center) :pad pad-small)
              (scroll-pane ui-skin
                           :set-fade-scroll-bars false
                           :set-fill-parent true))])))
@@ -347,29 +354,29 @@
                     :set-font-scale 0.8
                     :set-alignment (bit-or (align :left) (align :bottom)))
              (scroll-pane (style :scroll-pane nil nil nil nil nil))
-             (assoc :id :text :x pad-space :y (+ text-height (* 2 pad-space))))
+             (assoc :id :text :x pad-small :y (+ text-height (* 2 pad-small))))
          (-> [(check-box (nc-utils/get-string :stack-trace) ui-skin
                          :set-name "stack-trace")
               (text-button (nc-utils/get-string :copy) ui-skin
                            :set-name "copy")]
-             (horizontal :space (* 2 pad-space) :pack)
-             (assoc :id :error-buttons :x pad-space :y pad-space))
+             (horizontal :space (* 2 pad-small) :pack)
+             (assoc :id :error-buttons :x pad-small :y pad-small))
          (-> [(image-button home-style :set-name "home")
               (image-button restart-style :set-name "restart")
               (image-button screenshot-style :set-name "screenshot")
               (image-button files-style :set-name "files")
               (image-button docs-style :set-name "docs")
               (image-button repl-style :set-name "repl")]
-             (horizontal :space (* 2 pad-space) :pack)
-             (assoc :id :menu :x pad-space))
+             (horizontal :space (* 2 pad-small) :pack)
+             (assoc :id :menu :x pad-small))
          (-> [(image-button (texture-drawable "home_key.png"))
               (image-button (texture-drawable "restart_key.png"))
               (image-button (texture-drawable "screenshot_key.png"))
               (image-button (texture-drawable "files_key.png"))
               (image-button (texture-drawable "docs_key.png"))
               (image-button (texture-drawable "repl_key.png"))]
-             (horizontal :space (* 2 pad-space) :pack)
-             (assoc :id :menu-keys :x pad-space))
+             (horizontal :space (* 2 pad-small) :pack)
+             (assoc :id :menu-keys :x pad-small))
          (assoc (label " " ui-skin :set-visible false) :menu-label? true)])))
   
   :on-render
@@ -392,8 +399,8 @@
     (height! screen height)
     (for [e entities]
       (case (:id e)
-        :menu (assoc e :y (- height (vertical! e :get-height) pad-space))
-        :menu-keys (assoc e :y (- height (vertical! e :get-height) pad-space))
+        :menu (assoc e :y (- height (vertical! e :get-height) pad-small))
+        :menu-keys (assoc e :y (- height (vertical! e :get-height) pad-small))
         :text (assoc e :width width :height (- height (* 2 (:y e))))
         e)))
   
