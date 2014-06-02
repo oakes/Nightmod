@@ -3,6 +3,7 @@
             [clojure.java.io :as io]
             [clojure.string :as string]
             [nightcode.editors :as editors]
+            [nightcode.file-browser :as file-browser]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
@@ -157,7 +158,9 @@
   (->> (io/file @u/project-dir u/screenshot-file)
        .getCanonicalPath
        (files! :absolute)
-       screenshot!))
+       screenshot!)
+  (s/invoke-later
+    (file-browser/update-card!)))
 
 (defscreen main-screen
   :on-show
