@@ -15,12 +15,13 @@
             [play-clj.ui :refer :all]
             [play-clj.utils]
             [seesaw.core :as s])
-  (:import [java.awt Toolkit]
-           [java.awt.datatransfer Clipboard ClipboardOwner StringSelection]))
+  (:import [com.badlogic.gdx.assets.loaders FileHandleResolver]
+           [com.badlogic.gdx.graphics Texture]
+           [java.awt Toolkit]
+           [java.awt.datatransfer Clipboard ClipboardOwner StringSelection]
+           [java.io File]))
 
 (declare nightmod main-screen blank-screen overlay-screen)
-
-; constants
 
 (def ^:const text-height 40)
 (def ^:const pad-space 5.0)
@@ -32,6 +33,13 @@
                 "isometric-rpg"
                 "barebones-2d"
                 "barebones-3d"])
+
+(def manager (asset-manager*
+               (reify FileHandleResolver
+                 (resolve [this file-name]
+                   (if (try (.exists (io/file file-name)) (catch Exception _))
+                     (files! :absolute file-name)
+                     (files! :internal file-name))))))
 
 ; helpers
 
@@ -63,7 +71,16 @@
   [s]
   (drawable :texture-region (:object (texture s))))
 
-(defn read-tile
+(defn get-center-texture
+  [t]
+  (let [w (texture! t :get-region-width)
+        h (texture! t :get-region-height)
+        x (if (> w h) (-> (- w h) (/ 2)) 0)
+        y (if (> h w) (-> (- h w) (/ 2)) 0)
+        size (if (> w h) h w)]
+    (texture t :set-region (int x) (int y) size size)))
+
+(defn read-load-tile
   [f]
   {:display-name (or (-> (io/file f u/settings-file)
                          slurp
@@ -71,13 +88,35 @@
                          :title
                          (try (catch Exception _)))
                      (.getName f))
-   :name (.getCanonicalPath f)})
+   :name (.getCanonicalPath f)
+   :image (let [f (io/file f u/screenshot-file)]
+            (try
+              (->> (play-clj.utils/load-asset (.getCanonicalPath f) Texture)
+                   texture
+                   get-center-texture
+                   :object
+                   (drawable :texture-region))
+              (catch Exception _)))})
+
+(defn read-new-tile
+  [name]
+  {:display-name (nc-utils/get-string name)
+   :name name
+   :image (texture-drawable (str name "/" u/screenshot-file))})
+
+(defn wrap-label!
+  [btn]
+  (doto (image-text-button! btn :get-label-cell)
+    (cell! :size tile-size tile-size))
+  (doto (image-text-button! btn :get-label)
+    (label! :set-wrap true)))
 
 (defn create-tile
   [{:keys [font display-name name image]}]
-  [(image-text-button display-name
-                      (style :image-text-button image nil nil font)
-                      :set-name name)
+  [(doto (image-text-button display-name
+                            (style :image-text-button image nil nil font)
+                            :set-name name)
+     wrap-label!)
    :width tile-size
    :height tile-size
    :pad pad-space pad-space pad-space pad-space])
@@ -118,9 +157,10 @@
     (reset! ui/tree-selection nil)
     (u/toggle-editor! false))
   (on-gl
+    (asset-manager! manager :clear)
     (set-screen! nightmod main-screen)
-    (set-cursor-image! nil))
-  (manager/clean!))
+    (set-cursor-image! nil)
+    (manager/clean!)))
 
 (defn restart!
   []
@@ -191,7 +231,7 @@
 (defscreen main-screen
   :on-show
   (fn [screen entities]
-    (binding [play-clj.utils/*asset-manager* nil]
+    (binding [play-clj.utils/*asset-manager* manager]
       (update! screen
                :renderer (stage)
                :camera (orthographic)
@@ -203,19 +243,15 @@
                              .listFiles
                              (filter #(.isDirectory %))
                              (sort-by #(.getName %))
-                             (map read-tile)
+                             (map read-load-tile)
                              (map #(assoc % :font font))
                              (map create-tile)
                              (partition-all col-count)
                              (map #(cons :row %))
                              (apply concat))
-            new-games (->> (for [i (range (count templates))
-                                 :let [name (nth templates i)
-                                       img (str name "/" u/screenshot-file)]]
-                             {:font font
-                              :display-name (nc-utils/get-string name)
-                              :name name
-                              :image (texture-drawable img)})
+            new-games (->> templates
+                           (map read-new-tile)
+                           (map #(assoc % :font font))
                            (map create-tile)
                            (partition-all col-count)
                            (map #(cons :row %))
@@ -273,7 +309,7 @@
   :on-show
   (fn [screen entities]
     (update! screen :camera (orthographic) :renderer (stage))
-    (binding [play-clj.utils/*asset-manager* nil]
+    (binding [play-clj.utils/*asset-manager* manager]
       (let [ui-skin (skin "uiskin.json")
             home-style (style :image-button
                               (texture-drawable "home_up.png")

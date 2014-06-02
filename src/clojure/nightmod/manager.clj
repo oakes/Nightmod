@@ -24,4 +24,4 @@
   []
   (clear-ns! u/game-ns)
   (stop-timers!)
-  (on-gl (asset-manager! manager :clear)))
+  (asset-manager! manager :clear))
