@@ -49,11 +49,16 @@
     (input! :set-cursor-image img 0 0)
     (catch Exception _)))
 
-(defn schedule-screenshot!
-  []
-  (when @ui/tree-selection
-    (-> overlay-screen :screen (swap! assoc :screenshot? true))
-    nil))
+(defn take-screenshot!
+  [screen]
+  (update! screen :screenshot? false)
+  (->> (io/file @u/project-dir u/screenshot-file)
+       .getCanonicalPath
+       (files! :absolute)
+       screenshot!)
+  (sound! (:screenshot-sound screen) :play)
+  (s/invoke-later
+    (file-browser/update-card!)))
 
 (defn out-str
   []
@@ -167,14 +172,11 @@
   (when @ui/tree-selection
     (reset! u/project-dir @u/project-dir)))
 
-(defn take-screenshot!
+(defn schedule-screenshot!
   []
-  (->> (io/file @u/project-dir u/screenshot-file)
-       .getCanonicalPath
-       (files! :absolute)
-       screenshot!)
-  (s/invoke-later
-    (file-browser/update-card!)))
+  (when @ui/tree-selection
+    (-> overlay-screen :screen (swap! assoc :screenshot? true))
+    nil))
 
 (defn toggle-files!
   []
@@ -308,8 +310,11 @@
 (defscreen overlay-screen
   :on-show
   (fn [screen entities]
-    (update! screen :camera (orthographic) :renderer (stage))
     (binding [play-clj.utils/*asset-manager* manager]
+      (update! screen
+               :camera (orthographic)
+               :renderer (stage)
+               :screenshot-sound (sound "screenshot.ogg"))
       (let [ui-skin (skin "uiskin.json")
             home-style (style :image-button
                               (texture-drawable "home_up.png")
@@ -368,8 +373,7 @@
   :on-render
   (fn [screen entities]
     (when (:screenshot? screen)
-      (take-screenshot!)
-      (update! screen :screenshot? false))
+      (take-screenshot! screen))
     (->> (for [e entities]
            (case (:id e)
              :text (do (label! (scroll-pane! e :get-widget)
