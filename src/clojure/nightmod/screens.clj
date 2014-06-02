@@ -146,6 +146,19 @@
         (some-> (s/select @ui/root [:#repl-console])
                 s/request-focus!)))))
 
+(defn schedule-screenshot!
+  []
+  (when @ui/tree-selection
+    (-> overlay-screen :screen (swap! assoc :screenshot? true))
+    nil))
+
+(defn take-screenshot!
+  []
+  (->> (io/file @u/project-dir u/screenshot-file)
+       .getCanonicalPath
+       (files! :absolute)
+       screenshot!))
+
 (defscreen main-screen
   :on-show
   (fn [screen entities]
@@ -224,6 +237,10 @@
                                  (texture-drawable "restart_up.png")
                                  (texture-drawable "restart_down.png")
                                  nil nil nil nil)
+            screenshot-style (style :image-button
+                                    (texture-drawable "screenshot_up.png")
+                                    (texture-drawable "screenshot_down.png")
+                                    nil nil nil nil)
             files-style (style :image-button
                                (texture-drawable "files_up.png")
                                (texture-drawable "files_down.png")
@@ -250,6 +267,7 @@
              (assoc :id :error-buttons :x pad-space :y pad-space))
          (-> [(image-button home-style :set-name "home")
               (image-button restart-style :set-name "restart")
+              (image-button screenshot-style :set-name "screenshot")
               (image-button files-style :set-name "files")
               (image-button docs-style :set-name "docs")
               (image-button repl-style :set-name "repl")]
@@ -257,6 +275,7 @@
              (assoc :id :menu :x pad-space))
          (-> [(image-button (texture-drawable "home_key.png"))
               (image-button (texture-drawable "restart_key.png"))
+              (image-button (texture-drawable "screenshot_key.png"))
               (image-button (texture-drawable "files_key.png"))
               (image-button (texture-drawable "docs_key.png"))
               (image-button (texture-drawable "repl_key.png"))]
@@ -266,6 +285,9 @@
   
   :on-render
   (fn [screen entities]
+    (when (:screenshot? screen)
+      (take-screenshot!)
+      (update! screen :screenshot? false))
     (->> (for [e entities]
            (case (:id e)
              :text (do (label! (scroll-pane! e :get-widget)
@@ -292,6 +314,7 @@
     (case (actor! (:actor screen) :get-name)
       "home" (home!)
       "restart" (restart!)
+      "screenshot" (schedule-screenshot!)
       "files" (toggle-files!)
       "docs" (toggle-docs!)
       "repl" (toggle-repl!)

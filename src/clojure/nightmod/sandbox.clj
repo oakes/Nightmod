@@ -23,7 +23,7 @@
      ns-resolve ns-publics ns-unmap ns-map ns-interns the-ns in-ns require
      System/out System/in System/err
      defscreen* defgame* defgame set-screen! setScreen set-screen-wrapper!
-     app! app on-gl pref!
+     app! app on-gl pref! screenshot!
      asset-manager* asset-manager set-asset-manager!})
 
 (def tester

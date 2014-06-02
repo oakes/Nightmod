@@ -85,6 +85,8 @@
           81 (window/confirm-exit-app!)
           ; R
           82 (do (screens/restart!) true)
+          ; T
+          84 (do (screens/schedule-screenshot!) true)
           ; W
           87 (if (some-> @ui/tree-selection io/file .exists)
                (editors/close-selected-editor!)
