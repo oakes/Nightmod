@@ -237,7 +237,8 @@
       (update! screen
                :renderer (stage)
                :camera (orthographic)
-               :cursor-image (pixmap "glove.png"))
+               :cursor-image (pixmap "glove.png")
+               :click-sound (sound "click.ogg"))
       (let [ui-skin (skin "uiskin.json")
             font (skin! ui-skin :get-font "default-font")
             col-count (/ (count templates) 2)
@@ -297,6 +298,7 @@
   :on-ui-changed
   (fn [screen entities]
     (when-let [n (actor! (:actor screen) :get-name)]
+      (sound! (:click-sound screen) :play)
       (if (contains? (set templates) n)
         (new-project! n)
         (load-project! n)))
