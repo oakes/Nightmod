@@ -20,8 +20,11 @@
 
 (declare nightmod main-screen blank-screen overlay-screen)
 
+; constants
+
 (def ^:const text-height 40)
-(def ^:const pad-space 5)
+(def ^:const pad-space 5.0)
+(def ^:const tile-size 250)
 
 (def templates ["arcade"
                 "platformer"
@@ -30,20 +33,67 @@
                 "barebones-2d"
                 "barebones-3d"])
 
-(defn read-title
+; helpers
+
+(defn set-cursor-image!
+  [img]
+  (try
+    (input! :set-cursor-image img 0 0)
+    (catch Exception _)))
+
+(defn schedule-screenshot!
+  []
+  (when @ui/tree-selection
+    (-> overlay-screen :screen (swap! assoc :screenshot? true))
+    nil))
+
+(defn out-str
+  []
+  (->> [(when (seq @u/out) @u/out)
+        (some->> @u/error :message)
+        (some-> @u/error :exception .toString)
+        (when (and @u/error @u/stack-trace?)
+          (for [elem (-> @u/error :exception .getStackTrace)]
+            (.toString elem)))]
+       flatten
+       (remove nil?)
+       (string/join \newline)))
+
+(defn texture-drawable
+  [s]
+  (drawable :texture-region (:object (texture s))))
+
+(defn read-tile
   [f]
-  [(or (-> (io/file f u/settings-file)
-            slurp
-            edn/read-string
-            :title
-            (try (catch Exception _)))
-       (.getName f))
-   (.getCanonicalPath f)])
+  {:display-name (or (-> (io/file f u/settings-file)
+                         slurp
+                         edn/read-string
+                         :title
+                         (try (catch Exception _)))
+                     (.getName f))
+   :name (.getCanonicalPath f)})
+
+(defn create-tile
+  [{:keys [font display-name name image]}]
+  [(image-text-button display-name
+                      (style :image-text-button image nil nil font)
+                      :set-name name)
+   :width tile-size
+   :height tile-size
+   :pad pad-space pad-space pad-space pad-space])
+
+(defn set-visible!
+  [entity show?]
+  (doseq [a (actor! entity :get-children)]
+    (actor! a :set-visible show?)))
+
+; tiles on the main screen
 
 (defn load-project!
   [path]
-  (on-gl (set-screen! nightmod blank-screen overlay-screen))
-  ; save in project-dir so the reset button works
+  (on-gl (set-cursor-image! nil)
+         (set-screen! nightmod blank-screen overlay-screen))
+  ; save in project-dir so the asset loading and reset button works
   (reset! u/project-dir path)
   ; save in tree-projects so the up button is hidden correctly
   (swap! ui/tree-projects conj path)
@@ -59,6 +109,8 @@
                (u/new-project! template project-name)
                load-project!))))
 
+; buttons on the overlay screen
+
 (defn home!
   []
   (s/invoke-later
@@ -67,8 +119,7 @@
     (u/toggle-editor! false))
   (on-gl
     (set-screen! nightmod main-screen)
-    (try (input! :set-cursor-image nil 0 0)
-      (catch Exception _)))
+    (set-cursor-image! nil))
   (manager/clean!))
 
 (defn restart!
@@ -76,34 +127,14 @@
   (when @ui/tree-selection
     (reset! u/project-dir @u/project-dir)))
 
-(defn scrollify
-  [widget]
-  (scroll-pane widget (style :scroll-pane nil nil nil nil nil)))
-
-(defn set-visible!
-  [entity show?]
-  (doseq [a (actor! entity :get-children)]
-    (actor! a :set-visible show?)))
-
-(defn out-str
+(defn take-screenshot!
   []
-  (->> [(when (seq @u/out) @u/out)
-        (some->> @u/error :message)
-        (some-> @u/error :exception .toString)
-        (when (and @u/error @u/stack-trace?)
-          (for [elem (-> @u/error :exception .getStackTrace)]
-            (.toString elem)))]
-       flatten
-       (remove nil?)
-       (string/join \newline)))
-
-(defn set-clipboard!
-  [s]
-  (let [clip-board (.getSystemClipboard (Toolkit/getDefaultToolkit))]
-    (.setContents clip-board
-      (StringSelection. s)
-      (reify ClipboardOwner
-        (lostOwnership [this clipboard contents])))))
+  (->> (io/file @u/project-dir u/screenshot-file)
+       .getCanonicalPath
+       (files! :absolute)
+       screenshot!)
+  (s/invoke-later
+    (file-browser/update-card!)))
 
 (defn toggle-files!
   []
@@ -147,52 +178,61 @@
         (some-> (s/select @ui/root [:#repl-console])
                 s/request-focus!)))))
 
-(defn schedule-screenshot!
-  []
-  (when @ui/tree-selection
-    (-> overlay-screen :screen (swap! assoc :screenshot? true))
-    nil))
+(defn set-clipboard!
+  [s]
+  (let [clip-board (.getSystemClipboard (Toolkit/getDefaultToolkit))]
+    (.setContents clip-board
+      (StringSelection. s)
+      (reify ClipboardOwner
+        (lostOwnership [this clipboard contents])))))
 
-(defn take-screenshot!
-  []
-  (->> (io/file @u/project-dir u/screenshot-file)
-       .getCanonicalPath
-       (files! :absolute)
-       screenshot!)
-  (s/invoke-later
-    (file-browser/update-card!)))
+; screens
 
 (defscreen main-screen
   :on-show
   (fn [screen entities]
-    (update! screen :renderer (stage) :camera (orthographic))
-    (let [ui-skin (skin "uiskin.json")
-          create-button (fn [[display-name path]]
-                          (text-button display-name ui-skin :set-name path))
-          saved-games (->> (io/file @u/main-dir)
-                           .listFiles
-                           (filter #(.isDirectory %))
-                           (sort-by #(.getName %))
-                           (map read-title)
-                           (map create-button))
-          new-games (->> (for [i (range (count templates))
-                               :let [template (nth templates i)]]
-                           [(nc-utils/get-string template) template])
-                         (map create-button))
-          saved-column (-> (label (nc-utils/get-string :load) ui-skin)
-                           (cons saved-games)
-                           (vertical :pack)
-                           scrollify)
-          load-column (-> (label (nc-utils/get-string :new) ui-skin)
-                          (cons new-games)
-                          (vertical :pack)
-                          scrollify)]
-      [(assoc (shape :filled) :id :background)
-       (table [(when (seq saved-games)
-                 [saved-column :pad pad-space pad-space pad-space pad-space])
-               [load-column :pad pad-space pad-space pad-space pad-space]]
-              :align (align :center)
-              :set-fill-parent true)]))
+    (binding [play-clj.utils/*asset-manager* nil]
+      (update! screen
+               :renderer (stage)
+               :camera (orthographic)
+               :cursor-image (pixmap "glove.png"))
+      (let [ui-skin (skin "uiskin.json")
+            font (skin! ui-skin :get-font "default-font")
+            col-count (/ (count templates) 2)
+            saved-games (->> (io/file @u/main-dir)
+                             .listFiles
+                             (filter #(.isDirectory %))
+                             (sort-by #(.getName %))
+                             (map read-tile)
+                             (map #(assoc % :font font))
+                             (map create-tile)
+                             (partition-all col-count)
+                             (map #(cons :row %))
+                             (apply concat))
+            new-games (->> (for [i (range (count templates))
+                                 :let [name (nth templates i)
+                                       img (str name "/" u/screenshot-file)]]
+                             {:font font
+                              :display-name (nc-utils/get-string name)
+                              :name name
+                              :image (texture-drawable img)})
+                           (map create-tile)
+                           (partition-all col-count)
+                           (map #(cons :row %))
+                           (apply concat))]
+        [(assoc (shape :filled) :id :background)
+         (-> (concat (when (seq saved-games)
+                       [[(label (nc-utils/get-string :load) ui-skin)
+                         :colspan col-count]])
+                     saved-games
+                     [:row
+                      [(label (nc-utils/get-string :new) ui-skin)
+                       :colspan col-count]]
+                     new-games)
+             (table :align (align :center) :pad pad-space)
+             (scroll-pane ui-skin
+                          :set-fade-scroll-bars false
+                          :set-fill-parent true))])))
   
   :on-render
   (fn [screen entities]
@@ -209,9 +249,16 @@
           :background (shape e :rect 0 0 width height c1 c1 c2 c2)
           e))))
   
+  :on-ui-exit
+  (fn [screen entities]
+    (if (or (some-> (:actor screen) image-text-button?)
+            (some-> (:actor screen) (actor! :get-parent) image-text-button?))
+      (set-cursor-image! (:cursor-image screen))
+      (set-cursor-image! nil)))
+  
   :on-ui-changed
   (fn [screen entities]
-    (when-let [n (text-button! (:actor screen) :get-name)]
+    (when-let [n (actor! (:actor screen) :get-name)]
       (if (contains? (set templates) n)
         (new-project! n)
         (load-project! n)))
@@ -221,10 +268,6 @@
   :on-render
   (fn [screen entities]
     (clear!)))
-
-(defn texture-drawable
-  [s]
-  (drawable :texture-region (:object (texture s))))
 
 (defscreen overlay-screen
   :on-show
@@ -325,6 +368,8 @@
       "copy" (set-clipboard! (out-str))
       nil)
     nil))
+
+; misc
 
 (defgame nightmod
   :on-create

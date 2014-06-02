@@ -62,7 +62,7 @@
 (defn new-project!
   [template project-name project-file]
   (.mkdirs project-file)
-  (doseq [file-name (-> (str template "/_files.edn")
+  (doseq [file-name (-> (str template "/files.edn")
                         io/resource
                         slurp
                         edn/read-string)]
