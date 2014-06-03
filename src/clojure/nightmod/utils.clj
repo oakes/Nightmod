@@ -6,6 +6,7 @@
             [nightcode.editors :as editors]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
+            [nightmod.input :as input]
             [seesaw.core :as s])
   (:import [java.awt BorderLayout KeyboardFocusManager]
            [java.text SimpleDateFormat]))
@@ -102,8 +103,10 @@
       (remove! @ui/root @editor))
     (visibility! @ui/root @editor show?)
     (.revalidate @ui/root)
-    ; focus on the root so the game can receive keyboard events
-    (when-not show?
+    (if show?
+      ; clear the key down buffer so keys don't get stuck in the down position
+      (input/clear-key-buffer!)
+      ; focus on the root so the game can receive keyboard events
       (s/request-focus! @ui/root))))
 
 (defn set-out!

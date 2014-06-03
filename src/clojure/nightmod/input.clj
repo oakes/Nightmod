@@ -18,6 +18,17 @@
   [key]
   (LwjglInput/getGdxKeyCode (awt->lwjgl key)))
 
+(defn clear-key-buffer!
+  "Clears the LWJGL key down buffer."
+  ([]
+    (let [key-buf-field (doto (.getDeclaredField Keyboard "keyDownBuffer")
+                          (.setAccessible true))
+          key-buf (.get key-buf-field nil)]
+      (clear-key-buffer! key-buf)))
+  ([key-buf]
+    (doseq [i (range (.capacity key-buf))]
+      (.put key-buf i (byte 0)))))
+
 (defn pass-key-events!
   "Passes key events to the game."
   [window game]
@@ -35,11 +46,10 @@
         (keyReleased [this e]
           ; clear the LWJGL key buffer
           ; when a meta key is lifted, we must clear it completely
-          ; to prevent it from getting "stuck"
+          ; to prevent it from getting stuck in the down position
           (.set impl-field nil impl)
           (if (contains? meta-keys (.getKeyCode e))
-            (doseq [i (range (.capacity key-buf))]
-              (.put key-buf i (byte 0)))
+            (clear-key-buffer! key-buf)
             (.put key-buf (awt->lwjgl (.getKeyCode e)) (byte 0)))
           ; pass the event to LibGDX
           (-> game
