@@ -38,9 +38,9 @@
 (def manager (asset-manager*
                (reify FileHandleResolver
                  (resolve [this file-name]
-                   (if (try (.exists (io/file file-name)) (catch Exception _))
-                     (files! :absolute file-name)
-                     (files! :internal file-name))))))
+                   (if (io/resource file-name)
+                     (files! :internal file-name)
+                     (files! :absolute file-name))))))
 
 ; helpers
 
@@ -95,14 +95,16 @@
                          (try (catch Exception _)))
                      (.getName f))
    :name (.getCanonicalPath f)
-   :image (let [f (io/file f u/screenshot-file)]
-            (try
-              (->> (play-clj.utils/load-asset (.getCanonicalPath f) Texture)
-                   texture
-                   get-center-texture
-                   :object
-                   (drawable :texture-region))
-              (catch Exception _)))})
+   :image (let [f (io/file f u/screenshot-file)
+                path (.getCanonicalPath f)]
+            (some->> (or (try (play-clj.utils/load-asset path Texture)
+                           (catch Exception _))
+                         (try (Texture. (files! :absolute path))
+                           (catch Exception _)))
+                     texture
+                     get-center-texture
+                     :object
+                     (drawable :texture-region)))})
 
 (defn read-new-tile
   [name]
