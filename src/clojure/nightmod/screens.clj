@@ -298,8 +298,15 @@
           :background (shape e :rect 0 0 width height c1 c1 c2 c2)
           e))))
   
+  :on-ui-enter
+  (fn [screen entities]
+    (when (some-> (:actor screen) (actor! :get-parent) image-text-button?)
+      (actor! (:actor screen) :set-color (color :white))))
+  
   :on-ui-exit
   (fn [screen entities]
+    (when (some-> (:actor screen) (actor! :get-parent) image-text-button?)
+      (actor! (:actor screen) :set-color 1 1 1 0.5))
     (if (or (some-> (:actor screen) image-text-button?)
             (some-> (:actor screen) (actor! :get-parent) image-text-button?))
       (set-cursor-image! (:cursor-image screen))
