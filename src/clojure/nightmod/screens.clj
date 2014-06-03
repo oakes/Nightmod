@@ -241,36 +241,37 @@
                :cursor-image (pixmap "glove.png")
                :click-sound (sound "click.ogg"))
       (let [ui-skin (skin "uiskin.json")
-            font (skin! ui-skin :get-font "default-font")
+            default-font (skin! ui-skin :get-font "default-font")
+            large-font (skin! ui-skin :get-font "large-font")
             col-count (/ (count templates) 2)
             saved-games (->> (io/file @u/main-dir)
                              .listFiles
                              (filter #(.isDirectory %))
                              (sort-by #(.getName %))
                              (map read-load-tile)
-                             (map #(assoc % :font font))
+                             (map #(assoc % :font default-font))
                              (map create-tile)
                              (partition-all col-count)
                              (map #(cons :row %))
                              (apply concat))
             new-games (->> templates
                            (map read-new-tile)
-                           (map #(assoc % :font font))
+                           (map #(assoc % :font default-font))
                            (map create-tile)
                            (partition-all col-count)
                            (map #(cons :row %))
                            (apply concat))]
         [(assoc (shape :filled) :id :background)
          (-> (concat (when (seq saved-games)
-                       [[(label (nc-utils/get-string :load) ui-skin
-                                :set-font-scale 1.5)
+                       [[(label (nc-utils/get-string :load)
+                                (style :label large-font (color :white)))
                          :colspan col-count
                          :pad-top pad-large
                          :pad-bottom pad-large]])
                      saved-games
                      [:row
-                      [(label (nc-utils/get-string :new) ui-skin
-                              :set-font-scale 1.5)
+                      [(label (nc-utils/get-string :new)
+                              (style :label large-font (color :white)))
                        :colspan col-count
                        :pad-top pad-large
                        :pad-bottom pad-large]]
@@ -325,6 +326,7 @@
                :renderer (stage)
                :screenshot-sound (sound "screenshot.ogg"))
       (let [ui-skin (skin "uiskin.json")
+            small-font (skin! ui-skin :get-font "small-font")
             home-style (style :image-button
                               (texture-drawable "home_up.png")
                               (texture-drawable "home_down.png")
@@ -349,9 +351,8 @@
                               (texture-drawable "repl_up.png")
                               (texture-drawable "repl_down.png")
                               nil nil nil nil)]
-        [(-> (label "" ui-skin
+        [(-> (label "" (style :label small-font (color :white))
                     :set-wrap true
-                    :set-font-scale 0.8
                     :set-alignment (bit-or (align :left) (align :bottom)))
              (scroll-pane (style :scroll-pane nil nil nil nil nil))
              (assoc :id :text :x pad-small :y (+ text-height (* 2 pad-small))))
