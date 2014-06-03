@@ -6,6 +6,8 @@
            [org.lwjgl.input Keyboard]
            [org.lwjgl.opengl InputImplementation]))
 
+(def ^:const meta-keys #{KeyEvent/VK_CONTROL KeyEvent/VK_META})
+
 (defn awt->lwjgl
   "Translates key code from AWT to LWJGL."
   [key]
@@ -32,10 +34,10 @@
       (reify KeyListener
         (keyReleased [this e]
           ; clear the LWJGL key buffer
-          ; when the OS X command key is lifted, we must clear it
-          ; completely because it seems to swallow keyReleased events
+          ; when a meta key is lifted, we must clear it completely
+          ; to prevent it from getting "stuck"
           (.set impl-field nil impl)
-          (if (= (.getKeyCode e) KeyEvent/VK_META)
+          (if (contains? meta-keys (.getKeyCode e))
             (doseq [i (range (.capacity key-buf))]
               (.put key-buf i (byte 0)))
             (.put key-buf (awt->lwjgl (.getKeyCode e)) (byte 0)))
