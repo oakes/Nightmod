@@ -110,6 +110,6 @@
       (s/request-focus! @ui/root))))
 
 (defn set-out!
-  [s]
-  (when (seq s)
+  [s initialize?]
+  (when (or initialize? (seq s))
     (reset! out s)))

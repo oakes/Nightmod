@@ -64,7 +64,7 @@
 (defn run-file!
   [path]
   (reset! u/error nil)
-  (reset! u/out "")
+  (reset! u/out nil)
   (let [writer (StringWriter.)
         sb (create-sandbox)]
     (-> (format "(do %s\n)" (slurp path))
@@ -75,7 +75,7 @@
             (reset! u/error
                     {:message (nc-utils/get-string :error-load)
                      :exception e}))
-          (finally (u/set-out! (str writer)))))))
+          (finally (u/set-out! (str writer) true))))))
 
 (defn run-in-sandbox!
   [func]
@@ -89,7 +89,7 @@
                                      (format (nc-utils/get-string :error-in)))
                    :exception e}))
         nil)
-      (finally (u/set-out! (str *out*))))))
+      (finally (u/set-out! (str *out*) false)))))
 
 ; set namespaces we want to provide completions for
 (intern 'nightcode.completions
