@@ -1,6 +1,7 @@
 (ns nightmod.game
   (:require [clojail.core :as jail]
             [clojure.java.io :as io]
+            [nightmod.manager :as manager]
             [nightmod.screens :as screens]
             [nightmod.utils :as u]
             [play-clj.core :refer :all]))
@@ -13,9 +14,14 @@ whatever was drawn by the preceding screens.
 
     (set-game-screen! main-screen text-screen)"
   [& game-screens]
-  (->> (conj (vec game-screens) screens/overlay-screen)
-       (apply set-screen! screens/nightmod)
-       on-gl))
+  (on-gl ; clear existing assets so they are reloaded
+         (doseq [gs game-screens]
+           (-> gs :screen (swap! #(dissoc % :renderer :layers))))
+         (asset-manager! manager/manager :clear)
+         ; set the supplied screen(s) with the overlay screen added at the end
+         (apply set-screen!
+                screens/nightmod
+                (conj (vec game-screens) screens/overlay-screen))))
 
 (defn restart-game!
   "Causes the core.clj file to be run again."
