@@ -328,7 +328,7 @@ That should print out a vector with a single map inside of it. Now try moving yo
 
 `(-> main-screen :entities (swap! #(vector (assoc (first %) :x 200 :y 200))))`
 
-## Building a standalone game
+## Building a Standalone Game
 
 Follow these steps to build a standalone version of your Nightmod game for desktop OSes (Windows, OS X, and Linux) and mobile OSes (Android and iOS):
 
