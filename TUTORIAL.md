@@ -1,5 +1,35 @@
 ## Getting Started
 
+### Downloading, building and running
+
+Clone the source from github:
+
+    simon@fletcher:~/workspace$ git clone https://github.com/oakes/Nightmod.git
+    Cloning into 'Nightmod'...
+    remote: Reusing existing pack: 2285, done.
+    remote: Counting objects: 126, done.
+    remote: Compressing objects: 100% (113/113), done.
+    remote: Total 2411 (delta 52), reused 0 (delta 0)
+    Receiving objects: 100% (2411/2411), 4.54 MiB | 925.00 KiB/s, done.
+    Resolving deltas: 100% (1285/1285), done.
+    Checking connectivity... done.
+
+Connect to the directory:
+
+    cd Nightmod
+    
+Build it as a single JAR file:
+
+    lein uberjar
+
+Run is as a jar file:
+
+    java - jar target/nightmod-0.1.1-SNAPSHOT-standalone.jar 
+
+Note that your operating system will probably also support running the jar by selecting it in a file browser, or by other means. You will probably want to write a small launcher script, so that you can integrate it into your menus.
+
+### After NightMod starts
+
 After downloading and running [Nightmod](https://nightmod.net/), you'll see a screen listing several different types of games. Let's start off with the simplest one, Barebones 2D. After clicking it and giving it a name, you should see a screen saying "Hello world!" at the bottom. Now click the button at the top that looks like a grid, and you'll see a file grid appear that contains "core.clj". Click that to open the file in the built-in editor.
 
 ## Game Structure
