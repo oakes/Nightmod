@@ -160,15 +160,16 @@
 
 (defn home!
   []
-  (s/invoke-later
-    (editors/remove-editors! @u/project-dir)
-    (reset! ui/tree-selection nil)
-    (u/toggle-editor! false))
-  (on-gl
-    (asset-manager! manager :clear)
-    (set-screen! nightmod main-screen)
-    (set-cursor-image! nil)
-    (manager/clean!)))
+  (when @ui/tree-selection
+    (s/invoke-later
+      (editors/remove-editors! @u/project-dir)
+      (reset! ui/tree-selection nil)
+      (u/toggle-editor! false))
+    (on-gl
+      (asset-manager! manager :clear)
+      (set-screen! nightmod main-screen)
+      (set-cursor-image! nil)
+      (manager/clean!))))
 
 (defn restart!
   []
