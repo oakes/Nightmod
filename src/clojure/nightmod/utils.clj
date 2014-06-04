@@ -24,7 +24,7 @@
 (def main-dir (atom nil))
 (def project-dir (atom nil))
 (def error (atom nil))
-(def out (atom ""))
+(def out (atom nil))
 (def stack-trace? (atom false))
 (def editor (atom nil))
 
