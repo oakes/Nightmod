@@ -327,3 +327,13 @@ The REPL view can be displayed by clicking the > button. This is particularly us
 That should print out a vector with a single map inside of it. Now try moving your image and then run the command again. The `:x` and `:y` values should now be updated. You're looking at your game in real-time! Lastly, let's try moving the entity from the REPL:
 
 `(-> main-screen :entities (swap! #(vector (assoc (first %) :x 200 :y 200))))`
+
+## Building a standalone game
+
+Follow these steps to build a standalone version of your Nightmod game for desktop OSes (Windows, OS X, and Linux) and mobile OSes (Android and iOS):
+
+* Download [Nightcode](https://nightcode.info/) and create a new game project by clicking "New Project", providing a name, and choosing the "Game" option.
+* Copy all the files from your Nightmod game to the `desktop/resources` folder in your Nightcode project. If you don't know where your Nightmod game files are stored, you can find them by clicking the "Open in File Browser" button in Nightmod's file pane.
+* Replace `desktop/src-common/.../core.clj` with [this one](https://gist.github.com/oakes/20e11ede32df6168e6ed).
+* In your new core.clj file, replace every instance of "my-game" with whatever name you provided to Nightcode.
+* You can try it out by clicking "Run" in Nightcode, and build a jar file with "Build". See the bottom of the [play-clj tutorial](https://github.com/oakes/play-clj/blob/master/TUTORIAL.md) for directions on building Android/iOS versions. If you get stuck, try asking a question on [/r/playclj](http://www.reddit.com/r/playclj/).
