@@ -83,11 +83,10 @@
     (try
       (jvm/jvm-sandbox func context)
       (catch Exception e
-        (when (nil? @u/error)
-          (reset! u/error
-                  {:message (some->> (:name (meta func))
-                                     (format (nc-utils/get-string :error-in)))
-                   :exception e}))
+        (reset! u/error
+                {:message (some->> (:name (meta func))
+                                   (format (nc-utils/get-string :error-in)))
+                 :exception e})
         nil)
       (finally (u/set-out! (str *out*) false)))))
 
