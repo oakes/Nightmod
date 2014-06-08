@@ -72,9 +72,11 @@
         (sb {#'*out* writer})
         (try
           (catch Exception e
-            (reset! u/error
-                    {:message (nc-utils/get-string :error-load)
-                     :exception e}))
+            (when-not @u/error
+              (reset! u/error
+                      {:message (nc-utils/get-string :error-load)
+                       :exception e}))
+            (on-gl (screens/go-to-blank-screen!)))
           (finally (u/set-out! (str writer) true))))))
 
 (defn run-in-sandbox!
@@ -83,11 +85,12 @@
     (try
       (jvm/jvm-sandbox func context)
       (catch Exception e
-        (reset! u/error
-                {:message (some->> (:name (meta func))
-                                   (format (nc-utils/get-string :error-in)))
-                 :exception e})
-        nil)
+        (when-not @u/error
+          (reset! u/error
+                  {:message (some->> (:name (meta func))
+                                     (format (nc-utils/get-string :error-in)))
+                   :exception e}))
+        (screens/go-to-blank-screen!))
       (finally (u/set-out! (str *out*) false)))))
 
 ; set namespaces we want to provide completions for

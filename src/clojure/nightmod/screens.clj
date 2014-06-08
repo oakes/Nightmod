@@ -134,6 +134,10 @@
   (doseq [a (actor! entity :get-children)]
     (actor! a :set-visible show?)))
 
+(defn go-to-blank-screen!
+  []
+  (set-screen! nightmod blank-screen overlay-screen))
+
 ; tiles on the main screen
 
 (defn load-project!
@@ -442,9 +446,3 @@
     @init-bullet
     ; show the main screen
     (set-screen! this main-screen)))
-
-(add-watch u/error
-           :show-error
-           (fn [_ _ _ e]
-             (when e
-               (on-gl (set-screen! nightmod blank-screen overlay-screen)))))
