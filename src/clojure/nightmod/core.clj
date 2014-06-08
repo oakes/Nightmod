@@ -51,7 +51,7 @@
                                                 :focusable? (u/canvas-focus?))
                             BorderLayout/CENTER)))
     ; set various window properties
-    window/enable-full-screen!
+    ;window/enable-full-screen!
     window/add-listener!))
 
 (defn -main
