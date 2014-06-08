@@ -15,9 +15,10 @@ whatever was drawn by the preceding screens.
 
     (set-game-screen! main-screen text-screen)"
   [& game-screens]
-  (on-gl ; clear existing assets
-         (doseq [gs game-screens]
-           (-> gs :screen (swap! #(dissoc % :renderer :layers))))
+  ; remove renderers and layers so map assets can be cleared
+  (doseq [gs game-screens]
+    (-> gs :screen (swap! #(dissoc % :renderer :layers))))
+  (on-gl ; clear all assets
          (asset-manager! manager/manager :clear)
          ; set the supplied screen(s) with the overlay screen added at the end
          (apply set-screen!
