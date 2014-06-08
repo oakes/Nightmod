@@ -143,7 +143,7 @@
 (defn load-project!
   [path]
   (on-gl (set-cursor-image! nil)
-         (set-screen! nightmod blank-screen overlay-screen))
+         (go-to-blank-screen!))
   ; save in project-dir so the asset loading and reset button works
   (reset! u/project-dir path)
   ; save in tree-projects so the up button is hidden correctly
