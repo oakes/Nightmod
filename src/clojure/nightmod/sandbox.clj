@@ -76,7 +76,7 @@
               (reset! u/error
                       {:message (nc-utils/get-string :error-load)
                        :exception e}))
-            (on-gl (screens/go-to-blank-screen!)))
+            (on-gl (screens/set-blank-screen!)))
           (finally (u/set-out! (str writer) true))))))
 
 (defn run-in-sandbox!
@@ -90,7 +90,7 @@
                   {:message (some->> (:name (meta func))
                                      (format (nc-utils/get-string :error-in)))
                    :exception e}))
-        (screens/go-to-blank-screen!))
+        (screens/set-blank-screen!))
       (finally (u/set-out! (str *out*) false)))))
 
 ; set namespaces we want to provide completions for

@@ -134,7 +134,7 @@
   (doseq [a (actor! entity :get-children)]
     (actor! a :set-visible show?)))
 
-(defn go-to-blank-screen!
+(defn set-blank-screen!
   []
   (set-screen! nightmod blank-screen overlay-screen))
 
@@ -143,7 +143,7 @@
 (defn load-project!
   [path]
   (on-gl (set-cursor-image! nil)
-         (go-to-blank-screen!))
+         (set-blank-screen!))
   ; save in project-dir so the asset loading and reset button works
   (reset! u/project-dir path)
   ; save in tree-projects so the up button is hidden correctly
