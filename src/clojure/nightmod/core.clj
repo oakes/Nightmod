@@ -1,5 +1,6 @@
 (ns nightmod.core
   (:require [clojure.java.io :as io]
+            [nightcode.cli-args :as cli-args]
             [nightcode.editors :as editors]
             [nightcode.sandbox :as nc-sandbox]
             [nightcode.shortcuts :as shortcuts]
@@ -58,7 +59,7 @@
   "Launches the main window."
   [& args]
   (window/set-icon! "logo_launcher.png")
-  (window/set-theme! args)
+  (window/set-theme! (cli-args/parse-args args))
   (nc-sandbox/set-home!)
   (sandbox/set-policy!)
   (add-watch u/project-dir :load-game (fn [_ _ _ path]
