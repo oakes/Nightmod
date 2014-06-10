@@ -16,8 +16,8 @@ whatever was drawn by the preceding screens.
 
     (set-game-screen! main-screen text-screen)"
   [& game-screens]
-  (on-gl ; clear all assets
-         (try
+  (on-gl (try
+           ; clear all assets
            (doseq [gs game-screens]
              (-> gs :screen (swap! #(dissoc % :renderer :layers))))
            (asset-manager! manager/manager :clear)
@@ -25,6 +25,7 @@ whatever was drawn by the preceding screens.
            (apply set-screen!
                   screens/nightmod
                   (conj (vec game-screens) screens/overlay-screen))
+           ; display error
            (catch Exception e
              (when-not @u/error
                (reset! u/error
