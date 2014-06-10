@@ -1,6 +1,7 @@
 (ns nightmod.game
   (:require [clojail.core :as jail]
             [clojure.java.io :as io]
+            [nightcode.utils :as nc-utils]
             [nightmod.manager :as manager]
             [nightmod.screens :as screens]
             [nightmod.utils :as u]
@@ -15,15 +16,21 @@ whatever was drawn by the preceding screens.
 
     (set-game-screen! main-screen text-screen)"
   [& game-screens]
-  ; remove renderers and layers so map assets can be cleared
-  (doseq [gs game-screens]
-    (-> gs :screen (swap! #(dissoc % :renderer :layers))))
   (on-gl ; clear all assets
-         (asset-manager! manager/manager :clear)
-         ; set the supplied screen(s) with the overlay screen added at the end
-         (apply set-screen!
-                screens/nightmod
-                (conj (vec game-screens) screens/overlay-screen))))
+         (try
+           (doseq [gs game-screens]
+             (-> gs :screen (swap! #(dissoc % :renderer :layers))))
+           (asset-manager! manager/manager :clear)
+           ; set the supplied screen(s) with the overlay screen added at the end
+           (apply set-screen!
+                  screens/nightmod
+                  (conj (vec game-screens) screens/overlay-screen))
+           (catch Exception e
+             (when-not @u/error
+               (reset! u/error
+                       {:message (nc-utils/get-string :error-load)
+                        :exception e}))
+             (screens/set-blank-screen!)))))
 
 (defn restart-game!
   "Causes the core.clj file to be run again."
