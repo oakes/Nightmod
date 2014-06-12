@@ -222,13 +222,13 @@ At some point, you will need to do more than simple positioning and sizing. For 
 In play-clj, many different calls, such as `texture`, are actually macros that allow you to call the underlying Java methods after the required argument(s). In this case, the underlying class is called [TextureRegion](http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/graphics/g2d/TextureRegion.html). Consider this:
 
 ```clojure
-    (texture "clojure.png" :flip true false)
+    (texture "Clojure-icon.gif" :flip true false)
 ```
 
 ...which is transformed into:
 
 ```clojure
-    (let [entity (texture "clojure.png")]
+    (let [entity (texture "Clojure-icon.gif")]
       (doto ^TextureRegion (:object entity)
         (.flip true false))
       entity)
@@ -237,7 +237,7 @@ In play-clj, many different calls, such as `texture`, are actually macros that a
 You can even call multiple methods in the same expression this way. For example:
 
 ```clojure
-    (texture "clojure.png"
+    (texture "Clojure-icon.gif"
              :flip true false
              :set-region 0 0 100 100)
 ```
@@ -245,7 +245,7 @@ You can even call multiple methods in the same expression this way. For example:
 ...which is transformed into:
 
 ```clojure
-    (let [entity (texture "clojure.png")]
+    (let [entity (texture "Clojure-icon.gif")]
       (doto ^TextureRegion (:object entity)
         (.flip true false)
         (.setRegion 0 0 100 100)
