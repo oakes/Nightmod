@@ -18,12 +18,12 @@ Instead, play-clj stores the entities vector behind the scenes and passes it to 
 
 ## Loading a Texture
 
-Now let's find an image to use as a texture in the game. Find one you'd like to use, such as [this Clojure logo](http://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Clojure_Programming_Language_Logo_Icon_SVG.svg/200px-Clojure_Programming_Language_Logo_Icon_SVG.svg.png), and save it to your project's folder. You can find this folder by going back to the file grid (click the ↑ arrow button) and clicking "Open in File Browser", which should bring up the correct folder so you can copy the image into it. If you succeeded, you'll see it appear in the file grid, and you can go back to the "core.clj" file.
+Now let's find an image to use as a texture in the game. Find one you'd like to use, such as [this Clojure logo](http://upload.wikimedia.org/wikipedia/commons/c/c5/Clojure-icon.gif), and save it to your project's folder. You can find this folder by going back to the file grid (click the ↑ arrow button) and clicking "Open in File Browser", which should bring up the correct folder so you can copy the image into it. If you succeeded, you'll see it appear in the file grid, and you can go back to the "core.clj" file.
 
 Next, simply change the line where the label entity is being created, so it creates a texture from that file instead:
 
 ```clojure
-    (texture "clojure.png")
+    (texture "Clojure-icon.gif")
 ```
 
 ## Size and Position
@@ -37,14 +37,14 @@ If you run the code now, you'll see the image in the bottom-left corner. As ment
 A `texture` contains the underlying Java object. By default, it will be drawn at the bottom-left corner with the size of the image itself. You can change the position and size by simply using `assoc`:
 
 ```clojure
-    (assoc (texture "clojure.png")
+    (assoc (texture "Clojure-icon.gif")
            :x 50 :y 50 :width 100 :height 100)
 ```
 
 You can also set scaling and rotation on a texture using :scale-x, :scale-y, and :angle, which all use (:origin-x, :origin-y) as the center. For example, here we rotate it 45 degrees counter-clockwise around the bottom-left corner:
 
 ```clojure
-    (assoc (texture "clojure.png")
+    (assoc (texture "Clojure-icon.gif")
            :x 50 :y 50 :width 100 :height 100
            :angle 45 :origin-x 0 :origin-y 0)
 ```
