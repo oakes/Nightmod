@@ -3,7 +3,7 @@
 &#40;render-sorted! screen #&#40;sort-by :y %&#41; &#91;&quot;walls&quot;&#93; entities&#41;
 </pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn render-sorted!
   ([screen layer-names entities]
-    (render-sorted! sort-by-y screen layer-names entities))
+    (render-sorted! screen sort-by-y layer-names entities))
   ([{:keys [^BatchTiledMapRenderer renderer
             ^Camera camera
             update-fn!]

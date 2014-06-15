@@ -2,6 +2,19 @@
 &#40;set-game-screen! main-screen text-screen&#41;
 </pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn set-game-screen!
   [& game-screens]
-  (->> (conj (vec game-screens) screens/overlay-screen)
-       (apply set-screen! screens/nightmod)
-       on-gl))</pre></div></div></div></body></html>
+  (on-gl (try
+           ; clear all assets
+           (doseq [gs game-screens]
+             (-> gs :screen (swap! #(dissoc % :renderer :layers))))
+           (asset-manager! manager/manager :clear)
+           ; set the supplied screen(s) with the overlay screen added at the end
+           (apply set-screen!
+                  screens/nightmod
+                  (conj (vec game-screens) screens/overlay-screen))
+           ; display error
+           (catch Exception e
+             (when-not @u/error
+               (reset! u/error
+                       {:message (nc-utils/get-string :error-load)
+                        :exception e}))
+             (screens/set-blank-screen!)))))</pre></div></div></div></body></html>
