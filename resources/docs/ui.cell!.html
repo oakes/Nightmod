@@ -1,4 +1,4 @@
-<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(cell! cell & args)</div><div class="c-doc"><p>Calls a single method on a <a href='https://github.com/libgdx/libgdx/blob/master/gdx/src/com/esotericsoftware/tablelayout/Cell.java'>Cell</a>.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn cell!
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(cell! cell & args)</div><div class="c-doc"><p>Calls methods on a <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/scenes/scene2d/ui/Cell.html'>Cell</a>.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn cell!
   [^Cell cell & args]
   (let [method (first args)
         [[a1 a2 a3 a4] rest-args] (split-with #(not (keyword? %)) (rest args))]
