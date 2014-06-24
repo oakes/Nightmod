@@ -24,12 +24,12 @@
           TextureRegion.)
       (isa? (type arg) Pixmap)
       (-> ^Pixmap arg Texture. TextureRegion.)
-      (isa? (type arg) TextureRegion)
-      arg
+      (isa? (type arg) Texture)
+      (-> ^Texture arg TextureRegion.)
       (isa? (type arg) TextureEntity)
-      (TextureRegion. ^TextureRegion (:object arg))
+      (-> ^TextureRegion (:object arg) TextureRegion.)
       :else
-      (TextureRegion. arg))))</pre><pre>(defmacro texture
+      arg)))</pre><pre>(defmacro texture
   [arg & options]
   `(let [entity# (texture* ~arg)]
      (u/calls! ^TextureRegion (u/get-obj entity# :object) ~@options)
