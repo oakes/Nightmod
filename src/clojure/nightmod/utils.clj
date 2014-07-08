@@ -9,8 +9,7 @@
             [nightmod.input :as input]
             [seesaw.core :as s])
   (:import [java.awt BorderLayout KeyboardFocusManager]
-           [java.text SimpleDateFormat]
-           [javax.swing JDialog]))
+           [java.text SimpleDateFormat]))
 
 (def ^:const window-width 1200)
 (def ^:const window-height 768)
@@ -41,13 +40,9 @@
 
 (defn new-project-name!
   [template]
-  (when-not (-> (KeyboardFocusManager/getCurrentKeyboardFocusManager)
-                .getFocusedWindow
-                type
-                (isa? JDialog))
-    (dialogs/show-text-field-dialog!
-      (nc-utils/get-string :enter-project-name)
-      (nc-utils/get-string template))))
+  (dialogs/show-text-field-dialog!
+    (nc-utils/get-string :enter-project-name)
+    (nc-utils/get-string template)))
 
 (defn new-project-dir!
   [project-name]
