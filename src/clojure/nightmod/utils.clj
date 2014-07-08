@@ -33,10 +33,6 @@
   []
   (.getCanonicalPath (io/file (System/getProperty "user.home") "Nightmod")))
 
-(defn format-date
-  [unix-time]
-  (.format (SimpleDateFormat. "yyyy.MM.dd HH:mm:ss") unix-time))
-
 (defn format-project-dir
   [project-name]
   (-> project-name
