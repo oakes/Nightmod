@@ -371,7 +371,8 @@
              (scroll-pane (style :scroll-pane nil nil nil nil nil))
              (assoc :id :text :x pad-small :y (+ text-height (* 2 pad-small))))
          (-> [(check-box (nc-utils/get-string :stack-trace) ui-skin
-                         :set-name "stack-trace")
+                         :set-name "stack-trace"
+                         :set-checked @u/stack-trace?)
               (text-button (nc-utils/get-string :copy) ui-skin
                            :set-name "copy")]
              (horizontal :space (* 2 pad-small) :pack)
