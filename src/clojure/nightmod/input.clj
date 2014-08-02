@@ -14,7 +14,7 @@
   (KeyCodeConverter/translateFromAWT key))
 
 (defn awt->libgdx
-  "Translates key code from AWT to LibGDX."
+  "Translates key code from AWT to libGDX."
   [key]
   (LwjglInput/getGdxKeyCode (awt->lwjgl key)))
 
@@ -51,14 +51,14 @@
           (if (contains? meta-keys (.getKeyCode e))
             (clear-key-buffer! key-buf)
             (.put key-buf (awt->lwjgl (.getKeyCode e)) (byte 0)))
-          ; pass the event to LibGDX
+          ; pass the event to libGDX
           (-> game
               .getInput
               .getInputProcessor
               (.keyUp (awt->libgdx (.getKeyCode e)))
               play-clj/on-gl))
         (keyTyped [this e]
-          ; pass the event to LibGDX
+          ; pass the event to libGDX
           (-> game
               .getInput
               .getInputProcessor
@@ -68,7 +68,7 @@
           ; add to the LWJGL key buffer
           (.set impl-field nil impl)
           (.put key-buf (awt->lwjgl (.getKeyCode e)) (byte 1))
-          ; pass the event to LibGDX
+          ; pass the event to libGDX
           (-> game
               .getInput
               .getInputProcessor
