@@ -1,22 +1,22 @@
-(def ^:const vertical-tiles 6)
-(def ^:const pixels-per-tile 64)
-(def ^:const duration 0.2)
-(def ^:const damping 0.5)
-(def ^:const deceleration 0.9)
-(def ^:const map-width 25)
-(def ^:const map-height 25)
-(def ^:const aggro-distance 2)
-(def ^:const attack-distance 0.25)
-(def ^:const grid-tile-size 256)
+(def vertical-tiles 6)
+(def pixels-per-tile 64)
+(def duration 0.2)
+(def damping 0.5)
+(def deceleration 0.9)
+(def map-width 25)
+(def map-height 25)
+(def aggro-distance 2)
+(def attack-distance 0.25)
+(def grid-tile-size 256)
 
-(def ^:const directions [:w :nw :n :ne
-                         :e :se :s :sw])
-(def ^:const velocities [[-1 0] [-1 1] [0 1] [1 1]
-                         [1 0] [1 -1] [0 -1] [-1 -1]])
+(def directions [:w :nw :n :ne
+                 :e :se :s :sw])
+(def velocities [[-1 0] [-1 1] [0 1] [1 1]
+                 [1 0] [1 -1] [0 -1] [-1 -1]])
 
-(def ^:const bar-w 20)
-(def ^:const bar-h 80)
-(def ^:const npc-bar-h 0.1)
+(def bar-w 20)
+(def bar-h 80)
+(def npc-bar-h 0.1)
 
 (defn entity-rect
   [entity min-distance]

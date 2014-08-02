@@ -1,10 +1,10 @@
-(def ^:const vertical-tiles 20)
-(def ^:const duration 0.15)
-(def ^:const damping 0.5)
-(def ^:const max-velocity 14)
-(def ^:const max-jump-velocity (* max-velocity 4))
-(def ^:const deceleration 0.9)
-(def ^:const gravity -2.5)
+(def vertical-tiles 20)
+(def duration 0.15)
+(def damping 0.5)
+(def max-velocity 14)
+(def max-jump-velocity (* max-velocity 4))
+(def deceleration 0.9)
+(def gravity -2.5)
 
 (defn decelerate
   [velocity]
