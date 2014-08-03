@@ -59,6 +59,7 @@
                                 '[play-clj.g3d :refer :all]
                                 '[play-clj.math :refer :all]
                                 '[play-clj.physics :refer :all]
+                                '[play-clj.repl :refer :all]
                                 '[play-clj.ui :refer :all])))
 
 (defn run-file!
@@ -103,6 +104,7 @@
          'play-clj.g3d
          'play-clj.math
          'play-clj.physics
+         'play-clj.repl
          'play-clj.ui])
 
 ; set function that prevents blacklisted symbols from being in completions
