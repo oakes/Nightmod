@@ -115,8 +115,8 @@
 
 (defn attack-player
   [entities]
-  (if-let [npc (some #(if (npc-attacker? % (find-first :player? entities)) %)
-                     entities)]
+  (if-let [npc (find-first #(npc-attacker? % (find-first :player? entities))
+                           entities)]
     (attack entities npc)
     entities))
 
