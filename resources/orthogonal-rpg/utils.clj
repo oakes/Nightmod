@@ -59,10 +59,6 @@
       0
       velocity)))
 
-(defn get-player
-  [entities]
-  (some #(if (:player? %) %) entities))
-
 (defn touched?
   [key]
   (and (game :touched?)
@@ -100,7 +96,7 @@
 
 (defn get-npc-velocity
   [entities entity]
-  (let [player (get-player entities)]
+  (let [player (find-first :player? entities)]
     (if (and player (near-entity? entity player aggro-distance))
       (get-npc-aggro-velocity entity player)
       (if (= (:attack-time entity) 0)
@@ -121,7 +117,3 @@
     (not= (:y-velocity entity) 0) (if (> (:y-velocity entity) 0) :up :down)
     (not= (:x-velocity entity) 0) (if (> (:x-velocity entity) 0) :right :left)
     :else nil))
-
-(defn find-id
-  [entities id]
-  (some #(if (= id (:id %)) %) entities))

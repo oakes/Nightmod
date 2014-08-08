@@ -36,7 +36,7 @@
   :on-render
   (fn [screen entities]
     (clear!)
-    (let [me (get-player entities)]
+    (let [me (find-first :player? entities)]
       ; update health bars
       (->> (get-entity-at-cursor screen entities (game :x) (game :y))
            (run! npc-health-screen :on-update-health-bar :entity))
@@ -62,7 +62,7 @@
   :on-touch-down
   (fn [screen entities]
     (when (= (:button screen) (button-code :right))
-      (let [me (get-player entities)
+      (let [me (find-first :player? entities)
             x (:input-x screen)
             y (:input-y screen)
             victim (get-entity-at-cursor screen entities x y)

@@ -50,7 +50,7 @@
   
   :on-key-down
   (fn [screen entities]
-    (when-let [player (get-player entities)]
+    (when-let [player (find-first :player? entities)]
       (when (= (:key screen) (key-code :space))
         (print " ")
         (attack entities player))))
@@ -58,7 +58,7 @@
   :on-touch-down
   (fn [screen entities]
     (let [pos (input->screen screen (:input-x screen) (:input-y screen))]
-      (when-let [player (get-player entities)]
+      (when-let [player (find-first :player? entities)]
         (let [min-x (/ (width screen) 3)
               max-x (* (width screen) (/ 2 3))
               min-y (/ (height screen) 3)
