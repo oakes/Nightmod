@@ -13,7 +13,7 @@
                   :classifier "natives-desktop"]
                  [com.badlogicgames.gdx/gdx-platform "1.2.0"
                   :classifier "natives-desktop"]
-                 [nightcode "0.3.8.1"
+                 [nightcode "0.3.9"
                   :exclusions [leiningen
                                lein-ancient
                                lein-cljsbuild
@@ -24,7 +24,7 @@
                                play-clj/lein-template]]
                  [org.clojars.oakes/clojail "1.0.6"]
                  [org.clojure/clojure "1.6.0"]
-                 [play-clj "0.3.9-SNAPSHOT"]
+                 [play-clj "0.3.9"]
                  [seesaw "1.4.4"]]
   :uberjar-exclusions [#"clojure-clr.*\.zip"]
   :resource-paths ["resources"]
