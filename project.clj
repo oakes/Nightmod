@@ -3,15 +3,15 @@
   :url "https://github.com/oakes/Nightmod"
   :license {:name "Public Domain"
             :url "http://unlicense.org/UNLICENSE"}
-  :dependencies [[com.badlogicgames.gdx/gdx "1.2.0"]
-                 [com.badlogicgames.gdx/gdx-backend-lwjgl "1.2.0"]
-                 [com.badlogicgames.gdx/gdx-box2d "1.2.0"]
-                 [com.badlogicgames.gdx/gdx-box2d-platform "1.2.0"
+  :dependencies [[com.badlogicgames.gdx/gdx "1.3.0"]
+                 [com.badlogicgames.gdx/gdx-backend-lwjgl "1.3.0"]
+                 [com.badlogicgames.gdx/gdx-box2d "1.3.0"]
+                 [com.badlogicgames.gdx/gdx-box2d-platform "1.3.0"
                   :classifier "natives-desktop"]
-                 [com.badlogicgames.gdx/gdx-bullet "1.2.0"]
-                 [com.badlogicgames.gdx/gdx-bullet-platform "1.2.0"
+                 [com.badlogicgames.gdx/gdx-bullet "1.3.0"]
+                 [com.badlogicgames.gdx/gdx-bullet-platform "1.3.0"
                   :classifier "natives-desktop"]
-                 [com.badlogicgames.gdx/gdx-platform "1.2.0"
+                 [com.badlogicgames.gdx/gdx-platform "1.3.0"
                   :classifier "natives-desktop"]
                  [nightcode "0.3.9"
                   :exclusions [leiningen
