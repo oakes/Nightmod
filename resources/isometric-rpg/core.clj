@@ -49,7 +49,7 @@
                        (animate screen)
                        (prevent-move screen entities)
                        (adjust screen))))
-           (attack screen (some #(if (can-attack? % me) %) entities) me)
+           (attack screen (find-first #(can-attack? % me) entities) me)
            (play-sounds!)
            (render! screen)
            (render-sorted! screen ["things"])
