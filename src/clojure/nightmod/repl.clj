@@ -44,6 +44,7 @@
   []
   (let [console (editors/create-console u/repl-name)
         run! (fn [& _]
+               (.setText (.getTextArea console) "")
                (run-repl! (ui/get-io! console))
                (s/request-focus! (.getTextArea console)))
         actions {:restart run!}
