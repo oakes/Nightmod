@@ -167,7 +167,3 @@
                 (and npc? (> health 0))
                 (when entity)))
           entities)))
-
-(defn sort-entities
-  [entities]
-  (sort-by :y #(compare %2 %1) entities))

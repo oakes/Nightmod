@@ -52,7 +52,7 @@
            (attack screen (some #(if (can-attack? % me) %) entities) me)
            (play-sounds!)
            (render! screen)
-           (render-sorted! screen sort-entities ["things"])
+           (render-sorted! screen ["things"])
            (update-screen! screen))))
 
   :on-resize
