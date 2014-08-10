@@ -1,0 +1,11 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(e! filter-fn screen-object & args)</div><div class="c-doc"><p>Associates values to the entities in <code>screen-object</code> that match the supplied function. Returns the entities that were changed.</p><pre>
+&#40;e! :player? main-screen :health 10&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn e!
+  [filter-fn screen-object & args]
+  (swap! (:entities screen-object)
+         (fn [entities]
+           (vec (for [e entities]
+                  (if (filter-fn e)
+                    (apply assoc e args)
+                    e)))))
+  (e filter-fn screen-object))</pre></div></div></div></body></html>

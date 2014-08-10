@@ -6,11 +6,10 @@
   ([screen layer]
     (if (isa? (type layer) MapLayer)
         layer
-        (->> ^BatchTiledMapRenderer (u/get-obj screen :renderer)
-             .getMap
-             .getLayers
-             (drop-while #(not= layer (.getName ^MapLayer %)))
-             first))))</pre><pre>(defmacro tiled-map-layer
+        (-> ^BatchTiledMapRenderer (u/get-obj screen :renderer)
+            .getMap
+            .getLayers
+            (.get layer)))))</pre><pre>(defmacro tiled-map-layer
   [screen layer & options]
   `(let [^TiledMapTileLayer object# (tiled-map-layer* ~screen ~layer)]
      (u/calls! object# ~@options)))</pre></div></div></div></body></html>

@@ -1,0 +1,8 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(e screen-object)</div><div class="c-head">(e filter-fn screen-object)</div><div class="c-doc"><p>Returns the entities in <code>screen-object</code>, optionally filtered by a supplied function.</p><pre>
+&#40;e :player? main-screen&#41;
+&#40;e texture? main-screen&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn e
+  ([screen-object]
+    (-> screen-object :entities deref))
+  ([filter-fn screen-object]
+    (vec (filter filter-fn (e screen-object)))))</pre></div></div></div></body></html>

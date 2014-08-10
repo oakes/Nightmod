@@ -1,0 +1,5 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(s! screen-object & args)</div><div class="c-doc"><p>Associates values to the screen map in <code>screen-object</code>. Returns the new screen map.</p><pre>
+&#40;s! main-screen :camera &#40;orthographic&#41;&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn s!
+  [screen-object & args]
+  (apply swap! (:screen screen-object) assoc args))</pre></div></div></div></body></html>

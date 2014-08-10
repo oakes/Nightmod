@@ -1,0 +1,6 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(find-first match-fn entities)</div><div class="c-doc"><p>Returns the first entity in <code>entities</code> for which <code>match-fn</code> returns true.</p><pre>
+&#40;find-first :player? entities&#41;
+&#40;find-first #&#40;= :menu &#40;:id %&#41;&#41; entities&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn find-first
+  [match-fn entities]
+  (some #(when (match-fn %) %) entities))</pre></div></div></div></body></html>
