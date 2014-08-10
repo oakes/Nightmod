@@ -22,9 +22,7 @@
                    edn/read-string
                    (remove blacklisted?)))
 
-(def doc-map (into {} (map #(vector (:name %) (:file %)) doc-list)))
-
-(def ns-list (vec (group-by :ns doc-list)))
+(def ns-list (vec (into (sorted-map) (group-by :ns doc-list))))
 
 (defn update-content!
   [node]
