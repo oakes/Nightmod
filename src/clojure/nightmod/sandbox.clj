@@ -24,7 +24,7 @@
      System/out System/in System/err
      defscreen* defgame* defgame set-screen! setScreen set-screen-wrapper!
      app! app on-gl pref! screenshot!
-     asset-manager* asset-manager set-asset-manager!})
+     asset-manager* asset-manager asset-manager! set-asset-manager!})
 
 (def tester
   [(jail-test/blacklist-objects
