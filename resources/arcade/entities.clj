@@ -1,29 +1,29 @@
 (defn touching?
+  "Returns true if the entities are touching each other."
   [e1 e2]
-  ; figure out whether the given entities overlap each other
   (rectangle! (rectangle (:x e1) (:y e1) (:width e1) (:height e1))
               :overlaps
               (rectangle (:x e2) (:y e2) (:width e2) (:height e2))))
 
 (defn touching-entities
+  "Returns the entities that are touching the given entity."
   [entity entities]
-  ; return the entities that the entity is touching, or nil if none is found
-  (filter (fn [e] (touching? entity e)) entities))
+  (filter #(touching? entity %) entities))
 
 (defn remove-enemy?
+  "Returns true if the player or a missle is touching the given entity."
   [entity entities]
-  ; return the first player or missile touching this entity
   (or (some :player? (touching-entities entity entities))
       (some :missile? (touching-entities entity entities))))
 
 (defn remove-missile?
+  "Returns true if an enemy is touching the given entity."
   [entity entities]
-  ; return the first enemy touching this entity
   (some :enemy? (touching-entities entity entities)))
 
 (defn create-missile
+  "Returns a missile at the same x position as the mouse."
   []
-  ; create a circle shape and set its x position to where the mouse is
   (assoc (shape :filled
                 :set-color (color :blue)
                 :circle 0 0 10)
@@ -34,16 +34,16 @@
          :height 10))
 
 (defn move-missiles
+  "Moves the missiles up."
   [entities]
-  ; move the missiles up
   (for [e entities]
     (if (:missile? e)
       (assoc e :y (+ (:y e) 5))
       e)))
 
 (defn remove-missiles
+  "Marks missiles for removal if they are too high or are touching an enemy."
   [entities]
-  ; mark missiles for removal if they are too high or are touching an enemy
   (for [e entities]
     (if (and (:missile? e)
              (or (> (:y e) (game :height))
@@ -52,6 +52,7 @@
       e)))
 
 (defn create-enemy
+  "Returns an enemy at a random position."
   []
   (assoc (texture "enemy.png")
          :enemy? true
@@ -61,17 +62,17 @@
          :height 64))
 
 (defn move-enemies
+  "Moves the enemies down."
   [entities]
-  ; move the enemies down
   (for [e entities]
     (if (:enemy? e)
       (assoc e :y (- (:y e) 3))
       e)))
 
 (defn remove-enemies
+  "Marks enemies for removal if they are too low or are touching a missile or
+player."
   [entities]
-  ; mark enemies for removal if they are too low
-  ; or are touching a missile/player
   (for [e entities]
     (if (and (:enemy? e)
              (or (< (:y e) 0)

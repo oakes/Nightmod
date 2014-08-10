@@ -21,7 +21,6 @@
   :on-show
   (fn [screen entities]
     (update! screen :renderer (stage) :camera (orthographic))
-    ; set a timer to spawn an enemy every 2 seconds
     (add-timer! screen :spawn-enemy 0 2)
     (assoc (texture "player.png")
            :player? true
@@ -48,8 +47,6 @@
   
   :on-mouse-moved
   (fn [screen entities]
-    ; set the player's x position to the mouse position,
-    ; minus half of the player's width
     (for [e entities]
       (if (:player? e)
         (assoc e :x (- (:input-x screen)
