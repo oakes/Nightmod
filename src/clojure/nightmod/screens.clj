@@ -2,6 +2,7 @@
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.string :as string]
+            [nightcode.dialogs :as dialogs]
             [nightcode.editors :as editors]
             [nightcode.file-browser :as file-browser]
             [nightcode.shortcuts :as shortcuts]
@@ -166,14 +167,17 @@
   []
   (when @ui/tree-selection
     (s/invoke-later
-      (editors/remove-editors! @u/project-dir)
-      (reset! ui/tree-selection nil)
-      (u/toggle-editor! false))
-    (on-gl
-      (asset-manager! manager :clear)
-      (set-screen! nightmod main-screen)
-      (set-cursor-image! nil)
-      (manager/clean!))))
+      (let [unsaved-paths (editors/unsaved-paths)]
+        (when (or (= 0 (count unsaved-paths))
+                  (dialogs/show-close-file-dialog! unsaved-paths))
+          (editors/remove-editors! @u/project-dir)
+          (reset! ui/tree-selection nil)
+          (u/toggle-editor! false)
+          (on-gl
+            (asset-manager! manager :clear)
+            (set-screen! nightmod main-screen)
+            (set-cursor-image! nil)
+            (manager/clean!)))))))
 
 (defn restart!
   []
