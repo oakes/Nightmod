@@ -374,13 +374,6 @@
                     :set-alignment (bit-or (align :left) (align :bottom)))
              (scroll-pane (style :scroll-pane nil nil nil nil nil))
              (assoc :id :text :x pad-small :y (+ text-height (* 2 pad-small))))
-         (-> [(check-box (nc-utils/get-string :stack-trace) ui-skin
-                         :set-name "stack-trace"
-                         :set-checked @u/stack-trace?)
-              (text-button (nc-utils/get-string :copy) ui-skin
-                           :set-name "copy")]
-             (horizontal :space (* 2 pad-small) :pack)
-             (assoc :id :error-buttons :x pad-small :y pad-small))
          (-> [(image-button home-style :set-name "home")
               (image-button restart-style :set-name "restart")
               (image-button screenshot-style :set-name "screenshot")
@@ -397,7 +390,12 @@
               (image-button (texture-drawable "repl_key.png"))]
              (horizontal :space (* 2 pad-small) :pack)
              (assoc :id :menu-keys :x pad-small))
-         (assoc (label " " ui-skin :set-visible false) :menu-label? true)])))
+         (-> [(text-button (nc-utils/get-string :stack-trace) ui-skin
+                           :set-name "stack-trace")
+              (text-button (nc-utils/get-string :copy) ui-skin
+                           :set-name "copy")]
+             (horizontal :space (* 2 pad-small) :pack)
+             (assoc :id :error-buttons :x pad-small :y pad-small))])))
   
   :on-render
   (fn [screen entities]
