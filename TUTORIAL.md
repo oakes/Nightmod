@@ -322,11 +322,11 @@ First, define a custom screen function in `main-screen` with a name such as `:on
 
 The REPL view can be displayed by clicking the > button. This is particularly useful for reading and modifying state. Let's peek into the entities vector by typing the following into the REPL:
 
-`(-> main-screen :entities deref)`
+`(e main-screen)`
 
 That should print out a vector with a single map inside of it. Now try moving your image and then run the command again. The `:x` and `:y` values should now be updated. You're looking at your game in real-time! Lastly, let's try moving the entity from the REPL:
 
-`(-> main-screen :entities (swap! #(vector (assoc (first %) :x 200 :y 200))))`
+`(e! identity main-screen :x 200 :y 200)`
 
 ## Building a Standalone Game
 
