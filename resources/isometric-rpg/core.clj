@@ -20,6 +20,15 @@
       (sound! (:play-sound entity) :play)))
   (map #(dissoc % :play-sound) entities))
 
+(defn render-everything!
+  [screen entities]
+  (render-map! screen :with "grass")
+  (->> (get-entity-at-cursor screen entities (game :x) (game :y))
+       (update-health-bar (:npc-health-bar screen))
+       (conj entities)
+       (render-sorted! screen ["things"]))
+  entities)
+
 (defscreen main-screen
   :on-show
   (fn [screen entities]
@@ -27,6 +36,7 @@
                       (isometric-tiled-map "level.tmx")
                       (update! screen
                                :camera (orthographic)
+                               :npc-health-bar (shape :filled)
                                :renderer))]
       (->> [(create-player)
             (take 8 (repeatedly #(create-enemy)))]
@@ -37,11 +47,7 @@
   (fn [screen entities]
     (clear!)
     (let [me (find-first :player? entities)]
-      ; update health bars
-      (->> (get-entity-at-cursor screen entities (game :x) (game :y))
-           (run! npc-health-screen :on-update-health-bar :entity))
       (run! player-health-screen :on-update-health-bar :entity me)
-      ; run game logic
       (->> entities
            (map (fn [entity]
                   (->> entity
@@ -51,8 +57,7 @@
                        (adjust screen))))
            (attack screen (find-first #(can-attack? % me) entities) me)
            (play-sounds!)
-           (render! screen)
-           (render-sorted! screen ["things"])
+           (render-everything! screen)
            (update-screen! screen))))
 
   :on-resize
@@ -69,30 +74,6 @@
             victim (when (can-attack? me victim) victim)]
         (print " ")
         (attack screen me victim entities)))))
-
-(defscreen npc-health-screen
-  :on-show
-  (fn [screen entities]
-    (shape :filled))
-  
-  :on-render
-  (fn [screen entities]
-    (draw! (-> main-screen :screen deref) entities))
-  
-  :on-update-health-bar
-  (fn [screen entities]
-    (if-let [e (:entity screen)]
-      (let [bar (first entities)
-            bar-x (:x e)
-            bar-y (+ (:y e) (:height e))
-            bar-w (:width e)
-            pct (/ (:health e) (+ (:health e) (:wounds e)))]
-        (shape bar
-               :set-color (color :red)
-               :rect bar-x bar-y bar-w npc-bar-h
-               :set-color (color :green)
-               :rect bar-x bar-y (* bar-w pct) npc-bar-h))
-      (shape (first entities)))))
 
 (defscreen player-health-screen
   :on-show
@@ -122,4 +103,4 @@
              :set-color (color :green)
              :rect 0 0 bar-w (* bar-h pct)))))
 
-(set-game-screen! main-screen npc-health-screen player-health-screen)
+(set-game-screen! main-screen player-health-screen)

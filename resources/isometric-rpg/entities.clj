@@ -54,6 +54,19 @@
            :y-feet 0.5
            :hurt-sound (sound "enemy_hurt.wav"))))
 
+(defn update-health-bar
+  [bar entity]
+  (when entity
+    (let [bar-x (:x entity)
+          bar-y (+ (:y entity) (* 3/4 (:height entity)))
+          bar-w (:width entity)
+          pct (/ (:health entity) (+ (:health entity) (:wounds entity)))]
+      (shape bar
+             :set-color (color :red)
+             :rect bar-x bar-y bar-w npc-bar-h
+             :set-color (color :green)
+             :rect bar-x bar-y (* bar-w pct) npc-bar-h))))
+
 (defn move
   [screen entities entity]
   (let [[x-velocity y-velocity] (get-velocity entities entity)
