@@ -4,7 +4,7 @@
        \newline
        "Right click on enemies to attack.")
 
-(declare main-screen npc-health-screen player-health-screen)
+(declare main-screen player-health-screen)
 
 (defn update-screen!
   [screen entities]
