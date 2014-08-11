@@ -24,7 +24,7 @@
 
 (declare nightmod main-screen blank-screen overlay-screen)
 
-(def ^:const text-height 40)
+(def ^:const button-height 40)
 (def ^:const pad-small 5.0)
 (def ^:const pad-large 20.0)
 (def ^:const tile-size 250)
@@ -373,7 +373,7 @@
                     :set-wrap true
                     :set-alignment (bit-or (align :left) (align :bottom)))
              (scroll-pane (style :scroll-pane nil nil nil nil nil))
-             (assoc :id :text :x pad-small :y (+ text-height (* 2 pad-small))))
+             (assoc :id :text :x pad-small :y pad-small))
          (-> [(image-button home-style :set-name "home")
               (image-button restart-style :set-name "restart")
               (image-button screenshot-style :set-name "screenshot")
@@ -419,7 +419,10 @@
       (case (:id e)
         :menu (assoc e :y (- height (vertical! e :get-height) pad-small))
         :menu-keys (assoc e :y (- height (vertical! e :get-height) pad-small))
-        :text (assoc e :width width :height (- height (* 2 (:y e))))
+        :text (let [padded-height (+ button-height (* 2 pad-small))
+                    height-diff (if @u/error (* 2 padded-height) padded-height)
+                    y (if @u/error padded-height pad-small)]
+                (assoc e :width width :height (- height height-diff) :y y))
         e)))
   
   :on-ui-changed
