@@ -99,8 +99,8 @@
           pct (/ (:health player) (+ (:health player) (:wounds player)))]
       (shape bar
              :set-color (color :red)
-             :rect 0 0 bar-w bar-h
+             :rect 0 20 bar-w bar-h
              :set-color (color :green)
-             :rect 0 0 bar-w (* bar-h pct)))))
+             :rect 0 20 bar-w (* bar-h pct)))))
 
 (set-game-screen! main-screen player-health-screen)
