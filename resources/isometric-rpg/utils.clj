@@ -161,9 +161,8 @@
 (defn get-entity-at-cursor
   [screen entities input-x input-y]
   (let [cursor-pos (input->screen screen input-x input-y)]
-    (some (fn [{:keys [x y width height npc? health] :as entity}]
-            (-> (rectangle x y width height)
-                (rectangle! :contains (:x cursor-pos) (:y cursor-pos))
-                (and npc? (> health 0))
-                (when entity)))
-          entities)))
+    (find-first (fn [{:keys [x y width height npc? health] :as entity}]
+                  (-> (rectangle x y width height)
+                      (rectangle! :contains (:x cursor-pos) (:y cursor-pos))
+                      (and npc? (> health 0))))
+                entities)))
