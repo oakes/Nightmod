@@ -16,8 +16,7 @@
   [in-out func]
   (->> (fn []
          (try (func)
-           (catch Exception e (some-> (.getMessage e) println))
-           (finally (println "\n===" (nc-utils/get-string :finished) "==="))))
+           (catch Exception e (some-> (.getMessage e) println))))
        (redirect-io in-out)
        (fn [])
        Thread.
