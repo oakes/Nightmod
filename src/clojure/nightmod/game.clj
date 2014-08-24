@@ -17,10 +17,11 @@ whatever was drawn by the preceding screens.
     (set-game-screen! main-screen text-screen)"
   [& game-screens]
   (on-gl (try
-           ; clear all assets
+           ; clean up
            (doseq [gs game-screens]
              (-> gs :screen (swap! #(dissoc % :renderer :layers))))
            (asset-manager! manager/manager :clear)
+           (stop-timers!)
            ; set the supplied screen(s) with the overlay screen added at the end
            (apply set-screen!
                   screens/nightmod
