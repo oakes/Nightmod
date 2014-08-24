@@ -3,7 +3,6 @@ package nightmod;
 import java.awt.*;
 import java.lang.reflect.Method;
 import java.util.Properties;
-import javax.swing.*;
 
 /**
  * This class handles loading of Nightmod namespaces while the splash image
