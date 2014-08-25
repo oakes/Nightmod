@@ -3,17 +3,17 @@
   :url "https://github.com/oakes/Nightmod"
   :license {:name "Public Domain"
             :url "http://unlicense.org/UNLICENSE"}
-  :dependencies [[com.badlogicgames.gdx/gdx "1.3.0"]
-                 [com.badlogicgames.gdx/gdx-backend-lwjgl "1.3.0"]
-                 [com.badlogicgames.gdx/gdx-box2d "1.3.0"]
-                 [com.badlogicgames.gdx/gdx-box2d-platform "1.3.0"
+  :dependencies [[com.badlogicgames.gdx/gdx "1.3.1"]
+                 [com.badlogicgames.gdx/gdx-backend-lwjgl "1.3.1"]
+                 [com.badlogicgames.gdx/gdx-box2d "1.3.1"]
+                 [com.badlogicgames.gdx/gdx-box2d-platform "1.3.1"
                   :classifier "natives-desktop"]
-                 [com.badlogicgames.gdx/gdx-bullet "1.3.0"]
-                 [com.badlogicgames.gdx/gdx-bullet-platform "1.3.0"
+                 [com.badlogicgames.gdx/gdx-bullet "1.3.1"]
+                 [com.badlogicgames.gdx/gdx-bullet-platform "1.3.1"
                   :classifier "natives-desktop"]
-                 [com.badlogicgames.gdx/gdx-platform "1.3.0"
+                 [com.badlogicgames.gdx/gdx-platform "1.3.1"
                   :classifier "natives-desktop"]
-                 [nightcode "0.3.9"
+                 [nightcode "0.3.11-SNAPSHOT"
                   :exclusions [leiningen
                                lein-ancient
                                lein-cljsbuild
@@ -24,7 +24,7 @@
                                play-clj/lein-template]]
                  [org.clojars.oakes/clojail "1.0.6"]
                  [org.clojure/clojure "1.6.0"]
-                 [play-clj "0.3.9"]
+                 [play-clj "0.3.10-SNAPSHOT"]
                  [seesaw "1.4.4"]]
   :uberjar-exclusions [#"clojure-clr.*\.zip"]
   :resource-paths ["resources"]

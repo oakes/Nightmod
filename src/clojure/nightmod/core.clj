@@ -1,6 +1,7 @@
 (ns nightmod.core
   (:require [clojure.java.io :as io]
             [nightcode.customizations :as custom]
+            [nightcode.dialogs :as dialogs]
             [nightcode.editors :as editors]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
@@ -76,12 +77,13 @@
   []
   (while true
     (Thread/sleep 1000)
-    (let [current-time (System/currentTimeMillis)
-          last-frame @u/last-frame]
-      (when (and (> last-frame 0)
-                 (> (- current-time last-frame) u/timeout))
-        (reset! u/last-frame current-time)
-        (s/invoke-later (start-app!) (screens/timeout!))))))
+    (when (and (> @u/last-frame 0)
+               (> (- (System/currentTimeMillis) @u/last-frame) u/timeout))
+      (s/invoke-later
+        (when (and (not (u/dialog-visible?)) (dialogs/show-restart-dialog!))
+          (start-app!)
+          (screens/timeout!))
+        (reset! u/last-frame (System/currentTimeMillis))))))
 
 (defn -main
   "Launches the main window."

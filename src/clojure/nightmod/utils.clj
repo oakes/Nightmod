@@ -42,12 +42,16 @@
       (string/replace " " "-")
       nc-utils/format-project-name))
 
+(defn dialog-visible?
+  []
+  (-> (KeyboardFocusManager/getCurrentKeyboardFocusManager)
+      .getFocusedWindow
+      type
+      (isa? JDialog)))
+
 (defn new-project-name!
   [template]
-  (when-not (-> (KeyboardFocusManager/getCurrentKeyboardFocusManager)
-                .getFocusedWindow
-                type
-                (isa? JDialog))
+  (when-not (dialog-visible?)
     (dialogs/show-text-field-dialog!
       (nc-utils/get-string :enter-project-name)
       (nc-utils/get-string template))))
