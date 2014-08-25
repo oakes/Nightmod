@@ -76,9 +76,12 @@
   []
   (while true
     (Thread/sleep 1000)
-    (when (> (- (System/currentTimeMillis) @u/last-frame) u/timeout)
-      (reset! u/last-frame (System/currentTimeMillis))
-      (s/invoke-later (start-app!) (screens/timeout!)))))
+    (let [current-time (System/currentTimeMillis)
+          last-frame @u/last-frame]
+      (when (and (> last-frame 0)
+                 (> (- current-time last-frame) u/timeout))
+        (reset! u/last-frame current-time)
+        (s/invoke-later (start-app!) (screens/timeout!))))))
 
 (defn -main
   "Launches the main window."
