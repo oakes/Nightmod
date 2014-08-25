@@ -14,7 +14,8 @@
             [seesaw.core :as s]
             [seesaw.util :as s-util])
   (:import [java.awt BorderLayout Canvas]
-           [com.badlogic.gdx.backends.lwjgl LwjglApplication]
+           [com.badlogic.gdx.backends.lwjgl LwjglApplication
+            LwjglApplicationConfiguration]
            [org.lwjgl.input Keyboard])
   (:gen-class))
 
@@ -53,6 +54,32 @@
     ; set various window properties
     ;window/enable-full-screen!
     window/add-listener!))
+
+(defn start-app!
+  "Displays the window and all its contents."
+  []
+  (some-> @u/app .stop)
+  (let [canvas (doto (Canvas.) (.setFocusable (u/canvas-focus?)))
+        old-window @ui/root
+        window (s/show! (init-window (create-window) canvas))
+        app (LwjglApplication. screens/nightmod canvas)]
+    (overlay/override-save-button!)
+    (overlay/enable-toggling! window)
+    (reset! u/editor (overlay/create-editor-pane))
+    (reset! ui/root window)
+    (when-not (u/canvas-focus?)
+      (input/pass-key-events! window app))
+    (some-> old-window .dispose)
+    (reset! u/app app)))
+
+(defn watch-for-timeout!
+  "Restarts the app and shows a timeout error if necessary."
+  []
+  (while true
+    (Thread/sleep 1000)
+    (when (> (- (System/currentTimeMillis) @u/last-frame) u/timeout)
+      (reset! u/last-frame (System/currentTimeMillis))
+      (s/invoke-later (start-app!) (screens/timeout!)))))
 
 (defn -main
   "Launches the main window."
@@ -93,13 +120,6 @@
           ; else
           false)))
     ; create the window
-    (let [canvas (doto (Canvas.) (.setFocusable (u/canvas-focus?)))
-          window (s/show! (init-window (create-window) canvas))
-          game (LwjglApplication. screens/nightmod canvas)]
-      (overlay/override-save-button!)
-      (overlay/enable-toggling! window)
-      (reset! u/editor (overlay/create-editor-pane))
-      (reset! ui/root window)
-      (when-not (u/canvas-focus?)
-        (input/pass-key-events! window game))))
-  (Keyboard/enableRepeatEvents true))
+    (start-app!))
+  (Keyboard/enableRepeatEvents true)
+  (watch-for-timeout!))

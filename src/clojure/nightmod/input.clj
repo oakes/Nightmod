@@ -38,6 +38,7 @@
         impl-field (doto (.getDeclaredField Keyboard "implementation")
                         (.setAccessible true))
         impl (proxy [InputImplementation] []
+               (destroyKeyboard [])
                (pollKeyboard [bb])
                (readKeyboard [bb]))]
     (.addKeyListener

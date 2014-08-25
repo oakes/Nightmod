@@ -20,6 +20,7 @@
 (def ^:const screenshot-file "screenshot.png")
 (def ^:const docs-name "*Docs*")
 (def ^:const repl-name "*REPL*")
+(def ^:const timeout 5000)
 (def ^:const game-ns 'nightmod.run)
 
 (def main-dir (atom nil))
@@ -28,6 +29,8 @@
 (def out (atom nil))
 (def stack-trace? (atom false))
 (def editor (atom nil))
+(def app (atom nil))
+(def last-frame (atom 0))
 
 (defn get-data-dir
   []
