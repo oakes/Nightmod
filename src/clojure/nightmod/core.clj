@@ -1,7 +1,6 @@
 (ns nightmod.core
   (:require [clojure.java.io :as io]
             [nightcode.customizations :as custom]
-            [nightcode.dialogs :as dialogs]
             [nightcode.editors :as editors]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
@@ -13,6 +12,7 @@
             [nightmod.overlay :as overlay]
             [nightmod.utils :as u]
             [seesaw.core :as s]
+            [seesaw.invoke :as invoke]
             [seesaw.util :as s-util])
   (:import [java.awt BorderLayout Canvas]
            [com.badlogic.gdx.backends.lwjgl LwjglApplication]
@@ -72,18 +72,23 @@
     (some-> old-window .dispose)
     (reset! u/app app)))
 
-(defn watch-for-timeout!
-  "Restarts the app and shows a timeout error if necessary."
+(defn restart!
+  "Restarts the app."
   []
-  (while true
-    (Thread/sleep 1000)
-    (when (and (> @u/last-frame 0)
-               (> (- (System/currentTimeMillis) @u/last-frame) u/timeout))
-      (s/invoke-later
-        (when (and (not (u/dialog-visible?)) (dialogs/show-restart-dialog!))
-          (start-app!)
-          (screens/timeout!))
-        (reset! u/last-frame (System/currentTimeMillis))))))
+  (start-app!)
+  (screens/timeout!))
+
+(defn watch-for-timeout!
+  "Watches for a timeout on the GL thread and restarts."
+  []
+  (let [signal (invoke/signaller* restart!)]
+    (loop []
+      (Thread/sleep 1000)
+      (when (and (> @u/last-frame 0)
+                 (> (- (System/currentTimeMillis) @u/last-frame) u/timeout))
+        (signal)
+        (reset! u/last-frame (System/currentTimeMillis)))
+      (recur))))
 
 (defn -main
   "Launches the main window."
