@@ -14,8 +14,7 @@
             [seesaw.core :as s]
             [seesaw.util :as s-util])
   (:import [java.awt BorderLayout Canvas]
-           [com.badlogic.gdx.backends.lwjgl LwjglApplication
-            LwjglApplicationConfiguration]
+           [com.badlogic.gdx.backends.lwjgl LwjglApplication]
            [org.lwjgl.input Keyboard])
   (:gen-class))
 
