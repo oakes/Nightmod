@@ -116,7 +116,6 @@
 ; sandbox all screen functions
 (set-screen-wrapper!
   (fn [screen screen-fn]
-    (reset! u/last-frame (System/currentTimeMillis))
     (if (or (= screen (:screen screens/main-screen))
             (= screen (:screen screens/overlay-screen)))
       (screen-fn)

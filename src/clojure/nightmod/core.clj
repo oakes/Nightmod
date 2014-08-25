@@ -12,7 +12,6 @@
             [nightmod.overlay :as overlay]
             [nightmod.utils :as u]
             [seesaw.core :as s]
-            [seesaw.invoke :as invoke]
             [seesaw.util :as s-util])
   (:import [java.awt BorderLayout Canvas]
            [com.badlogic.gdx.backends.lwjgl LwjglApplication]
@@ -58,9 +57,7 @@
 (defn start-app!
   "Displays the window and all its contents."
   []
-  (some-> @u/app .stop)
   (let [canvas (doto (Canvas.) (.setFocusable (u/canvas-focus?)))
-        old-window @ui/root
         window (s/show! (init-window (create-window) canvas))
         app (LwjglApplication. screens/nightmod canvas)]
     (overlay/override-save-button!)
@@ -68,27 +65,7 @@
     (reset! u/editor (overlay/create-editor-pane))
     (reset! ui/root window)
     (when-not (u/canvas-focus?)
-      (input/pass-key-events! window app))
-    (some-> old-window .dispose)
-    (reset! u/app app)))
-
-(defn restart!
-  "Restarts the app."
-  []
-  (start-app!)
-  (screens/timeout!))
-
-(defn watch-for-timeout!
-  "Watches for a timeout on the GL thread and restarts."
-  []
-  (let [signal (invoke/signaller* restart!)]
-    (loop []
-      (Thread/sleep 1000)
-      (when (and (> @u/last-frame 0)
-                 (> (- (System/currentTimeMillis) @u/last-frame) u/timeout))
-        (signal)
-        (reset! u/last-frame (System/currentTimeMillis)))
-      (recur))))
+      (input/pass-key-events! window app))))
 
 (defn -main
   "Launches the main window."
@@ -130,5 +107,4 @@
           false)))
     ; create the window
     (start-app!))
-  (Keyboard/enableRepeatEvents true)
-  (watch-for-timeout!))
+  (Keyboard/enableRepeatEvents true))

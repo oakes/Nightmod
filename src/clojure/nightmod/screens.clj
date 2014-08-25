@@ -20,8 +20,7 @@
            [com.badlogic.gdx.graphics Texture]
            [java.awt Toolkit]
            [java.awt.datatransfer Clipboard ClipboardOwner StringSelection]
-           [java.io File]
-           [java.util.concurrent TimeoutException]))
+           [java.io File]))
 
 (declare nightmod main-screen blank-screen overlay-screen)
 
@@ -139,13 +138,6 @@
 (defn set-blank-screen!
   []
   (set-screen! nightmod blank-screen overlay-screen))
-
-(defn timeout!
-  []
-  (reset! u/error {:exception (TimeoutException. "Execution timed out.")})
-  (editors/remove-editors! @u/project-dir)
-  (on-gl (asset-manager! manager :clear)
-         (set-blank-screen!)))
 
 ; tiles on the main screen
 
