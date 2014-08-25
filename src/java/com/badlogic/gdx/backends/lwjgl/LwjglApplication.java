@@ -109,11 +109,18 @@ public class LwjglApplication implements Application {
 		mainLoopThread = new Thread("LWJGL Application") {
 			@Override
 			public void run () {
-				graphics.setVSync(graphics.config.vSyncEnabled);
+				try {
+					graphics.setVSync(graphics.config.vSyncEnabled);
+				} catch (Exception e) {}
 				try {
 					LwjglApplication.this.mainLoop();
 				} catch (Throwable t) {
 					if (audio != null) audio.dispose();
+					try {
+						Display.releaseContext();
+					} catch (LWJGLException e) {
+						throw new GdxRuntimeException(e);
+					}
 					if (t instanceof RuntimeException)
 						throw (RuntimeException)t;
 					else
@@ -281,6 +288,7 @@ public class LwjglApplication implements Application {
 
 	public void stop () {
 		running = false;
+		mainLoopThread.stop();
 		try {
 			mainLoopThread.join();
 		} catch (Exception ex) {
