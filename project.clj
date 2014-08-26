@@ -3,7 +3,8 @@
   :url "https://github.com/oakes/Nightmod"
   :license {:name "Public Domain"
             :url "http://unlicense.org/UNLICENSE"}
-  :dependencies [[com.badlogicgames.gdx/gdx "1.3.1"]
+  :dependencies [[clojail "1.0.6"]
+                 [com.badlogicgames.gdx/gdx "1.3.1"]
                  [com.badlogicgames.gdx/gdx-backend-lwjgl "1.3.1"]
                  [com.badlogicgames.gdx/gdx-box2d "1.3.1"]
                  [com.badlogicgames.gdx/gdx-box2d-platform "1.3.1"
@@ -22,7 +23,6 @@
                                lein-fruit
                                lein-typed
                                play-clj/lein-template]]
-                 [org.clojars.oakes/clojail "1.0.6"]
                  [org.clojure/clojure "1.6.0"]
                  [play-clj "0.3.10-SNAPSHOT"]
                  [seesaw "1.4.4"]]

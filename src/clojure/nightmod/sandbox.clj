@@ -3,6 +3,7 @@
             [clojail.jvm :as jvm]
             [clojail.testers :as jail-test]
             [clojure.java.io :as io]
+            [clojure.walk :refer [walk]]
             [nightcode.utils :as nc-utils]
             [nightmod.screens :as screens]
             [nightmod.utils :as u]
@@ -113,9 +114,25 @@
         (fn [symbol-str ns]
           (not (contains? blacklist-symbols (symbol symbol-str)))))
 
+; replace clojail's ensafen with a custom version that dotifies before
+; macroexpanding, and adds a timeout checker to all calls during macroexpansion
+(intern 'clojail.core
+        'ensafen
+        (-> (fn macroexpand-most [form]
+              (if (or (not (coll? form))
+                      (and (seq? form)
+                           (= 'quote (first form))))
+                form
+                (let [form (walk macroexpand-most identity (macroexpand form))]
+                  (if (list? form)
+                    (list 'do '(#'nightmod.game/check-for-timeout!) form)
+                    form))))
+            (comp #'clojail.core/dotify)))
+
 ; sandbox all screen functions
 (set-screen-wrapper!
   (fn [screen screen-fn]
+    (reset! u/last-frame (System/currentTimeMillis))
     (if (or (= screen (:screen screens/main-screen))
             (= screen (:screen screens/overlay-screen)))
       (screen-fn)

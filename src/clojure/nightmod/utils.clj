@@ -29,6 +29,7 @@
 (def out (atom nil))
 (def stack-trace? (atom false))
 (def editor (atom nil))
+(def last-frame (atom 0))
 
 (defn get-data-dir
   []

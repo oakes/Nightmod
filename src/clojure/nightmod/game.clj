@@ -6,7 +6,8 @@
             [nightmod.screens :as screens]
             [nightmod.utils :as u]
             [play-clj.core :refer :all]
-            [play-clj.utils :refer :all]))
+            [play-clj.utils :refer :all])
+  (:import [java.util.concurrent TimeoutException]))
 
 (defn set-game-screen!
   "Displays one or more screens that you defined with `defscreen`. They will be
@@ -48,3 +49,9 @@ whatever was drawn by the preceding screens.
            slurp
            (format "(do %s\n)")
            jail/safe-read))
+
+(defn ^:private check-for-timeout!
+  "Throws exception if the time since the last frame has exceeded the timeout."
+  []
+  (when (> (- (System/currentTimeMillis) @u/last-frame) u/timeout)
+    (throw (TimeoutException. "Execution timed out."))))
