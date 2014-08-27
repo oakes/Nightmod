@@ -133,7 +133,7 @@
                            (= 'quote (first form))))
                 form
                 (let [form (walk macroexpand-most identity (macroexpand form))]
-                  (if (list? form)
+                  (if (and (seq? form) (= 'recur (first form)))
                     (list 'do '(#'nightmod.game/check-for-timeout!) form)
                     form))))
             (comp #'clojail.core/dotify)))
