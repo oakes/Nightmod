@@ -65,7 +65,7 @@
 (defn out-str
   []
   (->> [(when (seq @u/out) @u/out)
-        (some->> @u/error :message)
+        (some-> @u/error :message)
         (some-> @u/error :exception .toString)
         (when (and @u/error @u/stack-trace?)
           (for [elem (-> @u/error :exception .getStackTrace)]
@@ -143,8 +143,9 @@
 
 (defn load-project!
   [path]
-  ; clear the custom cursor from the main screen
-  (on-gl (set-cursor-image! nil))
+  ; clear the custom cursor and start with a blank screen
+  (on-gl (set-cursor-image! nil)
+         (set-blank-screen!))
   ; save in project-dir so the asset loading and reset button works
   (reset! u/project-dir path)
   ; save in tree-projects so the up button is hidden correctly

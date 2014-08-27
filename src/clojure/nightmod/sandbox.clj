@@ -3,6 +3,8 @@
             [clojail.jvm :as jvm]
             [clojail.testers :as jail-test]
             [clojure.java.io :as io]
+            [clojure.tools.reader :as reader]
+            [clojure.tools.reader.reader-types :as rt]
             [clojure.walk :refer [walk]]
             [nightcode.utils :as nc-utils]
             [nightmod.screens :as screens]
@@ -63,14 +65,21 @@
                                 '[play-clj.repl :refer :all]
                                 '[play-clj.ui :refer :all])))
 
+(defn safe-read
+  [f]
+  (binding [*read-eval* false]
+    (-> (format "(do %s\n)" (slurp f))
+        (rt/indexing-push-back-reader 1 (.getName f))
+        reader/read)))
+
 (defn run-file!
   [path]
   (reset! u/error nil)
   (reset! u/out nil)
   (let [writer (StringWriter.)
         sb (create-sandbox)]
-    (-> (format "(do %s\n)" (slurp path))
-        jail/safe-read
+    (-> (io/file path)
+        safe-read
         (sb {#'*out* writer})
         (try
           (catch Exception e

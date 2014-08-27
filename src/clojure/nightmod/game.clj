@@ -3,6 +3,7 @@
             [clojure.java.io :as io]
             [nightcode.utils :as nc-utils]
             [nightmod.manager :as manager]
+            [nightmod.sandbox :as sandbox]
             [nightmod.screens :as screens]
             [nightmod.utils :as u]
             [play-clj.core :refer :all]
@@ -45,10 +46,7 @@ whatever was drawn by the preceding screens.
 
     (load-game-file \"utils.clj\")"
   [n]
-  (some->> (io/file @u/project-dir n)
-           slurp
-           (format "(do %s\n)")
-           jail/safe-read))
+  (sandbox/safe-read (io/file @u/project-dir n)))
 
 (defn ^:private check-for-timeout!
   "Throws exception if the time since the last frame has exceeded the timeout."
