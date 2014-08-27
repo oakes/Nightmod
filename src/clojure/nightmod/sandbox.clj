@@ -11,12 +11,18 @@
             [nightmod.utils :as u]
             [play-clj.core :refer :all])
   (:import [java.io FilePermission StringWriter]
-           [java.lang.reflect ReflectPermission]))
+           [java.lang.reflect ReflectPermission]
+           [java.util.concurrent TimeoutException]))
 
 (defn set-policy!
   []
   (System/setProperty "java.security.policy"
                       (-> "java.policy" io/resource .toString)))
+
+(defn check-for-timeout!
+  []
+  (when (> (- (System/currentTimeMillis) @u/last-frame) u/timeout)
+    (throw (TimeoutException. "Execution timed out."))))
 
 (def blacklist-symbols
   '#{alter-var-root resolve find-var with-redefs-fn intern
@@ -124,7 +130,7 @@
           (not (contains? blacklist-symbols (symbol symbol-str)))))
 
 ; replace clojail's ensafen with a custom version that dotifies before
-; macroexpanding, and adds a timeout checker to all calls during macroexpansion
+; macroexpanding, and adds a timeout checker to all recur calls
 (intern 'clojail.core
         'ensafen
         (-> (fn macroexpand-most [form]
@@ -134,7 +140,7 @@
                 form
                 (let [form (walk macroexpand-most identity (macroexpand form))]
                   (if (and (seq? form) (= 'recur (first form)))
-                    (list 'do '(#'nightmod.game/check-for-timeout!) form)
+                    (list 'do '(nightmod.sandbox/check-for-timeout!) form)
                     form))))
             (comp #'clojail.core/dotify)))
 
