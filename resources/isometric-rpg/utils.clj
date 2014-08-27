@@ -74,7 +74,7 @@
   [entity]
   (if (and (game :touched?) (button-pressed? :left))
     (let [x (float (- (game :x) (/ (game :width) 2)))
-          y (float (- (/ (game :height) 2) (game :y)))
+          y (float (- (game :y) (/ (game :height) 2)))
           x-adjust (* (:max-velocity entity) (Math/abs (double (/ x y))))
           y-adjust (* (:max-velocity entity) (Math/abs (double (/ y x))))]
       [(* (Math/signum x) (min (:max-velocity entity) x-adjust))
@@ -159,10 +159,10 @@
        (near-entity? e e2 attack-distance)))
 
 (defn get-entity-at-cursor
-  [screen entities input-x input-y]
-  (let [cursor-pos (input->screen screen input-x input-y)]
+  [screen entities]
+  (let [coords (input->screen screen (input! :get-x) (input! :get-y))]
     (find-first (fn [{:keys [x y width height npc? health] :as entity}]
                   (-> (rectangle x y width height)
-                      (rectangle! :contains (:x cursor-pos) (:y cursor-pos))
+                      (rectangle! :contains (:x coords) (:y coords))
                       (and npc? (> health 0))))
                 entities)))

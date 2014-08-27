@@ -23,7 +23,7 @@
 (defn render-everything!
   [screen entities]
   (render-map! screen :with "grass")
-  (->> (get-entity-at-cursor screen entities (game :x) (game :y))
+  (->> (get-entity-at-cursor screen entities)
        (update-health-bar (:npc-health-bar screen))
        (conj entities)
        (render-sorted! screen ["things"]))
@@ -68,9 +68,7 @@
   (fn [screen entities]
     (when (= (:button screen) (button-code :right))
       (let [me (find-first :player? entities)
-            x (:input-x screen)
-            y (:input-y screen)
-            victim (get-entity-at-cursor screen entities x y)
+            victim (get-entity-at-cursor screen entities)
             victim (when (can-attack? me victim) victim)]
         (print " ")
         (attack screen me victim entities)))))

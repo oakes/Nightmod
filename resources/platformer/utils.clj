@@ -17,8 +17,8 @@
   [key]
   (and (game :touched?)
        (case key
-         :down (> (game :y) (* (game :height) (/ 2 3)))
-         :up (< (game :y) (/ (game :height) 3))
+         :down (< (game :y) (/ (game :height) 3))
+         :up (> (game :y) (* (game :height) (/ 2 3)))
          :left (< (game :x) (/ (game :width) 3))
          :right (> (game :x) (* (game :width) (/ 2 3)))
          false)))

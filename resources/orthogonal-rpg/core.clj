@@ -57,14 +57,13 @@
   
   :on-touch-down
   (fn [screen entities]
-    (let [pos (input->screen screen (:input-x screen) (:input-y screen))]
-      (when-let [player (find-first :player? entities)]
-        (let [min-x (/ (width screen) 3)
-              max-x (* (width screen) (/ 2 3))
-              min-y (/ (height screen) 3)
-              max-y (* (height screen) (/ 2 3))]
-          (when (and (< min-x (:x pos) max-x)
-                     (< min-y (:y pos) max-y))
-            (attack entities player)))))))
+    (when-let [player (find-first :player? entities)]
+      (let [min-x (/ (game :width) 3)
+            max-x (* (game :width) (/ 2 3))
+            min-y (/ (game :height) 3)
+            max-y (* (game :height) (/ 2 3))]
+        (when (and (< min-x (game :x) max-x)
+                   (< min-y (game :y) max-y))
+          (attack entities player))))))
 
 (set-game-screen! main-screen)
