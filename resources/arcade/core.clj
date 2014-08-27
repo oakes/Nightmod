@@ -49,7 +49,7 @@
   (fn [screen entities]
     (for [e entities]
       (if (:player? e)
-        (assoc e :x (- (:input-x screen)
+        (assoc e :x (- (game :point-x)
                        (/ (texture! e :get-region-width) 2)))
         e)))
   
