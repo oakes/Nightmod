@@ -32,7 +32,7 @@ public class Timer {
 	static Timer instance = new Timer();
 
 	static public Timer instance () {
-		checkStatics();
+		//checkStatics();
 		if (instance == null) {
 			instance = new Timer();
 		}
@@ -82,7 +82,7 @@ public class Timer {
 	/** Starts the timer if it was stopped. */
 	public void start () {
 		synchronized (instances) {
-			checkStatics();
+			//checkStatics();
 			if (instances.contains(this, true)) return;
 			instances.add(this);
 			if (thread == null) thread = new TimerThread();
