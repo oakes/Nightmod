@@ -151,8 +151,7 @@
   ; save in tree-projects so the up button is hidden correctly
   (swap! ui/tree-projects conj path)
   ; save in tree-selection so the file grid is displayed
-  (s/invoke-later
-    (reset! ui/tree-selection path)))
+  (s/invoke-later (reset! ui/tree-selection path)))
 
 (defn new-project!
   [template]
