@@ -21,11 +21,11 @@
     &#40;println &#40;:width screen&#41;&#41; ; the new width of the screen
     &#40;println &#40;:height screen&#41;&#41; ; the new height of the screen
     entities&#41;
-  ; the screen resumed from a paused state &#40;mobile only&#41;
+  ; the screen resumed from a paused state
   :on-resume
   &#40;fn &#91;screen entities&#93;
     entities&#41;
-  ; the screen paused &#40;mobile only&#41;
+  ; the screen paused
   :on-pause
   &#40;fn &#91;screen entities&#93;
     entities&#41;
@@ -155,6 +155,18 @@
   :on-end-contact
   &#40;fn &#91;screen entities&#93;
     &#40;println &#40;:contact screen&#41;&#41; ; the Contact - http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/physics/box2d/Contact.html
+    entities&#41;
+  ; called between each use of `step!` before the collision is processed
+  :on-pre-solve
+  &#40;fn &#91;screen entities&#93;
+    &#40;println &#40;:contact screen&#41;&#41; ; the Contact - http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/physics/box2d/Contact.html
+    &#40;println &#40;:impulse screen&#41;&#41; ; the ContactImpulse - http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/physics/box2d/ContactImpulse.html
+    entities&#41;
+  ; called between each use of `step!` after the collision is processed
+  :on-post-solve
+  &#40;fn &#91;screen entities&#93;
+    &#40;println &#40;:contact screen&#41;&#41; ; the Contact - http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/physics/box2d/Contact.html
+    &#40;println &#40;:old-manifold screen&#41;&#41; ; the Manifold - http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/physics/box2d/Manifold.html
     entities&#41;&#41;
 </pre><pre>
 ; 3D physics contact &#40;for play-clj.g3d-physics&#41;
@@ -381,8 +393,13 @@
                (execute-fn! on-resize :width w :height h)
                (update-screen! @screen))
      :resume #(execute-fn! on-resume)}))</pre><pre>(defmacro defscreen
-  [n & {:keys [] :as options}]
-  `(let [fn-syms# (->> (for [[k# v#] ~options]
+  [n & options]
+  (let [s (format "Unexpected value in (defscreen %s). You need to give it
+keywords and functions in pairs."
+                  (str n))]
+    (assert (even? (count options)) s)
+    (assert (= 0 (count (remove keyword? (keys (apply hash-map options))))) s))
+  `(let [fn-syms# (->> (for [[k# v#] ~(apply hash-map options)]
                          [k# (intern *ns* (symbol (str '~n "-" (name k#))) v#)])
                        flatten
                        (apply hash-map))

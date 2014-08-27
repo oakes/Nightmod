@@ -2,7 +2,4 @@
 &#40;load-game-file &quot;utils.clj&quot;&#41;
 </pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defmacro load-game-file
   [n]
-  (some->> (io/file @u/project-dir n)
-           slurp
-           (format "(do %s\n)")
-           jail/safe-read))</pre></div></div></div></body></html>
+  (sandbox/safe-read (io/file @u/project-dir n)))</pre></div></div></div></body></html>

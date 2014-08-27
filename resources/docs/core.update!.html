@@ -1,5 +1,5 @@
 <html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(update! screen & args)</div><div class="c-doc"><p>Runs the equivalent of <code>&#40;swap! screen-atom assoc ...&#41;</code>, where <code>screen-atom</code> is the atom storing the screen map behind the scenes. Returns the updated <code>screen</code> map.</p><pre>
 &#40;update! screen :renderer &#40;stage&#41;&#41;
 </pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn update!
-  [{:keys [update-fn!] :as screen} & args]
-  (update-fn! assoc args))</pre></div></div></div></body></html>
+  [screen & args]
+  ((:update-fn! screen) assoc args))</pre></div></div></div></body></html>

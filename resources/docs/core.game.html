@@ -1,13 +1,15 @@
-<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(game k)</div><div class="c-doc"><p>Provides quick access to often-used functions.</p><pre>
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(game k & [arg])</div><div class="c-doc"><p>Provides quick access to often-used functions.</p><pre>
 &#40;game :width&#41;
 </pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn game
-  [k]
+  [k & [arg]]
   (case k
     :width (graphics! :get-width)
     :height (graphics! :get-height)
     :fps (graphics! :get-frames-per-second)
     :fullscreen? (graphics! :is-fullscreen)
     :touched? (input! :is-touched)
-    :x (input! :get-x)
-    :y (input! :get-y)
+    :x (input! :get-x) ; deprecated, use :point-x instead
+    :y (input! :get-y) ; deprecated, use :point-y instead (it is flipped)
+    :point-x (input! :get-x (or arg 0))
+    :point-y (- (graphics! :get-height) (input! :get-y (or arg 0)))
     (u/throw-key-not-found k)))</pre></div></div></div></body></html>
