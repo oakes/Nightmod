@@ -1,4 +1,4 @@
-(defproject nightmod "0.1.6-SNAPSHOT"
+(defproject nightmod "0.1.6"
   :description "A tool for making live-moddable games in Clojure"
   :url "https://github.com/oakes/Nightmod"
   :license {:name "Public Domain"
@@ -14,7 +14,7 @@
                   :classifier "natives-desktop"]
                  [com.badlogicgames.gdx/gdx-platform "1.3.1"
                   :classifier "natives-desktop"]
-                 [nightcode "0.3.11-SNAPSHOT"
+                 [nightcode "0.3.11"
                   :exclusions [leiningen
                                lein-ancient
                                lein-cljsbuild
@@ -25,7 +25,7 @@
                                play-clj/lein-template]]
                  [org.clojure/clojure "1.6.0"]
                  [org.clojure/tools.reader "0.8.7"]
-                 [play-clj "0.3.10-SNAPSHOT"]
+                 [play-clj "0.3.10"]
                  [seesaw "1.4.4"]]
   :uberjar-exclusions [#"clojure-clr.*\.zip"]
   :resource-paths ["resources"]
