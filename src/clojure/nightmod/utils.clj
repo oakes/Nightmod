@@ -18,6 +18,7 @@
 (def ^:const core-file "core.clj")
 (def ^:const settings-file "settings.edn")
 (def ^:const screenshot-file "screenshot.png")
+(def ^:const prefs-file ".prefs.edn")
 (def ^:const docs-name "*Docs*")
 (def ^:const repl-name "*REPL*")
 (def ^:const timeout 5000)

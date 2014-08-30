@@ -49,16 +49,20 @@
    (jail-test/blacklist-nses '[clojure.main])
    (jail-test/blanket "clojail")])
 
-(def context (-> (doto (jvm/permissions)
+(def context
+  (memoize (fn [path]
+             (-> (doto (jvm/permissions)
                    (.add (FilePermission. "<<ALL FILES>>" "read"))
+                   (.add (FilePermission. (.getCanonicalPath (io/file path "*"))
+                                          "write"))
                    (.add (ReflectPermission. "suppressAccessChecks")))
                  jvm/domain
-                 jvm/context))
+                 jvm/context))))
 
 (defn create-sandbox
   []
   (jail/sandbox tester
-                :context context
+                :context (context @u/project-dir)
                 :timeout u/timeout
                 :namespace u/game-ns
                 :max-defs Integer/MAX_VALUE
@@ -100,7 +104,7 @@
   [func]
   (binding [*out* (StringWriter.)]
     (try
-      (jvm/jvm-sandbox func context)
+      (jvm/jvm-sandbox func (context @u/project-dir))
       (catch Exception e
         (when-not @u/error
           (reset! u/error

@@ -1,5 +1,6 @@
 (ns nightmod.game
   (:require [clojail.core :as jail]
+            [clojure.edn :as edn]
             [clojure.java.io :as io]
             [nightcode.utils :as nc-utils]
             [nightmod.manager :as manager]
@@ -46,3 +47,21 @@ whatever was drawn by the preceding screens.
     (load-game-file \"utils.clj\")"
   [n]
   (sandbox/safe-read (io/file @u/project-dir n)))
+
+(defn game-pref
+  "Retrieves preferences.
+
+    (game-pref)"
+  []
+  (try (edn/read-string (slurp (io/file @u/project-dir u/prefs-file)))
+    (catch Exception _ {})))
+
+(defn game-pref!
+  "Stores preferences.
+
+    (game-pref! {:level 10 :health 5})
+    (game-pref! :level 10)"
+  ([m]
+    (spit (io/file @u/project-dir u/prefs-file) (pr-str m)))
+  ([k v]
+    (game-pref! (assoc (game-pref) k v))))
