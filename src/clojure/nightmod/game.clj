@@ -59,9 +59,11 @@ whatever was drawn by the preceding screens.
 (defn game-pref!
   "Stores preferences.
 
-    (game-pref! {:level 10 :health 5})
-    (game-pref! :level 10)"
-  ([m]
-    (spit (io/file @u/project-dir u/prefs-file) (pr-str m)))
-  ([k v]
-    (game-pref! (assoc (game-pref) k v))))
+    (game-pref! {:level 10 :health 5}) ; replace all preferences
+    (game-pref! :level 10 :health 5) ; add to existing preferences"
+  [& keyvals]
+  (->> (if (map? (first keyvals))
+         (first keyvals)
+         (apply assoc (game-pref) keyvals))
+       pr-str
+       (spit (io/file @u/project-dir u/prefs-file))))
