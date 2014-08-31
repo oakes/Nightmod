@@ -46,7 +46,16 @@
       "java.util.concurrent"
       "java.awt"])
    (jail-test/blacklist-symbols blacklist-symbols)
-   (jail-test/blacklist-nses '[clojure.main])
+   (jail-test/blacklist-nses '[clojure.main
+                               nightmod.core
+                               nightmod.docs
+                               nightmod.input
+                               nightmod.manager
+                               nightmod.overlay
+                               nightmod.repl
+                               nightmod.sandbox
+                               nightmod.screens
+                               nightmod.utils])
    (jail-test/blanket "clojail")])
 
 (def context
