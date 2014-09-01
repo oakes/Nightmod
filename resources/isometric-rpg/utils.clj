@@ -33,9 +33,11 @@
   [screen entity layer-name]
   (let [entity (screen->isometric screen entity)
         rect (entity-rect entity 0)
-        layer (map-layer screen layer-name)]
-    (->> (for [o (map-objects layer)]
-           (let [r (map-object! o :get-rectangle)
+        layer (map-layer screen layer-name)
+        objects (map-objects layer)]
+    (->> (for [n (range (map-objects! objects :get-count))]
+           (let [o (map-objects! objects :get n)
+                 r (map-object! o :get-rectangle)
                  x (/ (rectangle! r :get-x) (/ pixels-per-tile 2))
                  y (/ (rectangle! r :get-y) (/ pixels-per-tile 2))
                  width (/ (rectangle! r :get-width) (/ pixels-per-tile 2))
