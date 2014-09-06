@@ -9,9 +9,11 @@
             [nightcode.utils :as nc-utils]
             [nightmod.screens :as screens]
             [nightmod.utils :as u]
-            [play-clj.core :refer :all])
+            [play-clj.core :refer :all]
+            [play-clj.net])
   (:import [java.io FilePermission StringWriter]
            [java.lang.reflect ReflectPermission]
+           [java.net SocketPermission]
            [java.util.concurrent TimeoutException]))
 
 (defn set-policy!
@@ -64,7 +66,8 @@
                    (.add (FilePermission. "<<ALL FILES>>" "read"))
                    (.add (FilePermission. (.getCanonicalPath (io/file path "*"))
                                           "write"))
-                   (.add (ReflectPermission. "suppressAccessChecks")))
+                   (.add (ReflectPermission. "suppressAccessChecks"))
+                   (.add (SocketPermission. "play-clj.net" "connect")))
                  jvm/domain
                  jvm/context))))
 
@@ -80,6 +83,7 @@
                                 '[play-clj.g2d :refer :all]
                                 '[play-clj.g3d :refer :all]
                                 '[play-clj.math :refer :all]
+                                '[play-clj.net :refer :all]
                                 '[play-clj.physics :refer :all]
                                 '[play-clj.repl :refer :all]
                                 '[play-clj.ui :refer :all])))
@@ -132,6 +136,7 @@
          'play-clj.g2d
          'play-clj.g3d
          'play-clj.math
+         'play-clj.net
          'play-clj.physics
          'play-clj.repl
          'play-clj.ui])
@@ -165,3 +170,7 @@
             (= screen (:screen screens/overlay-screen)))
       (screen-fn)
       (run-in-sandbox! screen-fn))))
+
+; use the play-clj.net server
+(intern 'play-clj.net 'client-send-address "tcp://play-clj.net:4707")
+(intern 'play-clj.net 'client-receive-address "tcp://play-clj.net:4708")
