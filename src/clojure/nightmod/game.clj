@@ -20,8 +20,6 @@ whatever was drawn by the preceding screens.
   [& game-screens]
   (on-gl (try
            ; clean up
-           (doseq [gs game-screens]
-             (-> gs :screen (swap! #(dissoc % :renderer :layers))))
            (asset-manager! manager/manager :clear)
            (stop-timers!)
            ; set the supplied screen(s) with the overlay screen added at the end
