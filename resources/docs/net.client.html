@@ -1,0 +1,19 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(client screen-or-fn)</div><div class="c-head">(client screen-or-fn topics)</div><div class="c-head">(client screen-or-fn topics send-address receive-address)</div><div class="c-doc"><p>Returns a hash map containing sender and receiver sockets, both of which are connected to the <code>send-address</code> and <code>receive-address</code> (localhost by default). The receiver socket is also subscribed to the <code>topics</code>. The <code>screen-or-fn</code> is a callback function taking two arguments, or a play-clj screen map (in which case, the callback will be the screen's :on-network-receive function).</p><pre>
+&#40;client screen &#91;:my-game-position&#93;&#41;
+&#40;client screen &#91;:my-game-position&#93;
+        &quot;tcp://localhost:4707&quot; &quot;tcp://localhost:4708&quot;&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn client
+  ([screen-or-fn]
+    (client screen-or-fn []))
+  ([screen-or-fn topics]
+    (client screen-or-fn topics client-send-address client-receive-address))
+  ([screen-or-fn topics send-address receive-address]
+    (let [context (ZContext.)
+          push (.createSocket context ZMQ/PUSH)
+          sub (.createSocket context ZMQ/SUB)]
+      {:sender (doto push (.connect send-address))
+       :receiver (doto sub
+                   (.connect receive-address)
+                   ((partial apply subscribe!) topics))
+       :thread (doto (Thread. #(client-listen! sub screen-or-fn)) .start)
+       :context context})))</pre></div></div></div></body></html>

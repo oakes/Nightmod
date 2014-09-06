@@ -1,0 +1,10 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(game-pref! & keyvals)</div><div class="c-doc"><p>Stores preferences.</p><pre>
+&#40;game-pref! {:level 10 :health 5}&#41; ; replace all preferences
+&#40;game-pref! :level 10 :health 5&#41; ; add to existing preferences
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn game-pref!
+  [& keyvals]
+  (->> (if (map? (first keyvals))
+         (first keyvals)
+         (apply assoc (game-pref) keyvals))
+       pr-str
+       (spit (io/file @u/project-dir u/prefs-file))))</pre></div></div></div></body></html>

@@ -1,0 +1,6 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(game-pref)</div><div class="c-doc"><p>Retrieves preferences.</p><pre>
+&#40;game-pref&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn game-pref
+  []
+  (try (edn/read-string (slurp (io/file @u/project-dir u/prefs-file)))
+    (catch Exception _ {})))</pre></div></div></div></body></html>

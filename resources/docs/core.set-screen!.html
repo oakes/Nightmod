@@ -2,8 +2,6 @@
 &#40;set-screen! my-game main-screen text-screen&#41;
 </pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn set-screen!
   [^Game game-object & screen-objects]
-  (assert (isa? (type game-object) Game) "The first argument in set-screen!
-must be the defgame object.")
   (let [run-fn! (fn [k & args]
                   (doseq [screen screen-objects]
                     (apply (get screen k) args)))]

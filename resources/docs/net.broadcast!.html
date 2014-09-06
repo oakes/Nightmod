@@ -1,0 +1,14 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(broadcast! client topic message)</div><div class="c-doc"><p>Sends a <code>message</code> with the connected server, to be broadcasted to all peers subscribed to the <code>topic</code>. The <code>client</code> is a hash map returned by the client function, or a play-clj screen map that contains a client hash map associated with the :network key.</p><pre>
+&#40;let &#91;screen &#40;update! screen :network &#40;client screen &#91;:my-game-position&#93;&#41;&#41;&#93;
+  &#40;broadcast! screen :my-game-position {:x 10 :y 5}&#41;&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn broadcast!
+  [client topic message]
+  (let [encoded-message (pr-str [topic message])
+        message-size (count (str->bytes encoded-message))]
+    (if (> message-size max-message-size)
+      (throw (Exception. (str "Message is too large to broadcast: "
+                              message-size
+                              " > "
+                              max-message-size)))
+      (.send (get-obj client :network :sender) encoded-message ZMQ/NOBLOCK)))
+  nil)</pre></div></div></div></body></html>
