@@ -57,7 +57,8 @@
                                nightmod.repl
                                nightmod.sandbox
                                nightmod.screens
-                               nightmod.utils])
+                               nightmod.utils
+                               play-clj.utils])
    (jail-test/blanket "clojail")])
 
 (def context
