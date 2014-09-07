@@ -1,6 +1,6 @@
-<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(unsubscribe! client & topics)</div><div class="c-doc"><p>Unsubscribes <code>client</code> the given <code>topics</code>. The <code>client</code> is a hash map returned by the client function, or a play-clj screen map that contains a client hash map associated with the :network key.</p><pre>
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(unsubscribe! screen & topics)</div><div class="c-doc"><p>Unsubscribes the client the given <code>topics</code>. The <code>screen</code> is a hash map returned by the client function, or a play-clj screen map that contains a client hash map associated with the :network key.</p><pre>
 &#40;unsubscribe! screen :my-game-level-2&#41;
 </pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn unsubscribe!
-  [client & topics]
+  [screen & topics]
   (doseq [t topics]
-    (.unsubscribe (get-obj client :network :receiver) (str->bytes t))))</pre></div></div></div></body></html>
+    (.unsubscribe (u/get-obj screen :network :receiver) (u/str->bytes t))))</pre></div></div></div></body></html>

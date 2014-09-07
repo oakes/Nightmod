@@ -58,6 +58,7 @@
                                nightmod.sandbox
                                nightmod.screens
                                nightmod.utils
+                               play-clj.net-utils
                                play-clj.utils])
    (jail-test/blanket "clojail")])
 
@@ -173,5 +174,5 @@
       (run-in-sandbox! screen-fn))))
 
 ; use the play-clj.net server
-(intern 'play-clj.net 'client-send-address "tcp://play-clj.net:4707")
-(intern 'play-clj.net 'client-receive-address "tcp://play-clj.net:4708")
+(intern 'play-clj.net-utils 'client-send-address "tcp://play-clj.net:4707")
+(intern 'play-clj.net-utils 'client-receive-address "tcp://play-clj.net:4708")

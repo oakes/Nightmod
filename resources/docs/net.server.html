@@ -3,13 +3,17 @@
 &#40;server &quot;tcp://&#42;:4708&quot; &quot;tcp://&#42;:4707&quot;&#41;
 </pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn server
   ([]
-    (server server-send-address server-receive-address))
+    (server u/server-send-address u/server-receive-address))
   ([send-address receive-address]
     (let [context (ZContext.)
           pub (.createSocket context ZMQ/PUB)
-          pull (.createSocket context ZMQ/PULL)]
-      (.setMaxMsgSize pull max-message-size)
-      {:sender (doto pub (.bind send-address))
-       :receiver (doto pull (.bind receive-address))
-       :thread (doto (Thread. #(server-listen! pub pull)) .start)
-       :context context})))</pre></div></div></div></body></html>
+          pull (.createSocket context ZMQ/PULL)
+          _ (.setMaxMsgSize pull u/max-message-size)
+          s {:sender (doto pub (.bind send-address))
+             :receiver (doto pull (.bind receive-address))
+             :thread (doto (Thread. #(server-listen! pub pull)) .start)
+             :context context}]
+      ; add to the networks atom if it exists
+      (some-> u/*networks* (swap! assoc s #(disconnect! s)))
+      ; return server
+      s)))</pre></div></div></div></body></html>

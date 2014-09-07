@@ -2,7 +2,8 @@
   (:require [clojure.java.io :as io]
             [nightmod.utils :as u]
             [play-clj.core :refer :all]
-            [play-clj.utils :refer :all])
+            [play-clj.net-utils :as net-utils]
+            [play-clj.utils :as utils])
   (:import [com.badlogic.gdx.assets.loaders FileHandleResolver]
            [com.badlogic.gdx.files FileHandle]))
 
@@ -14,7 +15,10 @@
 (set-asset-manager! manager)
 
 ; keep a reference to all timers to we can stop them later
-(track-timers!)
+(utils/track-timers!)
+
+; keep a reference to all networks so we can disconnect them later
+(net-utils/track-networks!)
 
 (defn clear-ns!
   [nspace]
@@ -23,5 +27,6 @@
 (defn clean!
   []
   (clear-ns! u/game-ns)
-  (stop-timers!)
+  (utils/stop-timers!)
+  (net-utils/disconnect-networks!)
   (asset-manager! manager :clear))
