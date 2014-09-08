@@ -1,4 +1,4 @@
-(defproject nightmod "0.1.7"
+(defproject nightmod "0.1.8-SNAPSHOT"
   :description "A tool for making live-moddable games in Clojure"
   :url "https://github.com/oakes/Nightmod"
   :license {:name "Public Domain"
