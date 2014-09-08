@@ -10,4 +10,5 @@
   ; stop the thread
   (.interrupt (u/get-obj screen :network :thread))
   ; remove from the networks atom if it exists
-  (some-> u/*networks* (swap! dissoc (or (:network screen) screen))))</pre></div></div></div></body></html>
+  (some-> u/*networks* (swap! dissoc (or (:network screen) screen)))
+  nil)</pre></div></div></div></body></html>
