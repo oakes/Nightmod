@@ -26,7 +26,7 @@
                  [org.clojure/clojure "1.6.0"]
                  [org.clojure/tools.reader "0.8.7"]
                  [play-clj "0.3.11"]
-                 [play-clj.net "0.1.1"]
+                 [play-clj.net "0.1.2"]
                  [seesaw "1.4.4"]]
   :uberjar-exclusions [#"clojure-clr.*\.zip"]
   :resource-paths ["resources"]
