@@ -11,7 +11,7 @@
             [nightmod.utils :as u]
             [play-clj.core :refer :all]
             [play-clj.net])
-  (:import [java.io FilePermission StringWriter]
+  (:import [java.io File FilePermission StringWriter]
            [java.lang.reflect ReflectPermission]
            [java.net SocketPermission]
            [java.util.concurrent TimeoutException]))
@@ -66,8 +66,10 @@
   (memoize (fn [path]
              (-> (doto (jvm/permissions)
                    (.add (FilePermission. "<<ALL FILES>>" "read"))
-                   (.add (FilePermission. (.getCanonicalPath (io/file path "*"))
-                                          "write"))
+                   (.add (-> (io/file path)
+                             .getCanonicalPath
+                             (str File/separatorChar "*")
+                             (FilePermission. "write")))
                    (.add (ReflectPermission. "suppressAccessChecks"))
                    (.add (SocketPermission. "play-clj.net" "connect")))
                  jvm/domain
