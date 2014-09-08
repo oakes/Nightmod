@@ -24,7 +24,7 @@
                                lein-typed
                                play-clj/lein-template]]
                  [org.clojure/clojure "1.6.0"]
-                 [org.clojure/tools.reader "0.8.7"]
+                 [org.clojure/tools.reader "0.8.8"]
                  [play-clj "0.3.11"]
                  [play-clj.net "0.1.2"]
                  [seesaw "1.4.4"]]
