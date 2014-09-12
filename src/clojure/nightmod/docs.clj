@@ -32,7 +32,7 @@
     (.setCaretPosition 0)))
 
 (defn var-node
-  [{:keys [ns name] :as node}]
+  [{:keys [name] :as node}]
   (proxy [DefaultMutableTreeNode] [node]
     (isLeaf [] true)
     (toString [] name)))
@@ -70,16 +70,16 @@
   []
   (let [css (doto (StyleSheet.) (.importStyleSheet (io/resource "docs.css")))
         kit (doto (HTMLEditorKit.) (.setStyleSheet css))]
-  (doto (s/editor-pane :id :docs-content
-                       :editable? false
-                       :content-type "text/html")
-    (.setEditorKit kit)
-    (s/listen :hyperlink (fn [e]
-                           (when (and (= (.getEventType e)
-                                         HyperlinkEvent$EventType/ACTIVATED)
-                                      (Desktop/isDesktopSupported))
-                             (.browse (Desktop/getDesktop)
-                               (URI. (.getDescription e)))))))))
+    (doto (s/editor-pane :id :docs-content
+                         :editable? false
+                         :content-type "text/html")
+      (.setEditorKit kit)
+      (s/listen :hyperlink (fn [e]
+                             (when (and (= (.getEventType e)
+                                           HyperlinkEvent$EventType/ACTIVATED)
+                                        (Desktop/isDesktopSupported))
+                               (.browse (Desktop/getDesktop)
+                                 (URI. (.getDescription e)))))))))
 
 (defn search!
   [& _])
