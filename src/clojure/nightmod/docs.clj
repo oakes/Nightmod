@@ -25,8 +25,8 @@
 (def ns-list (vec (into (sorted-map) (group-by :ns doc-list))))
 
 (defn update-content!
-  [node]
-  (doto (s/select @ui/root [:#docs-content])
+  [content node]
+  (doto content
     (.setText (or (some->> node :file (str "docs/") io/resource slurp)
                   ""))
     (.setCaretPosition 0)))
@@ -51,7 +51,7 @@
     (getChildCount [] (count ns-list))))
 
 (defn create-sidebar
-  []
+  [content]
   (doto (s/tree :id :docs-sidebar)
     (.setRootVisible false)
     (.setShowsRootHandles true)
@@ -59,12 +59,11 @@
     (.addTreeSelectionListener
       (reify TreeSelectionListener
         (valueChanged [this e]
-          (update-content! (some-> e
-                                   .getPath
-                                   .getLastPathComponent
-                                   .getUserObject)))))
+          (->> (some-> e .getPath .getLastPathComponent .getUserObject)
+               (update-content! content)))))
     (-> .getSelectionModel
-        (.setSelectionMode TreeSelectionModel/SINGLE_TREE_SELECTION))))
+        (.setSelectionMode TreeSelectionModel/SINGLE_TREE_SELECTION))
+    (.setSelectionRow 0)))
 
 (defn create-content
   []
@@ -97,7 +96,9 @@
 (defn create-card
   []
   (let [widgets (create-widgets)
-        widget-bar (ui/wrap-panel :items (map #(get widgets % %) *widgets*))]
+        widget-bar (ui/wrap-panel :items (map #(get widgets % %) *widgets*))
+        content (create-content)
+        sidebar (create-sidebar content)]
     (s/border-panel :north widget-bar
-                    :west (s/scrollable (create-sidebar) :size [200 :by 0])
-                    :center (s/scrollable (create-content)))))
+                    :west (s/scrollable sidebar :size [200 :by 0])
+                    :center (s/scrollable content))))
