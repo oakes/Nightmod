@@ -166,7 +166,7 @@
 (defn clone-project!
   [uri-str]
   (s/invoke-later
-    (if-let [name (git/address->name uri-str)]
+    (if-let [name (and uri-str (git/address->name uri-str))]
       (when-let [project-name (u/new-project-name! name)]
         (some->> (u/new-project-dir! project-name)
                  (git/clone-with-dialog! uri-str)
@@ -250,7 +250,8 @@
   []
   (-> (Toolkit/getDefaultToolkit)
       .getSystemClipboard
-      (.getData DataFlavor/stringFlavor)))
+      (.getData DataFlavor/stringFlavor)
+      (try (catch Exception _))))
 
 (defn set-clipboard!
   [s]
