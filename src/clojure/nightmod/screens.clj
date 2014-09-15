@@ -5,6 +5,7 @@
             [nightcode.dialogs :as dialogs]
             [nightcode.editors :as editors]
             [nightcode.file-browser :as file-browser]
+            [nightcode.git :as git]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
@@ -19,7 +20,8 @@
   (:import [com.badlogic.gdx.assets.loaders FileHandleResolver]
            [com.badlogic.gdx.graphics Texture]
            [java.awt Toolkit]
-           [java.awt.datatransfer Clipboard ClipboardOwner StringSelection]
+           [java.awt.datatransfer Clipboard ClipboardOwner DataFlavor
+            StringSelection]
            [java.io File]))
 
 (declare nightmod main-screen blank-screen overlay-screen)
@@ -161,6 +163,18 @@
                (u/new-project! template project-name)
                load-project!))))
 
+(defn clone-project!
+  [uri-str]
+  (s/invoke-later
+    (if-let [name (git/address->name uri-str)]
+      (when-let [project-name (u/new-project-name! name)]
+        (some->> (u/new-project-dir! project-name)
+                 (git/clone-with-dialog! uri-str)
+                 load-project!))
+      (dialogs/show-simple-dialog!
+        (format (nc-utils/get-string :invalid-git-address)
+                (str \newline \newline uri-str \newline \newline))))))
+
 ; buttons on the overlay screen
 
 (defn home!
@@ -232,6 +246,12 @@
         (some-> (s/select @ui/root [:#repl-console])
                 s/request-focus!)))))
 
+(defn get-clipboard
+  []
+  (-> (Toolkit/getDefaultToolkit)
+      .getSystemClipboard
+      (.getData DataFlavor/stringFlavor)))
+
 (defn set-clipboard!
   [s]
   (let [clip-board (.getSystemClipboard (Toolkit/getDefaultToolkit))]
@@ -286,7 +306,20 @@
                        :colspan col-count
                        :pad-top pad-large
                        :pad-bottom pad-large]]
-                     new-games)
+                     new-games
+                     [:row
+                      [(label (nc-utils/get-string :download)
+                              (style :label large-font (color :white)))
+                       :colspan col-count
+                       :pad-top pad-large
+                       :pad-bottom pad-large]]
+                     [:row
+                      [(text-button (nc-utils/get-string :clone-git-project)
+                                    ui-skin
+                                    :set-name "clone")
+                       :colspan col-count
+                       :pad-top pad-large
+                       :pad-bottom pad-large]])
              (table :align (align :center) :pad pad-small)
              (scroll-pane ui-skin
                           :set-fade-scroll-bars false
@@ -325,8 +358,14 @@
   (fn [screen entities]
     (when-let [n (actor! (:actor screen) :get-name)]
       (sound! (:click-sound screen) :play)
-      (if (contains? (set templates) n)
+      (cond
+        (= n "clone")
+        (clone-project! (get-clipboard))
+        
+        (contains? (set templates) n)
         (new-project! n)
+        
+        :else
         (load-project! n)))
     nil))
 

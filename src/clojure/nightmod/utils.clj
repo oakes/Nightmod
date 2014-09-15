@@ -50,11 +50,11 @@
       (isa? JDialog)))
 
 (defn new-project-name!
-  [template]
+  [default-name]
   (when-not (dialog-visible?)
     (dialogs/show-text-field-dialog!
       (nc-utils/get-string :enter-project-name)
-      (nc-utils/get-string template))))
+      (nc-utils/get-string default-name))))
 
 (defn new-project-dir!
   [project-name]

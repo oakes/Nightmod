@@ -14,7 +14,7 @@
                   :classifier "natives-desktop"]
                  [com.badlogicgames.gdx/gdx-platform "1.3.1"
                   :classifier "natives-desktop"]
-                 [nightcode "0.3.11"
+                 [nightcode "0.3.12-SNAPSHOT"
                   :exclusions [leiningen
                                lein-ancient
                                lein-cljsbuild
