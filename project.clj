@@ -14,7 +14,7 @@
                   :classifier "natives-desktop"]
                  [com.badlogicgames.gdx/gdx-platform "1.3.1"
                   :classifier "natives-desktop"]
-                 [nightcode "0.3.12-SNAPSHOT"
+                 [nightcode "0.3.12"
                   :exclusions [leiningen
                                lein-ancient
                                lein-cljsbuild
@@ -28,7 +28,6 @@
                  [play-clj "0.3.11"]
                  [play-clj.net "0.1.2"]
                  [seesaw "1.4.4"]]
-  :uberjar-exclusions [#"clojure-clr.*\.zip"]
   :resource-paths ["resources"]
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]

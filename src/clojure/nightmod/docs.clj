@@ -1,7 +1,6 @@
 (ns nightmod.docs
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
-            [nightcode.editors :as editors]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
             [nightmod.sandbox :as sandbox]
@@ -91,7 +90,7 @@
                          :columns 16
                          :listen [:key-released search!])
              (nc-utils/set-accessible-name! :search)
-             (editors/text-prompt! (nc-utils/get-string :search)))})
+             (ui/text-prompt! (nc-utils/get-string :search)))})
 
 (defn create-card
   []
