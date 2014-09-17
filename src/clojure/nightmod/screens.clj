@@ -174,7 +174,9 @@
                  load-project!))
       (dialogs/show-simple-dialog!
         (format (nc-utils/get-string :invalid-git-address)
-                (str \newline \newline uri-str \newline \newline))))))
+                (str \newline \newline
+                     (subs uri-str 0 (min (count uri-str) 100))
+                     \newline \newline))))))
 
 ; buttons on the overlay screen
 
