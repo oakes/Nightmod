@@ -30,13 +30,15 @@
 (def ^:const pad-small 5.0)
 (def ^:const pad-large 20.0)
 (def ^:const tile-size 250)
+(def ^:const col-count 3)
 
 (def templates ["arcade"
                 "platformer"
                 "orthogonal-rpg"
                 "isometric-rpg"
                 "barebones-2d"
-                "barebones-3d"])
+                "barebones-3d"
+                "clone-git-project"])
 
 (def manager (asset-manager*
                (reify FileHandleResolver
@@ -275,7 +277,6 @@
       (let [ui-skin (skin "uiskin.json")
             default-font (skin! ui-skin :get-font "default-font")
             large-font (skin! ui-skin :get-font "large-font")
-            col-count (/ (count templates) 2)
             saved-games (->> (io/file @u/main-dir)
                              .listFiles
                              (filter #(.isDirectory %))
@@ -307,20 +308,7 @@
                        :colspan col-count
                        :pad-top pad-large
                        :pad-bottom pad-large]]
-                     new-games
-                     [:row
-                      [(label (nc-utils/get-string :download)
-                              (style :label large-font (color :white)))
-                       :colspan col-count
-                       :pad-top pad-large
-                       :pad-bottom pad-large]]
-                     [:row
-                      [(text-button (nc-utils/get-string :clone-git-project)
-                                    ui-skin
-                                    :set-name "clone")
-                       :colspan col-count
-                       :pad-top pad-large
-                       :pad-bottom pad-large]])
+                     new-games)
              (table :align (align :center) :pad pad-small)
              (scroll-pane ui-skin
                           :set-fade-scroll-bars false
@@ -360,7 +348,7 @@
     (when-let [n (actor! (:actor screen) :get-name)]
       (sound! (:click-sound screen) :play)
       (cond
-        (= n "clone")
+        (= n "clone-git-project")
         (clone-project! (get-clipboard))
         
         (contains? (set templates) n)
