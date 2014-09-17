@@ -37,7 +37,6 @@
                 "orthogonal-rpg"
                 "isometric-rpg"
                 "barebones-2d"
-                "barebones-3d"
                 "clone-git-project"])
 
 (def manager (asset-manager*
