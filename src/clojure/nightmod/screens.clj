@@ -37,7 +37,7 @@
                 "orthogonal-rpg"
                 "isometric-rpg"
                 "barebones"
-                "clone-project"])
+                "download"])
 
 (def manager (asset-manager*
                (reify FileHandleResolver
@@ -346,7 +346,7 @@
     (when-let [n (actor! (:actor screen) :get-name)]
       (sound! (:click-sound screen) :play)
       (cond
-        (= n "clone-project")
+        (= n "download")
         (clone-project! (get-clipboard))
         
         (contains? (set templates) n)
