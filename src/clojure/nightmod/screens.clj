@@ -36,8 +36,8 @@
                 "platformer"
                 "orthogonal-rpg"
                 "isometric-rpg"
-                "barebones-2d"
-                "clone-git-project"])
+                "barebones"
+                "clone-project"])
 
 (def manager (asset-manager*
                (reify FileHandleResolver
@@ -173,10 +173,7 @@
                  (git/clone-with-dialog! uri-str)
                  load-project!))
       (dialogs/show-simple-dialog!
-        (format (nc-utils/get-string :invalid-git-address)
-                (str \newline \newline
-                     (subs uri-str 0 (min (count uri-str) 100))
-                     \newline \newline))))))
+        (nc-utils/get-string :invalid-git-address)))))
 
 ; buttons on the overlay screen
 
@@ -349,7 +346,7 @@
     (when-let [n (actor! (:actor screen) :get-name)]
       (sound! (:click-sound screen) :play)
       (cond
-        (= n "clone-git-project")
+        (= n "clone-project")
         (clone-project! (get-clipboard))
         
         (contains? (set templates) n)
