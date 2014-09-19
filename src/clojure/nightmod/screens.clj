@@ -172,8 +172,7 @@
         (some->> (u/new-project-dir! project-name)
                  (git/clone-with-dialog! uri-str)
                  load-project!))
-      (dialogs/show-simple-dialog!
-        (nc-utils/get-string :invalid-git-address)))))
+      (u/show-simple-dialog! (nc-utils/get-string :invalid-git-address)))))
 
 ; buttons on the overlay screen
 

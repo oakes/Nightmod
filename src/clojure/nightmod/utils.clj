@@ -49,6 +49,11 @@
       type
       (isa? JDialog)))
 
+(defn show-simple-dialog!
+  [s]
+  (when-not (dialog-visible?)
+    (dialogs/show-simple-dialog! s)))
+
 (defn new-project-name!
   [default-name]
   (when-not (dialog-visible?)
