@@ -178,3 +178,8 @@
 ; use the play-clj.net server
 (intern 'play-clj.net-utils 'client-send-address "tcp://play-clj.net:4707")
 (intern 'play-clj.net-utils 'client-receive-address "tcp://play-clj.net:4708")
+
+; throw error when run! is used
+(intern 'play-clj.core 'run!
+        (fn [& _]
+          (throw (Exception. "Replace run! with screen!"))))
