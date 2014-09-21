@@ -89,7 +89,6 @@
                                 '[play-clj.math :refer :all]
                                 '[play-clj.net :refer :all]
                                 '[play-clj.physics :refer :all]
-                                '[play-clj.repl :refer :all]
                                 '[play-clj.ui :refer :all])))
 
 (defn safe-read
@@ -142,7 +141,6 @@
          'play-clj.math
          'play-clj.net
          'play-clj.physics
-         'play-clj.repl
          'play-clj.ui])
 
 ; set function that prevents blacklisted symbols from being in completions
