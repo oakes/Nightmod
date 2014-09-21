@@ -60,7 +60,7 @@
                                nightmod.utils
                                play-clj.net-utils
                                play-clj.utils])
-   (jail-test/blanket "clojail")])
+   (jail-test/blanket "clojail" "nightcode")])
 
 (def context
   (memoize (fn [path]
