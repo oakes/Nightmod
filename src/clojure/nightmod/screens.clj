@@ -90,14 +90,13 @@
         size (if (> w h) h w)]
     (texture t :set-region (int x) (int y) size size)))
 
-(defn read-project-title
-  [f]
-  (-> f slurp edn/read-string :title (try (catch Exception _))))
-
 (defn read-load-tile
   [f]
-  {:display-name (or (read-project-title (io/file f u/project-file))
-                     (read-project-title (io/file f "settings.edn"))
+  {:display-name (or (-> (io/file f u/settings-file)
+                         slurp
+                         edn/read-string
+                         :title
+                         (try (catch Exception _)))
                      (.getName f))
    :name (.getCanonicalPath f)
    :image (let [f (io/file f u/screenshot-file)
