@@ -138,9 +138,13 @@
   (doseq [a (actor! entity :get-children)]
     (actor! a :set-visible show?)))
 
+(def ^:dynamic *set-blank-screen?* true) ; prevents ∞ loop from :on-hide errors
+
 (defn set-blank-screen!
   []
-  (set-screen! nightmod blank-screen overlay-screen))
+  (when *set-blank-screen?*
+    (binding [*set-blank-screen?* false]
+      (set-screen! nightmod blank-screen overlay-screen))))
 
 ; tiles on the main screen
 
