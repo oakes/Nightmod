@@ -16,7 +16,7 @@
 (def ^:const window-height 768)
 (def ^:const editor-width 700)
 (def ^:const core-file "core.clj")
-(def ^:const settings-file "settings.edn")
+(def ^:const project-file "project.edn")
 (def ^:const screenshot-file "screenshot.png")
 (def ^:const prefs-file ".prefs.edn")
 (def ^:const docs-name "*Docs*")
@@ -64,18 +64,18 @@
 (defn new-project-dir!
   [project-name]
   (let [dir-name (format-project-dir project-name)
-        project-file (io/file @main-dir dir-name)]
+        project-dir (io/file @main-dir dir-name)]
     (cond
       (= 0 (count dir-name))
       (dialogs/show-simple-dialog! (nc-utils/get-string :invalid-name))
-      (.exists project-file)
+      (.exists project-dir)
       (dialogs/show-simple-dialog! (nc-utils/get-string :file-exists))
       :else
-      project-file)))
+      project-dir)))
 
 (defn new-project!
-  [template project-name project-file]
-  (.mkdirs project-file)
+  [template project-name project-dir]
+  (.mkdirs project-dir)
   (doseq [file-name (-> (str template "/files.edn")
                         io/resource
                         slurp
@@ -83,10 +83,10 @@
     (-> (str template "/" file-name)
         io/resource
         io/input-stream
-        (io/copy (io/file project-file file-name))))
-  (->> (format (slurp (io/resource settings-file)) project-name)
-       (spit (io/file project-file settings-file)))
-  (.getCanonicalPath project-file))
+        (io/copy (io/file project-dir file-name))))
+  (->> (format (slurp (io/resource project-file)) project-name)
+       (spit (io/file project-dir project-file)))
+  (.getCanonicalPath project-dir))
 
 (defn canvas-focus?
   []
