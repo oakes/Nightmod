@@ -11,7 +11,10 @@
 (def manager (asset-manager*
                (reify FileHandleResolver
                  (resolve [this file-name]
-                   (FileHandle. (io/file @u/project-dir file-name))))))
+                   (let [f (io/file file-name)]
+                     (FileHandle. (if (.isAbsolute f)
+                                    f
+                                    (io/file @u/project-dir file-name))))))))
 (set-asset-manager! manager)
 
 ; keep a reference to all timers to we can stop them later
