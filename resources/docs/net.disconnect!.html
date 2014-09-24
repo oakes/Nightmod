@@ -1,4 +1,4 @@
-<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(disconnect! screen)</div><div class="c-doc"><p>Closes the sockets and interrupts the receiver thread. The <code>screen</code> is a hash map returned by the client function, or a play-clj screen map that contains a client hash map associated with the :network key.</p><pre>
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(disconnect! screen)</div><div class="c-doc"><p>Closes the sockets and interrupts the receiver thread. The <code>screen</code> is a play-clj screen map that contains a client hash map associated with the :network key.</p><pre>
 &#40;let &#91;screen &#40;update! screen :network &#40;client screen&#41;&#41;&#93;
   &#40;disconnect! screen&#41;&#41;
 </pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn disconnect!

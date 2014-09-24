@@ -2,5 +2,5 @@
   [{:keys [update-fn!] :as screen} id]
   (when-let [timer (get-in screen [:timers id])]
     (.stop timer)
-    (update-fn! update-in [[:timers] dissoc id])
+    (update-fn! update-in [:timers] dissoc id)
     timer))</pre></div></div></div></body></html>

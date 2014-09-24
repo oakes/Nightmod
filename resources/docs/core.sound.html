@@ -12,11 +12,10 @@
  sound is no longer playing, this has no effect.</div></div><div class="j-item"><span class="j-name">:stop</span><span class="j-args"></span><div class="j-doc">Stops playing all instances of this sound.</div></div><div class="j-item"><span class="j-name">:stop</span><span class="j-args"><span class="j-arg"><span class="j-type">^long</span> sound-id</span></span><div class="j-doc">Stops the sound instance with the given id as returned by {@link #play()} or {@link #play(float)}. If the sound is no longer
  playing, this has no effect.</div></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn sound*
   [path]
-  (let [^FileHandle fh (if (string? path)
-                         (files! :internal path)
-                         path)]
-    (or (u/load-asset (.path fh) Sound)
-        (audio! :new-sound fh))))</pre><pre>(defmacro sound
+  (or (u/load-asset path Sound)
+      (audio! :new-sound (if (string? path)
+                           (files! :internal path)
+                           path))))</pre><pre>(defmacro sound
   [path & options]
   `(let [^Sound object# (sound* ~path)]
      (u/calls! object# ~@options)))</pre></div></div></div></body></html>

@@ -22,12 +22,10 @@
   [path]
   (if (nil? path)
     (BitmapFont.)
-    (let [^Files files (Gdx/files)
-          ^FileHandle fh (if (string? path)
-                           (.internal files path)
-                           path)]
-      (or (u/load-asset (.path fh) BitmapFont)
-          (BitmapFont. fh)))))</pre><pre>(defmacro bitmap-font
+    (or (u/load-asset path BitmapFont)
+        (BitmapFont. (if (string? path)
+                       (.internal (Gdx/files) path)
+                       path)))))</pre><pre>(defmacro bitmap-font
   [& [path & options]]
   `(let [^BitmapFont object# (bitmap-font* ~path)]
      (u/calls! object# ~@options)))</pre></div></div></div></body></html>

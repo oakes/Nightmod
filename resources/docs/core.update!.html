@@ -2,4 +2,5 @@
 &#40;update! screen :renderer &#40;stage&#41;&#41;
 </pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn update!
   [screen & args]
-  ((:update-fn! screen) assoc args))</pre></div></div></div></body></html>
+  (doto (apply (:update-fn! screen) assoc args)
+    update-screen!))</pre></div></div></div></body></html>

@@ -11,7 +11,7 @@
     sort-fn layer-names entities]
     (doseq [ln layer-names]
       (when-not (get-in screen [:layers ln])
-        (update-fn! assoc-in [[:layers ln] (split-layer screen ln)])))
+        (update-fn! assoc-in [:layers ln] (split-layer screen ln))))
     (when camera (.setView renderer camera))
     (let [^Batch batch (.getSpriteBatch renderer)]
       (.begin batch)
@@ -20,6 +20,6 @@
                           sort-fn)]
         (if-let [layer (:layer entity)]
           (.renderTileLayer renderer layer)
-          (e/draw-entity! entity screen batch)))
+          (e/draw! entity screen batch)))
       (.end batch))
     entities))</pre></div></div></div></body></html>

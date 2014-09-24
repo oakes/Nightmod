@@ -1,4 +1,4 @@
-<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(server)</div><div class="c-head">(server send-address receive-address)</div><div class="c-doc"><p>Returns a hash map containing sender and receiver sockets, both of which are bound to the <code>send-address</code> and <code>receive-address</code> (* by default).</p><pre>
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(server)</div><div class="c-head">(server send-address receive-address)</div><div class="c-doc"><p>Returns a hash map containing sender and receiver sockets, both of which are bound to the <code>send-address</code> and <code>receive-address</code>.</p><pre>
 &#40;server&#41;
 &#40;server &quot;tcp://&#42;:4708&quot; &quot;tcp://&#42;:4707&quot;&#41;
 </pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn server
