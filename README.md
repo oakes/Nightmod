@@ -11,6 +11,7 @@ Nightmod is a tool for making live-moddable games. You can view a game's code wh
 * Try more examples
     * [2D Physics](https://gist.github.com/oakes/ee8882f009dbde17f4e1)
     * [3D Physics](https://gist.github.com/oakes/51f672f4124e725cd4b7)
+    * [Minimal 3D](https://gist.github.com/oakes/dbcf7445e5521360f62b)
 
 ## Licensing
 
