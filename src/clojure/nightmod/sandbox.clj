@@ -31,7 +31,7 @@
      *read-eval* eval
      addMethod forName
      load load-file load-string load-reader
-     ns-resolve ns-publics ns-unmap ns-map ns-interns the-ns in-ns require
+     ns-resolve ns-publics ns-unmap ns-map ns-interns the-ns in-ns
      System/out System/in System/err
      defscreen* defgame* defgame set-screen! setScreen set-screen-wrapper!
      app! app on-gl pref! screenshot!
