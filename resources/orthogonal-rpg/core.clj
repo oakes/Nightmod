@@ -19,9 +19,8 @@
 (defscreen main-screen
   :on-show
   (fn [screen entities]
-    (let [screen (->> (/ 1 pixels-per-tile)
-                      (orthogonal-tiled-map "level.tmx")
-                      (update! screen :camera (orthographic) :renderer))
+    (let [renderer (orthogonal-tiled-map "level.tmx" (/ 1 pixels-per-tile))
+          screen (update! screen :camera (orthographic) :renderer renderer)
           enemies (take 10 (repeatedly #(create-enemy)))]
       (reduce #(randomize-locations screen %1 %2)
               []

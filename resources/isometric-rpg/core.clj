@@ -32,12 +32,11 @@
 (defscreen main-screen
   :on-show
   (fn [screen entities]
-    (let [screen (->> (/ 1 pixels-per-tile)
-                      (isometric-tiled-map "level.tmx")
-                      (update! screen
-                               :camera (orthographic)
-                               :npc-health-bar (shape :filled)
-                               :renderer))]
+    (let [renderer (isometric-tiled-map "level.tmx" (/ 1 pixels-per-tile))
+          screen (update! screen
+                          :camera (orthographic)
+                          :renderer renderer
+                          :npc-health-bar (shape :filled))]
       (->> [(create-player)
             (take 8 (repeatedly #(create-enemy)))]
            (flatten)

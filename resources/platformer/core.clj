@@ -12,8 +12,9 @@
 (defscreen main-screen
   :on-show
   (fn [screen entities]
-    (->> (orthogonal-tiled-map "level.tmx" (/ 1 16))
-         (update! screen :camera (orthographic) :renderer))
+    (update! screen
+             :camera (orthographic)
+             :renderer (orthogonal-tiled-map "level.tmx" 1/16))
     (create-player))
   
   :on-render
