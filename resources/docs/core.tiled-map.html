@@ -2,10 +2,8 @@
  {@link #dispose()}.</div></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn tiled-map*
   ([]
     (TiledMap.))
-  ([s]
-    (if (string? s)
-      (or (u/load-asset s TiledMap)
-          (.load (TmxMapLoader.) s))
-      s)))</pre><pre>(defmacro tiled-map
+  ([^String path]
+    (or (u/load-asset path TiledMap)
+        (.load (TmxMapLoader.) path))))</pre><pre>(defmacro tiled-map
   [s & options]
   `(u/calls! ^TiledMap (tiled-map* ~s) ~@options))</pre></div></div></div></body></html>

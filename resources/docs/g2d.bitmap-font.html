@@ -18,14 +18,12 @@
  {@link #dispose()} is called. Use with care!</div></div><div class="j-item"><span class="j-name">:set-scale</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> scale-x</span>, <span class="j-arg"><span class="j-type">^float</span> scale-y</span></span><div class="j-doc">Scales the font by the specified amounts on both axes <br>
  <br>
  Note that smoother scaling can be achieved if the texture backing the BitmapFont is using {@link TextureFilter#Linear}. The
- default is Nearest, so use a BitmapFont constructor that takes a {@link TextureRegion}.</div></div><div class="j-item"><span class="j-name">:set-scale</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> scale-x-y</span></span><div class="j-doc">Scales the font by the specified amount in both directions.</div></div><div class="j-item"><span class="j-name">:set-use-integer-positions</span><span class="j-args"><span class="j-arg"><span class="j-type">^boolean</span> integer</span></span><div class="j-doc">Specifies whether to use integer positions or not. Default is to use them so filtering doesn't kick in as badly.</div></div><div class="j-item"><span class="j-name">:uses-integer-positions</span><span class="j-args"></span><div class="j-doc">Checks whether this font uses integer positions for drawing.</div></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn bitmap-font*
-  [path]
+ default is Nearest, so use a BitmapFont constructor that takes a {@link TextureRegion}.</div></div><div class="j-item"><span class="j-name">:set-scale</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> scale-x-y</span></span><div class="j-doc">Scales the font by the specified amount in both directions.</div></div><div class="j-item"><span class="j-name">:set-use-integer-positions</span><span class="j-args"><span class="j-arg"><span class="j-type">^boolean</span> integer</span></span><div class="j-doc">Specifies whether to use integer positions or not. Default is to use them so filtering doesn't kick in as badly.</div></div><div class="j-item"><span class="j-name">:to-string</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:uses-integer-positions</span><span class="j-args"></span><div class="j-doc">Checks whether this font uses integer positions for drawing.</div></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn bitmap-font*
+  [^String path]
   (if (nil? path)
     (BitmapFont.)
     (or (u/load-asset path BitmapFont)
-        (BitmapFont. (if (string? path)
-                       (.internal (Gdx/files) path)
-                       path)))))</pre><pre>(defmacro bitmap-font
+        (BitmapFont. (.internal (Gdx/files) path)))))</pre><pre>(defmacro bitmap-font
   [& [path & options]]
   `(let [^BitmapFont object# (bitmap-font* ~path)]
      (u/calls! object# ~@options)))</pre></div></div></div></body></html>

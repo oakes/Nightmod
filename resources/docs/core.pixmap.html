@@ -11,12 +11,11 @@
  LuminanceAlpha the luminance is the first byte and the alpha is the second byte of the pixel. For the formats RGB888 and
  RGBA8888 the color components are stored in a single byte each in the order red, green, blue (alpha). For the formats RGB565
  and RGBA4444 the pixel colors are stored in shorts in machine dependent order.</div></div><div class="j-item"><span class="j-name">:get-width</span><span class="j-args"></span></div><div class="j-item"><span class="j-name">:set-color</span><span class="j-args"><span class="j-arg"><span class="j-type">^int</span> color</span></span><div class="j-doc">Sets the color for the following drawing operations</div></div><div class="j-item"><span class="j-name">:set-color</span><span class="j-args"><span class="j-arg"><span class="j-type">^float</span> r</span>, <span class="j-arg"><span class="j-type">^float</span> g</span>, <span class="j-arg"><span class="j-type">^float</span> b</span>, <span class="j-arg"><span class="j-type">^float</span> a</span></span><div class="j-doc">Sets the color for the following drawing operations.</div></div><div class="j-item"><span class="j-name">:set-color</span><span class="j-args"><span class="j-arg"><span class="j-type">^Color</span> color</span></span><div class="j-doc">Sets the color for the following drawing operations.</div></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn pixmap*
-  [path]
-  (let [^FileHandle fh (if (string? path)
-                         (files! :internal path)
-                         path)]
-    (or (u/load-asset (.path fh) Pixmap)
-        (Pixmap. fh))))</pre><pre>(defmacro pixmap
+  ([^String path]
+    (or (u/load-asset path Pixmap)
+        (Pixmap. (files! :internal path))))
+  ([width height fmt]
+    (Pixmap. width height fmt)))</pre><pre>(defmacro pixmap
   [path & options]
   `(let [^Pixmap object# (pixmap* ~path)]
      (u/calls! object# ~@options)))</pre></div></div></div></body></html>

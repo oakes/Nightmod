@@ -12,10 +12,8 @@
  false, and removing "-disabled" from the style name when enabled is true. A method named "getStyle" is called the actor via
  reflection and the name of that style is found in the skin. If the actor doesn't have a "getStyle" method or the style was
  not found in the skin, no exception is thrown and the actor is left unchanged.</div></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn skin*
-  [path]
+  [^String path]
   (or (u/load-asset path Skin)
-      (Skin. (if (string? path)
-               (.internal ^Files (Gdx/files) path)
-               path))))</pre><pre>(defmacro skin
+      (Skin. (.internal ^Files (Gdx/files) path))))</pre><pre>(defmacro skin
   [path & options]
   `(u/calls! ^Skin (skin* ~path) ~@options))</pre></div></div></div></body></html>
