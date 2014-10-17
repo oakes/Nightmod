@@ -14,7 +14,7 @@
                   :classifier "natives-desktop"]
                  [com.badlogicgames.gdx/gdx-platform "1.4.1"
                   :classifier "natives-desktop"]
-                 [nightcode "0.4.0"
+                 [nightcode "0.4.1-SNAPSHOT"
                   :exclusions [gwt-plugin
                                leiningen
                                lein-ancient

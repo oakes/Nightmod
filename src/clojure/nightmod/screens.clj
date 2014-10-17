@@ -34,8 +34,8 @@
 
 (def templates ["arcade"
                 "platformer"
-                "orthogonal-rpg"
-                "isometric-rpg"
+                "orthogonal"
+                "isometric"
                 "barebones"
                 "download"])
 
