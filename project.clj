@@ -25,7 +25,7 @@
                                lein-typed
                                play-clj/lein-template]]
                  [org.clojure/clojure "1.6.0"]
-                 [org.clojure/core.logic "0.8.8"]
+                 [org.clojure/core.logic "0.8.9"]
                  [org.clojure/tools.reader "0.8.9"]
                  [play-clj "0.4.1"]
                  [play-clj.net "0.1.2"]
