@@ -1,5 +1,6 @@
 (ns nightmod.core
-  (:require [clojure.java.io :as io]
+  (:require [clojure.core.logic]
+            [clojure.java.io :as io]
             [nightcode.customizations :as custom]
             [nightcode.editors :as editors]
             [nightcode.shortcuts :as shortcuts]
