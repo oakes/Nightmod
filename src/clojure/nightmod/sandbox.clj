@@ -108,7 +108,7 @@
         safe-read
         (sb {#'*out* writer})
         (try
-          (catch Exception e
+          (catch Throwable e
             (when-not @u/error
               (reset! u/error
                       {:message (nc-utils/get-string :error-load)
@@ -121,7 +121,7 @@
   (binding [*out* (StringWriter.)]
     (try
       (jvm/jvm-sandbox func (context @u/project-dir))
-      (catch Exception e
+      (catch Throwable e
         (when-not @u/error
           (reset! u/error
                   {:message (some->> (:name (meta func))
