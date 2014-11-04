@@ -61,8 +61,8 @@
             max-x (* (game :width) (/ 2 3))
             min-y (/ (game :height) 3)
             max-y (* (game :height) (/ 2 3))]
-        (when (and (< min-x (game :point-x) max-x)
-                   (< min-y (game :point-y) max-y))
+        (when (and (< min-x (game :x) max-x)
+                   (< min-y (game :y) max-y))
           (attack entities player))))))
 
 (set-game-screen! main-screen)

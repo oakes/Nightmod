@@ -49,8 +49,7 @@
   (fn [screen entities]
     (for [e entities]
       (if (:player? e)
-        (assoc e :x (- (game :point-x)
-                       (/ (texture! e :get-region-width) 2)))
+        (assoc e :x (- (game :x) (/ (texture! e :get-region-width) 2)))
         e)))
   
   :on-key-down

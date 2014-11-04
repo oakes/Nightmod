@@ -75,8 +75,8 @@
 (defn get-player-velocity
   [entity]
   (if (and (game :touched?) (button-pressed? :left))
-    (let [x (float (- (game :point-x) (/ (game :width) 2)))
-          y (float (- (game :point-y) (/ (game :height) 2)))
+    (let [x (float (- (game :x) (/ (game :width) 2)))
+          y (float (- (game :y) (/ (game :height) 2)))
           x-adjust (* (:max-velocity entity) (Math/abs (double (/ x y))))
           y-adjust (* (:max-velocity entity) (Math/abs (double (/ y x))))]
       [(* (Math/signum x) (min (:max-velocity entity) x-adjust))

@@ -28,7 +28,7 @@
                 :set-color (color :blue)
                 :circle 0 0 10)
          :missile? true
-         :x (game :point-x)
+         :x (game :x)
          :y 50
          :width 10
          :height 10))
