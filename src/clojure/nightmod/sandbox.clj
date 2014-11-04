@@ -62,34 +62,36 @@
                                play-clj.utils])
    (jail-test/blanket "clojail" "nightcode")])
 
-(def context
-  (memoize (fn [path]
-             (-> (doto (jvm/permissions)
-                   (.add (FilePermission. "<<ALL FILES>>" "read"))
-                   (.add (-> (io/file path)
-                             .getCanonicalPath
-                             (str File/separatorChar "*")
-                             (FilePermission. "write")))
-                   (.add (ReflectPermission. "suppressAccessChecks"))
-                   (.add (SocketPermission. "play-clj.net" "connect")))
-                 jvm/domain
-                 jvm/context))))
+(def create-context
+  (memoize
+    (fn [path]
+      (-> (doto (jvm/permissions)
+            (.add (FilePermission. "<<ALL FILES>>" "read"))
+            (.add (-> (io/file path)
+                      .getCanonicalPath
+                      (str File/separatorChar "*")
+                      (FilePermission. "write")))
+            (.add (ReflectPermission. "suppressAccessChecks"))
+            (.add (SocketPermission. "play-clj.net" "connect")))
+          jvm/domain
+          jvm/context))))
 
-(defn create-sandbox
-  []
-  (jail/sandbox tester
-                :context (context @u/project-dir)
-                :timeout u/timeout
-                :namespace u/game-ns
-                :max-defs Integer/MAX_VALUE
-                :init '(require '[nightmod.game :refer :all]
-                                '[play-clj.core :refer :all]
-                                '[play-clj.g2d :refer :all]
-                                '[play-clj.g3d :refer :all]
-                                '[play-clj.math :refer :all]
-                                '[play-clj.net :refer :all]
-                                '[play-clj.physics :refer :all]
-                                '[play-clj.ui :refer :all])))
+(def create-sandbox
+  (memoize
+    (fn [path]
+      (jail/sandbox tester
+                    :context (create-context path)
+                    :timeout u/timeout
+                    :namespace u/game-ns
+                    :max-defs Integer/MAX_VALUE
+                    :init '(require '[nightmod.game :refer :all]
+                                    '[play-clj.core :refer :all]
+                                    '[play-clj.g2d :refer :all]
+                                    '[play-clj.g3d :refer :all]
+                                    '[play-clj.math :refer :all]
+                                    '[play-clj.net :refer :all]
+                                    '[play-clj.physics :refer :all]
+                                    '[play-clj.ui :refer :all])))))
 
 (defn safe-read
   [f]
@@ -103,12 +105,12 @@
   (reset! u/error nil)
   (reset! u/out nil)
   (let [writer (StringWriter.)
-        sb (create-sandbox)]
+        sb (create-sandbox @u/project-dir)]
     (-> (io/file path)
         safe-read
         (sb {#'*out* writer})
         (try
-          (catch Exception e
+          (catch Throwable e
             (when-not @u/error
               (reset! u/error
                       {:message (nc-utils/get-string :error-load)
@@ -120,8 +122,8 @@
   [func]
   (binding [*out* (StringWriter.)]
     (try
-      (jvm/jvm-sandbox func (context @u/project-dir))
-      (catch Exception e
+      (jvm/jvm-sandbox func (create-context @u/project-dir))
+      (catch Throwable e
         (when-not @u/error
           (reset! u/error
                   {:message (some->> (:name (meta func))
