@@ -1,0 +1,10 @@
+<html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(music path & options)</div><div class="c-doc"><p>Returns a <a href='http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/audio/Music.html'>Music</a>. Supports wav, mp3, and ogg.</p><pre>
+&#40;music &quot;song.wav&quot;&#41;
+&#40;music &quot;song.wav&quot; :play&#41;
+</pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn music*
+  [^String path]
+  (or (u/load-asset path Music)
+      (audio! :new-music (files! :internal path))))</pre><pre>(defmacro music
+  [path & options]
+  `(let [^Music object# (music* ~path)]
+     (u/calls! object# ~@options)))</pre></div></div></div></body></html>
