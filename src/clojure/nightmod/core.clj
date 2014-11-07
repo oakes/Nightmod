@@ -12,6 +12,7 @@
             [nightmod.input :as input]
             [nightmod.overlay :as overlay]
             [nightmod.utils :as u]
+            [schema.core]
             [seesaw.core :as s]
             [seesaw.util :as s-util])
   (:import [java.awt BorderLayout Canvas]

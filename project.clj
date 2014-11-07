@@ -29,6 +29,7 @@
                  [org.clojure/tools.reader "0.8.12"]
                  [play-clj "0.4.2"]
                  [play-clj.net "0.1.2"]
+                 [prismatic/schema "0.3.2"]
                  [seesaw "1.4.4"]]
   :resource-paths ["resources"]
   :source-paths ["src/clojure"]
