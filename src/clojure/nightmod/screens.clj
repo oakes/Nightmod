@@ -32,10 +32,10 @@
 (def ^:const tile-size 250)
 (def ^:const col-count 3)
 
-(def templates ["arcade"
-                "platformer"
+(def templates ["platformer"
                 "orthogonal"
                 "isometric"
+                "arcade"
                 "barebones"
                 "download"])
 
