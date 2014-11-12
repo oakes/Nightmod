@@ -316,7 +316,7 @@ First, define a custom screen function in `main-screen` with a name such as `:on
 
 ## Using the REPL
 
-The REPL view can be displayed by clicking the > button. This is particularly useful for reading and modifying state. Let's peek into the entities vector by typing the following into the REPL:
+The REPL view can be displayed by clicking the > button. This is particularly useful for reading and modifying state. We'll be using some REPL-specific functions, so type `(use 'play-clj.repl)` to bring them in. Let's peek into the entities vector by typing the following into the REPL:
 
 `(e main-screen)`
 
