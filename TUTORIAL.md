@@ -1,6 +1,6 @@
 ## Getting Started
 
-After downloading the jar file from [the website](https://nightmod.net/) and running it, you'll see a screen listing several different types of games. Let's start off with the simplest one, Barebones 2D. After clicking it and giving it a name, you should see a screen saying "Hello world!" at the bottom. Now click the button at the top that looks like a grid, and you'll see a file grid appear that contains "core.clj". Click that to open the file in the built-in editor.
+After downloading the jar file from [the website](https://nightmod.net/) and running it, you'll see a screen listing several different types of games. Let's start off with the simplest one, Barebones. After clicking it and giving it a name, you should see a screen saying "Hello world!" at the bottom. Now click the button at the top that looks like a grid, and you'll see a file grid appear that contains "core.clj". Click that to open the file in the built-in editor.
 
 ## Game Structure
 
