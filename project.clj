@@ -4,15 +4,15 @@
   :license {:name "Public Domain"
             :url "http://unlicense.org/UNLICENSE"}
   :dependencies [[clojail "1.0.6"]
-                 [com.badlogicgames.gdx/gdx "1.4.1"]
-                 [com.badlogicgames.gdx/gdx-backend-lwjgl "1.4.1"]
-                 [com.badlogicgames.gdx/gdx-box2d "1.4.1"]
-                 [com.badlogicgames.gdx/gdx-box2d-platform "1.4.1"
+                 [com.badlogicgames.gdx/gdx "1.5.0"]
+                 [com.badlogicgames.gdx/gdx-backend-lwjgl "1.5.0"]
+                 [com.badlogicgames.gdx/gdx-box2d "1.5.0"]
+                 [com.badlogicgames.gdx/gdx-box2d-platform "1.5.0"
                   :classifier "natives-desktop"]
-                 [com.badlogicgames.gdx/gdx-bullet "1.4.1"]
-                 [com.badlogicgames.gdx/gdx-bullet-platform "1.4.1"
+                 [com.badlogicgames.gdx/gdx-bullet "1.5.0"]
+                 [com.badlogicgames.gdx/gdx-bullet-platform "1.5.0"
                   :classifier "natives-desktop"]
-                 [com.badlogicgames.gdx/gdx-platform "1.4.1"
+                 [com.badlogicgames.gdx/gdx-platform "1.5.0"
                   :classifier "natives-desktop"]
                  [nightcode "0.4.2.5"
                   :exclusions [gwt-plugin
@@ -27,7 +27,7 @@
                  [org.clojure/clojure "1.6.0"]
                  [org.clojure/core.logic "0.8.9"]
                  [org.clojure/tools.reader "0.8.12"]
-                 [play-clj "0.4.2"]
+                 [play-clj "0.4.3-SNAPSHOT"]
                  [play-clj.net "0.1.2"]
                  [prismatic/schema "0.3.2"]
                  [seesaw "1.4.4"]]
