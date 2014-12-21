@@ -72,7 +72,7 @@
                       (str File/separatorChar "*")
                       (FilePermission. "write")))
             (.add (ReflectPermission. "suppressAccessChecks"))
-            (.add (SocketPermission. "play-clj.net" "connect")))
+            (.add (SocketPermission. "*" "connect")))
           jvm/domain
           jvm/context))))
 
@@ -174,7 +174,3 @@
             (= screen (:screen screens/overlay-screen)))
       (screen-fn)
       (run-in-sandbox! screen-fn))))
-
-; use the play-clj.net server
-(intern 'play-clj.net-utils 'client-send-address "tcp://play-clj.net:4707")
-(intern 'play-clj.net-utils 'client-receive-address "tcp://play-clj.net:4708")
