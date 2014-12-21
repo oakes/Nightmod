@@ -114,7 +114,8 @@
   [name]
   {:display-name (nc-utils/get-string name)
    :name name
-   :image (texture-drawable (str name "/" u/screenshot-file))})
+   :image (try (texture-drawable (str name "/" u/screenshot-file))
+            (catch Exception _))})
 
 (defn wrap-label!
   [btn]
