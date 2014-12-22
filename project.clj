@@ -14,7 +14,7 @@
                   :classifier "natives-desktop"]
                  [com.badlogicgames.gdx/gdx-platform "1.5.0"
                   :classifier "natives-desktop"]
-                 [nightcode "0.4.2.5"
+                 [nightcode "0.4.3"
                   :exclusions [gwt-plugin
                                leiningen
                                lein-ancient
@@ -26,10 +26,10 @@
                                play-clj/lein-template]]
                  [org.clojure/clojure "1.6.0"]
                  [org.clojure/core.logic "0.8.9"]
-                 [org.clojure/tools.reader "0.8.12"]
+                 [org.clojure/tools.reader "0.8.13"]
                  [play-clj "0.4.3"]
                  [play-clj.net "0.1.2"]
-                 [prismatic/schema "0.3.2"]
+                 [prismatic/schema "0.3.3"]
                  [seesaw "1.4.4"]]
   :resource-paths ["resources"]
   :source-paths ["src/clojure"]
