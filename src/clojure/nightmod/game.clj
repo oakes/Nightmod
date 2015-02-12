@@ -22,12 +22,6 @@ whatever was drawn by the preceding screens.
            ; clean up
            (asset-manager! manager/manager :clear)
            (stop-timers!)
-           ; make sure the game screens are valid
-           (doseq [screen game-screens
-                   required-key [:show :render :hide :pause :resize :resume]]
-             (when (or (not (map? screen))
-                       (not (contains? screen required-key)))
-               (throw (Exception. "Invalid screen given to set-game-screen!"))))
            ; set the supplied screen(s) with the overlay screen added at the end
            (apply set-screen!
                   screens/nightmod
