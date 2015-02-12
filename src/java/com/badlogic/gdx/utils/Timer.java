@@ -248,7 +248,7 @@ public class Timer {
 				app = null;
 				wake();
 			}
-			thread = null;
+			//thread = null;
 		}
 
 		public void dispose () {
