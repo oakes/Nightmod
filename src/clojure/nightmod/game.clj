@@ -23,6 +23,8 @@ whatever was drawn by the preceding screens.
            (asset-manager! manager/manager :clear)
            (stop-timers!)
            ; make sure the game screens are valid
+           (when-not (seq game-screens)
+             (throw (Exception. "No screen given to set-game-screen!")))
            (doseq [screen game-screens]
              (when-not (every? #(fn? (get screen %))
                                [:show :render :hide :pause :resize :resume])
