@@ -1,7 +1,6 @@
 <html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(position! object vec-3)</div><div class="c-head">(position! object x-val y-val)</div><div class="c-head">(position! object x-val y-val z-val)</div><div class="c-doc"><p>Sets the position of <code>object</code>. If <code>object</code> is a screen, the position of the camera will be set.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn position!
   ([object vec-3]
-    (let [^Camera camera (u/get-obj object :camera)]
-      (set! (. camera position) vec-3)))
+    (position! object (x vec-3) (y vec-3) (z vec-3)))
   ([object x-val y-val]
     (position! object x-val y-val nil))
   ([object x-val y-val z-val]
