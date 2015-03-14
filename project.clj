@@ -36,5 +36,4 @@
   :java-source-paths ["src/java"]
   :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
   :aot [nightmod.core]
-  :main ^:skip-aot nightmod.Nightmod
-  :manifest {"SplashScreen-Image" "logo_splash.png"})
+  :main ^:skip-aot nightmod.Nightmod)
