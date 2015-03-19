@@ -1,3 +1,3 @@
 <html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(nine-patch? entity)</div><div class="c-doc"><p>Returns true if <code>entity</code> is a <code>nine-patch</code>.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn nine-patch?
   [entity]
-  (isa? (type (u/get-obj entity :object)) NinePatch))</pre></div></div></div></body></html>
+  (instance? NinePatch (u/get-obj entity :object)))</pre></div></div></div></body></html>

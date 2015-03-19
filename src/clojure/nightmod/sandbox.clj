@@ -115,7 +115,7 @@
               (reset! u/error
                       {:message (nc-utils/get-string :error-load)
                        :exception e}))
-            (on-gl (screens/set-blank-screen!)))
+            (screens/set-blank-screen!))
           (finally (u/set-out! (str writer) true))))))
 
 (defn run-in-sandbox!

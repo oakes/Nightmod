@@ -1,3 +1,3 @@
 <html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(table? entity)</div><div class="c-doc"><p>Returns true if <code>entity</code> is a <code>table</code>.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn table?
   [entity]
-  (isa? (type (u/get-obj entity :object)) Table))</pre></div></div></div></body></html>
+  (instance? Table (u/get-obj entity :object)))</pre></div></div></div></body></html>

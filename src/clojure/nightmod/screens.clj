@@ -191,11 +191,9 @@
           (editors/remove-editors! @u/project-dir)
           (reset! ui/tree-selection nil)
           (u/toggle-editor! false)
-          (on-gl
-            (asset-manager! manager :clear)
-            (set-screen! nightmod main-screen)
-            (set-cursor-image! nil)
-            (manager/clean!)))))))
+          (on-gl (asset-manager! manager :clear))
+          (set-screen! nightmod main-screen)
+          (on-gl (set-cursor-image! nil) (manager/clean!)))))))
 
 (defn restart!
   []
@@ -319,7 +317,8 @@
   :on-render
   (fn [screen entities]
     (clear!)
-    (render! screen entities))
+    (render! screen)
+    (draw! screen entities))
   
   :on-resize
   (fn [{:keys [width height] :as screen} entities]
