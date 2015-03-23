@@ -3,9 +3,9 @@
 </pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn render!
   ([{:keys [renderer] :as screen}]
     (cond
-      (isa? (type renderer) BatchTiledMapRenderer)
+      (instance? BatchTiledMapRenderer renderer)
       (render-map! screen)
-      (isa? (type renderer) Stage)
+      (instance? Stage renderer)
       (render-stage! screen)))
   ([screen entities]
     (render! screen)
