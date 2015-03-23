@@ -3,11 +3,10 @@
 </pre></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn render!
   ([{:keys [renderer] :as screen}]
     (cond
-      (instance? BatchTiledMapRenderer renderer)
+      (isa? (type renderer) BatchTiledMapRenderer)
       (render-map! screen)
-      (instance? Stage renderer)
+      (isa? (type renderer) Stage)
       (render-stage! screen)))
   ([screen entities]
     (render! screen)
-    (binding [e/*skip-draw?* true]
-      (draw! screen entities))))</pre></div></div></div></body></html>
+    (draw! screen entities)))</pre></div></div></div></body></html>

@@ -1,7 +1,7 @@
 <html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(y object)</div><div class="c-doc"><p>Returns the y position of <code>object</code>. If <code>object</code> is a screen, the y position of the camera will be returned.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn y
   [object]
   (cond
-    (instance? Vector2 object) (. ^Vector2 object y)
-    (instance? Vector3 object) (. ^Vector3 object y)
+    (isa? (type object) Vector2) (. ^Vector2 object y)
+    (isa? (type object) Vector3) (. ^Vector3 object y)
     :else (let [^Camera camera (u/get-obj object :camera)]
             (. (. camera position) y))))</pre></div></div></div></body></html>

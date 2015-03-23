@@ -1,3 +1,3 @@
 <html><body><div class="content"><div class="item"><div class="clj"><div class="c-head">(particle-effect? entity)</div><div class="c-doc"><p>Returns true if <code>entity</code> is a <code>particle-effect</code>.</p></div></div><div class="c-head">Source</div><div class="c-src"><pre>(defn particle-effect?
   [entity]
-  (instance? ParticleEffect (u/get-obj entity :object)))</pre></div></div></div></body></html>
+  (isa? (type (u/get-obj entity :object)) ParticleEffect))</pre></div></div></div></body></html>

@@ -22,11 +22,11 @@
       (-> (or (u/load-asset arg Texture)
               (Texture. ^String arg))
           TextureRegion.)
-      (instance? Pixmap arg)
+      (isa? (type arg) Pixmap)
       (-> ^Pixmap arg Texture. TextureRegion.)
-      (instance? Texture arg)
+      (isa? (type arg) Texture)
       (-> ^Texture arg TextureRegion.)
-      (instance? TextureEntity arg)
+      (isa? (type arg) TextureEntity)
       (-> ^TextureRegion (:object arg) TextureRegion.)
       :else
       arg)))</pre><pre>(defmacro texture
