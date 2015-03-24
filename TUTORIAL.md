@@ -1,6 +1,6 @@
 ## Getting Started
 
-After downloading the jar file from [the website](https://nightmod.net/) and running it, you'll see a screen listing several different types of games. Let's start off with the simplest one, Barebones. After clicking it and giving it a name, you should see a screen saying "Hello world!" at the bottom. Now click the button at the top that looks like a grid, and you'll see a file grid appear that contains "core.clj". Click that to open the file in the built-in editor.
+After downloading the jar file from [the website](https://sekao.net/nightmod/) and running it, you'll see a screen listing several different types of games. Let's start off with the simplest one, Barebones. After clicking it and giving it a name, you should see a screen saying "Hello world!" at the bottom. Now click the button at the top that looks like a grid, and you'll see a file grid appear that contains "core.clj". Click that to open the file in the built-in editor.
 
 ## Game Structure
 
@@ -328,7 +328,7 @@ That should print out a vector with a single map inside of it. Now try moving yo
 
 Follow these steps to build your game as a standalone jar file:
 
-* Create a [play-clj](https://github.com/oakes/play-clj) game. To do that, download [Nightcode](https://nightcode.info/), click "New Project", provide a name, and choose the "Game" option.
+* Create a [play-clj](https://github.com/oakes/play-clj) game. To do that, download [Nightcode](https://sekao.net/nightcode/), click "New Project", provide a name, and choose the "Game" option.
 * Copy all the files from your Nightmod game to the `desktop/resources` folder in your Nightcode project. If you don't know where your Nightmod game files are stored, you can find them by clicking the "Open in File Browser" button in Nightmod's file pane.
 * Replace `desktop/src-common/.../core.clj` with [this one](https://gist.github.com/oakes/20e11ede32df6168e6ed).
 * In your new core.clj file, replace every instance of "my-game" with whatever name you provided to Nightcode.
