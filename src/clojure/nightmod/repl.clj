@@ -1,5 +1,6 @@
 (ns nightmod.repl
-  (:require [nightcode.editors :as editors]
+  (:require [clojure.main]
+            [nightcode.editors :as editors]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
             [nightmod.utils :as u]
