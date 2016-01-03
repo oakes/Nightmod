@@ -48,10 +48,15 @@
 
 ; helpers
 
-(defn set-cursor-image!
-  [img]
+(defn new-cursor
+  [path]
+  (try (graphics! :new-cursor (pixmap path) 0 0)
+    (catch Exception _)))
+
+(defn set-cursor!
+  [cursor]
   (try
-    (input! :set-cursor-image img 0 0)
+    (graphics! :set-cursor cursor)
     (catch Exception _)))
 
 (defn take-screenshot!
@@ -152,7 +157,7 @@
 (defn load-project!
   [path]
   ; clear the custom cursor and start with a blank screen
-  (on-gl (set-cursor-image! nil)
+  (on-gl (set-cursor! nil)
          (set-blank-screen!))
   ; save in project-dir so the asset loading and reset button works
   (reset! u/project-dir path)
@@ -194,7 +199,7 @@
           (on-gl
             (asset-manager! manager :clear)
             (set-screen! nightmod main-screen)
-            (set-cursor-image! nil)
+            (set-cursor! nil)
             (manager/clean!)))))))
 
 (defn restart!
@@ -274,7 +279,7 @@
       (update! screen
                :renderer (stage)
                :camera (orthographic)
-               :cursor-image (pixmap "glove.png")
+               :cursor (new-cursor "glove.png")
                :click-sound (sound "click.ogg"))
       (let [ui-skin (skin "uiskin.json")
             default-font (skin! ui-skin :get-font "default-font")
@@ -342,8 +347,8 @@
       (actor! (:actor screen) :set-color 1 1 1 0.5))
     (if (or (some-> (:actor screen) image-text-button?)
             (some-> (:actor screen) (actor! :get-parent) image-text-button?))
-      (set-cursor-image! (:cursor-image screen))
-      (set-cursor-image! nil)))
+      (set-cursor! (:cursor screen))
+      (set-cursor! nil)))
   
   :on-ui-changed
   (fn [screen entities]
