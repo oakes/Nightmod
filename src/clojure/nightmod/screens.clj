@@ -18,7 +18,7 @@
             [play-clj.utils]
             [seesaw.core :as s])
   (:import [com.badlogic.gdx.assets.loaders FileHandleResolver]
-           [com.badlogic.gdx.graphics Texture]
+           [com.badlogic.gdx.graphics Cursor$SystemCursor Texture]
            [java.awt Toolkit]
            [java.awt.datatransfer Clipboard ClipboardOwner DataFlavor
             StringSelection]
@@ -56,7 +56,9 @@
 (defn set-cursor!
   [cursor]
   (try
-    (graphics! :set-cursor cursor)
+    (if cursor
+      (graphics! :set-cursor cursor)
+      (graphics! :set-system-cursor Cursor$SystemCursor/Arrow))
     (catch Exception _)))
 
 (defn take-screenshot!

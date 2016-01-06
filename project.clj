@@ -4,15 +4,15 @@
   :license {:name "Public Domain"
             :url "http://unlicense.org/UNLICENSE"}
   :dependencies [[clojail "1.0.6"]
-                 [com.badlogicgames.gdx/gdx "1.7.2"]
-                 [com.badlogicgames.gdx/gdx-backend-lwjgl "1.7.2"]
-                 [com.badlogicgames.gdx/gdx-box2d "1.7.2"]
-                 [com.badlogicgames.gdx/gdx-box2d-platform "1.7.2"
+                 [com.badlogicgames.gdx/gdx "1.8.0"]
+                 [com.badlogicgames.gdx/gdx-backend-lwjgl "1.8.0"]
+                 [com.badlogicgames.gdx/gdx-box2d "1.8.0"]
+                 [com.badlogicgames.gdx/gdx-box2d-platform "1.8.0"
                   :classifier "natives-desktop"]
-                 [com.badlogicgames.gdx/gdx-bullet "1.7.2"]
-                 [com.badlogicgames.gdx/gdx-bullet-platform "1.7.2"
+                 [com.badlogicgames.gdx/gdx-bullet "1.8.0"]
+                 [com.badlogicgames.gdx/gdx-bullet-platform "1.8.0"
                   :classifier "natives-desktop"]
-                 [com.badlogicgames.gdx/gdx-platform "1.7.2"
+                 [com.badlogicgames.gdx/gdx-platform "1.8.0"
                   :classifier "natives-desktop"]
                  [nightcode "1.0.0-SNAPSHOT"
                   :exclusions [gwt-plugin
