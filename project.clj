@@ -26,7 +26,7 @@
                  [org.clojure/clojure "1.7.0"]
                  [org.clojure/core.logic "0.8.10"]
                  [org.clojure/tools.reader "0.9.2"]
-                 [play-clj "1.0.0-SNAPSHOT"]
+                 [play-clj "1.0.0"]
                  [play-clj.net "0.1.2"]
                  [prismatic/schema "1.0.4"]
                  [seesaw "1.4.5"]]
