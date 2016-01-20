@@ -14,7 +14,7 @@
                   :classifier "natives-desktop"]
                  [com.badlogicgames.gdx/gdx-platform "1.8.0"
                   :classifier "natives-desktop"]
-                 [nightcode "1.0.0-SNAPSHOT"
+                 [nightcode "1.0.0"
                   :exclusions [gwt-plugin
                                leiningen
                                lein-ancient
@@ -23,7 +23,7 @@
                                lein-droid
                                lein-typed
                                play-clj/lein-template]]
-                 [org.clojure/clojure "1.7.0"]
+                 [org.clojure/clojure "1.8.0"]
                  [org.clojure/core.logic "0.8.10"]
                  [org.clojure/tools.reader "0.9.2"]
                  [play-clj "1.0.0"]
