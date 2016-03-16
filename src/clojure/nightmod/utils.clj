@@ -109,18 +109,18 @@
 
 (defn toggle-editor!
   ([]
-    (toggle-editor! (not (.isVisible @editor))))
+   (toggle-editor! (not (.isVisible @editor))))
   ([show?]
-    (if show?
-      (add! @ui/root @editor)
-      (remove! @ui/root @editor))
-    (visibility! @ui/root @editor show?)
-    (.revalidate @ui/root)
-    (if show?
-      ; clear the key down buffer so keys don't get stuck in the down position
-      (input/clear-key-buffer!)
-      ; focus on the root so the game can receive keyboard events
-      (s/request-focus! @ui/root))))
+   (if show?
+     (add! @ui/root @editor)
+     (remove! @ui/root @editor))
+   (visibility! @ui/root @editor show?)
+   (.revalidate @ui/root)
+   (if show?
+     ; clear the key down buffer so keys don't get stuck in the down position
+     (input/clear-key-buffer!)
+     ; focus on the root so the game can receive keyboard events
+     (s/request-focus! @ui/root))))
 
 (defn set-out!
   [s initialize?]

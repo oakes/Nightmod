@@ -21,13 +21,13 @@
 (defn clear-key-buffer!
   "Clears the LWJGL key down buffer."
   ([]
-    (let [key-buf-field (doto (.getDeclaredField Keyboard "keyDownBuffer")
-                          (.setAccessible true))
-          key-buf (.get key-buf-field nil)]
-      (clear-key-buffer! key-buf)))
+   (let [key-buf-field (doto (.getDeclaredField Keyboard "keyDownBuffer")
+                         (.setAccessible true))
+         key-buf (.get key-buf-field nil)]
+     (clear-key-buffer! key-buf)))
   ([key-buf]
-    (doseq [i (range (.capacity key-buf))]
-      (.put key-buf i (byte 0)))))
+   (doseq [i (range (.capacity key-buf))]
+     (.put key-buf i (byte 0)))))
 
 (defn pass-key-events!
   "Passes key events to the game."
