@@ -63,16 +63,16 @@
                          (if (swap! external? not)
                            (show-external-editor! main-window editor-window)
                            (show-internal-editor! main-window editor-window)))
-        window-btn #(ui/button :id :window
-                               :text (nc-utils/get-string :toggle-window)
-                               :listen [:action toggle-window!])]
+        window-btn #(s/button :id :window
+                              :text (nc-utils/get-string :toggle-window)
+                              :listen [:action toggle-window!])]
     (.addWindowListener editor-window (proxy [WindowAdapter] []
                                         (windowClosing [e]
                                           (toggle-window!))))
     (intern 'nightcode.ui 'get-editor-pane (fn [] @u/editor))
     (intern 'nightcode.editors '*widgets* [:up :save :undo :redo
                                            :font-dec :font-inc
-                                           :doc :paredit :find :close])
+                                           :find :close])
     (intern 'nightcode.file-browser '*widgets* [:up :new-file :edit
                                                 :open-in-browser :save :cancel
                                                 (window-btn)])

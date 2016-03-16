@@ -36,9 +36,9 @@
 
 (defn create-widgets
   [actions]
-  {:restart (ui/button :id :restart
-                       :text (nc-utils/get-string :restart)
-                       :listen [:action (:restart actions)])})
+  {:restart (s/button :id :restart
+                      :text (nc-utils/get-string :restart)
+                      :listen [:action (:restart actions)])})
 
 (defn create-card
   []
