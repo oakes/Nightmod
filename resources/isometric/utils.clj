@@ -60,10 +60,10 @@
 
 (defn invalid-location?
   ([screen entities entity]
-    (invalid-location? screen entities entity 0))
+   (invalid-location? screen entities entity 0))
   ([screen entities entity min-distance]
-    (or (near-entities? entities entity min-distance)
-        (on-object-layer? screen entity "barriers"))))
+   (or (near-entities? entities entity min-distance)
+       (on-object-layer? screen entity "barriers"))))
 
 (defn decelerate
   [velocity]

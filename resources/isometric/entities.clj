@@ -156,7 +156,7 @@
            
            :else
            e))
-         entities))
+       entities))
 
 (defn randomize-location
   [screen entities entity]
