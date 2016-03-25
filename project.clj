@@ -1,4 +1,4 @@
-(defproject nightmod "1.2.0-SNAPSHOT"
+(defproject nightmod "1.1.1"
   :description "A tool for making live-moddable games in Clojure"
   :url "https://github.com/oakes/Nightmod"
   :license {:name "Public Domain"
@@ -14,7 +14,7 @@
                   :classifier "natives-desktop"]
                  [com.badlogicgames.gdx/gdx-platform "1.8.0"
                   :classifier "natives-desktop"]
-                 [nightcode "1.1.0"
+                 [nightcode "1.1.2"
                   :exclusions [gwt-plugin
                                leiningen
                                lein-ancient
