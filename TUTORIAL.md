@@ -328,8 +328,8 @@ That should print out a vector with a single map inside of it. Now try moving yo
 
 Follow these steps to build your game as a standalone jar file:
 
-* Create a [play-clj](https://github.com/oakes/play-clj) game. To do that, download [Nightcode](https://sekao.net/nightcode/), click "New Project", provide a name, and choose the "Game" option.
-* Copy all the files from your Nightmod game to the `desktop/resources` folder in your Nightcode project. If you don't know where your Nightmod game files are stored, you can find them by clicking the "Open in File Browser" button in Nightmod's file pane.
+* Create a [play-clj](https://github.com/oakes/play-clj) project. To do that, install [Leiningen](https://github.com/technomancy/leiningen) and run `lein new play-clj hello-world` in the terminal (replace `hello-world` with your game name).
+* Copy all the files from your Nightmod game to the `desktop/resources` folder in your Leiningen project. If you don't know where your Nightmod game files are stored, you can find them by clicking the "Open in File Browser" button in Nightmod's file pane.
 * Replace `desktop/src-common/.../core.clj` with [this one](https://gist.github.com/oakes/20e11ede32df6168e6ed).
-* In your new core.clj file, replace every instance of "my-game" with whatever name you provided to Nightcode.
-* You can try it out by clicking "Run" in Nightcode, and build a jar file with "Build".
+* In your new core.clj file, replace every instance of "my-game" with whatever name you provided to Leiningen.
+* You can try it out by going to the `desktop` directory and running `lein run`, or build a jar file with `lein uberjar`.
