@@ -22,7 +22,6 @@
 (def ^:const docs-name "*Docs*")
 (def ^:const repl-name "*REPL*")
 (def ^:const timeout 5000)
-(def ^:const game-ns 'nightmod.run)
 
 (def main-dir (atom nil))
 (def project-dir (atom nil))

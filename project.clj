@@ -3,8 +3,7 @@
   :url "https://github.com/oakes/Nightmod"
   :license {:name "Public Domain"
             :url "http://unlicense.org/UNLICENSE"}
-  :dependencies [[clojail "1.0.6"]
-                 [com.badlogicgames.gdx/gdx "1.9.3"]
+  :dependencies [[com.badlogicgames.gdx/gdx "1.9.3"]
                  [com.badlogicgames.gdx/gdx-backend-lwjgl "1.9.3"]
                  [com.badlogicgames.gdx/gdx-box2d "1.9.3"]
                  [com.badlogicgames.gdx/gdx-box2d-platform "1.9.3"
@@ -33,6 +32,6 @@
   :resource-paths ["resources"]
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]
-  :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
+  :javac-options ["-target" "1.7" "-source" "1.7" "-Xlint:-options"]
   :aot [nightmod.core]
   :main ^:skip-aot nightmod.Nightmod)

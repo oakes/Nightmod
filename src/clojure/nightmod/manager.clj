@@ -23,13 +23,8 @@
 ; keep a reference to all networks so we can disconnect them later
 (net-utils/track-networks!)
 
-(defn clear-ns!
-  [nspace]
-  (doall (map #(ns-unmap nspace %) (keys (ns-interns nspace)))))
-
 (defn clean!
   []
-  (clear-ns! u/game-ns)
   (utils/stop-timers!)
   (net-utils/disconnect-networks!)
   (asset-manager! manager :clear))

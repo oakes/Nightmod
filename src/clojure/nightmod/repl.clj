@@ -29,8 +29,7 @@
 
 (defn run-repl!
   [in-out]
-  (start-thread! in-out (clojure.main/repl :init #(in-ns u/game-ns)
-                                           :print clojure.pprint/pprint)))
+  (start-thread! in-out (clojure.main/repl :print clojure.pprint/pprint)))
 
 (def ^:dynamic *widgets* [:restart])
 

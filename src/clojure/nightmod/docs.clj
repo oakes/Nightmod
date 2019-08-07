@@ -3,7 +3,6 @@
             [clojure.java.io :as io]
             [nightcode.ui :as ui]
             [nightcode.utils :as nc-utils]
-            [nightmod.sandbox :as sandbox]
             [seesaw.core :as s])
   (:import [java.awt Desktop]
            [java.net URI]
@@ -12,14 +11,9 @@
            [javax.swing.tree DefaultMutableTreeNode DefaultTreeModel
             TreeSelectionModel]))
 
-(defn blacklisted?
-  [{:keys [name]}]
-  (contains? sandbox/blacklist-symbols (symbol name)))
-
 (def doc-list (->> (io/resource "docs/index.edn")
                    slurp
-                   edn/read-string
-                   (remove blacklisted?)))
+                   edn/read-string))
 
 (def ns-list (vec (into (sorted-map) (group-by :ns doc-list))))
 

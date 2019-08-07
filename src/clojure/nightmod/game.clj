@@ -1,6 +1,5 @@
 (ns nightmod.game
-  (:require [clojail.core :as jail]
-            [clojure.edn :as edn]
+  (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
             [nightcode.utils :as nc-utils]
             [nightmod.manager :as manager]

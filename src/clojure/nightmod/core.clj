@@ -25,7 +25,7 @@
   java.awt.Component (children [this] nil))
 
 (defn load-game!
-  "Loads game into the canvas and runs it in a sandbox."
+  "Loads game into the canvas and runs it."
   [path]
   (doto (.getCanonicalPath (io/file path u/core-file))
     overlay/protect-file!
@@ -73,8 +73,6 @@
   "Launches the main window."
   [& args]
   (window/set-icon! "logo_launcher.png")
-  (window/set-theme! (custom/parse-args args))
-  (sandbox/set-policy!)
   (add-watch u/project-dir :load-game (fn [_ _ _ path]
                                         (load-game! path)))
   (->> (u/get-data-dir) (reset! u/main-dir) io/file .mkdir)
