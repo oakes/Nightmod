@@ -21,14 +21,16 @@
                                lein-clr
                                lein-droid
                                lein-typed
-                               play-clj/lein-template]]
+                               play-clj/lein-template
+                               com.github.insubstantial/substance]]
                  [org.clojure/clojure "1.8.0"]
                  [org.clojure/core.logic "0.8.10"]
                  [org.clojure/tools.reader "0.9.2"]
                  [play-clj "1.1.0"]
                  [play-clj.net "0.1.2"]
                  [prismatic/schema "1.0.4"]
-                 [seesaw "1.4.5"]]
+                 [seesaw "1.4.5"]
+                 [org.pushing-pixels/radiance-substance "2.0.1"]]
   :resource-paths ["resources"]
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]

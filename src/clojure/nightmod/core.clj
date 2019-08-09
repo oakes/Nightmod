@@ -1,7 +1,6 @@
 (ns nightmod.core
   (:require [clojure.core.logic]
             [clojure.java.io :as io]
-            [nightcode.customizations :as custom]
             [nightcode.editors :as editors]
             [nightcode.shortcuts :as shortcuts]
             [nightcode.ui :as ui]
@@ -17,7 +16,9 @@
             [seesaw.util :as s-util])
   (:import [java.awt BorderLayout Canvas]
            [com.badlogic.gdx.backends.lwjgl LwjglApplication]
-           [org.lwjgl.input Keyboard])
+           [org.lwjgl.input Keyboard]
+           [javax.swing UIManager]
+           [org.pushingpixels.substance.api.skin SubstanceGraphiteLookAndFeel])
   (:gen-class))
 
 ; allow s/select to work with Canvas
@@ -69,6 +70,12 @@
     (when-not (u/canvas-focus?)
       (input/pass-key-events! window app))))
 
+(defn set-theme!
+  "Sets the theme based on the command line arguments."
+  []
+  (s/native!)
+  (UIManager/setLookAndFeel (SubstanceGraphiteLookAndFeel.)))
+
 (defn -main
   "Launches the main window."
   [& args]
@@ -77,6 +84,7 @@
                                         (load-game! path)))
   (->> (u/get-data-dir) (reset! u/main-dir) io/file .mkdir)
   (s/invoke-later
+    (set-theme!)
     ; listen for keys while modifier is down
     (shortcuts/listen-for-shortcuts!
       (fn [key-code]
