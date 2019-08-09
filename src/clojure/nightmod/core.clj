@@ -35,10 +35,7 @@
 (defn create-window
   "Creates the main window."
   []
-  (s/frame :title (str "Nightmod " (or (some-> "nightmod.core"
-                                               nc-utils/get-project
-                                               (nth 2))
-                                       "beta"))
+  (s/frame :title (str "Nightmod 1.3.4")
            :width u/window-width
            :height u/window-height
            :on-close :nothing))
